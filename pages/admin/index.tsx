@@ -1,0 +1,10 @@
+// admin
+// admin/addAdmin
+// admin/viewAdmin
+// admin/user/[id]
+// admin/report/users
+// admin/report/users/[id]
+// admin/report/nft
+// admin/report/nft/[id]
+// admin/report/collection
+// admin/report/collection/[id]
