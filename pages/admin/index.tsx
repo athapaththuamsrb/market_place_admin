@@ -67,135 +67,6 @@ const columns = [
   },
 ];
 
-// const rows = [
-//   {
-//     id: 1,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "John",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 2,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Mary",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 3,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Gihan",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 4,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Kalum",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 5,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Arin",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 6,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Sindy",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 7,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "july",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 8,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "John",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 9,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Mary",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 10,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Gihan",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 11,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Kalum",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 12,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Arin",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 13,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "Sindy",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-//   {
-//     id: 14,
-//     User_ID: "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
-//     Name: "july",
-//     Date: "2022/04/05",
-//     Total: 6,
-//     Created: 8,
-//     Volume: 10,
-//   },
-// ];
-
 const onRowsSelectionHandler = (ids) => {
   const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
   console.log(selectedRowsData);
@@ -223,32 +94,9 @@ const reportedUsers: NextPage = () => {
       <Box
         sx={{
           flexGrow: 1,
-          position: "relative",
-          width:"145px",
-          left: "75%",
-          marginTop: "100px",
-          marginBottom: "10px",
-          height: 40,
-          borderRadius: "10px",
-        }}
-      >
-        <Button
-      
-          onClick={() => console.log("you submitted")}
-          type="submit"
-          color="primary"
-          variant="contained"
-          endIcon={<GroupIcon />}
-        >
-          Add Admin
-        </Button>
-      </Box>
-      <Box
-        sx={{
-          flexGrow: 1,
           width: "72%",
           marginX: "auto",
-          marginTop: "10px",
+          marginTop: "100px",
           marginBottom: "100px",
           height: 750,
           backgroundColor: "white",

@@ -7,6 +7,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
     {
       id: 2,
@@ -16,6 +18,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'reported',
+      Type: 'User'
     },
     {
       id: 3,
@@ -25,6 +29,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
     {
       id: 4,
@@ -34,6 +40,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
     {
       id: 5,
@@ -43,6 +51,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'reported',
+      Type: 'User'
     },
     {
       id: 6,
@@ -52,6 +62,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
     {
       id: 7,
@@ -61,6 +73,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'blocked',
+      Type: 'User'
     },
     {
       id: 8,
@@ -70,6 +84,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'Admin'
     },
     {
       id: 9,
@@ -79,6 +95,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'Admin'
     },
     {
       id: 10,
@@ -88,6 +106,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'Super_Admin'
     },
     {
       id: 11,
@@ -97,6 +117,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
     {
       id: 12,
@@ -106,6 +128,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
     {
       id: 13,
@@ -115,6 +139,8 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
     {
       id: 14,
@@ -124,5 +150,7 @@ export const rows = [
       Total: 6,
       Created: 8,
       Volume: 10,
+      Status: 'active',
+      Type: 'User'
     },
   ];
