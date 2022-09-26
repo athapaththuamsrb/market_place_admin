@@ -87,7 +87,7 @@ const reportedUsers: NextPage = () => {
     fetch("/api/rows")
       .then((res) => res.json())
       .then((data) => setRows(data));
-  });
+  },[]);
 
   return (
     <div>

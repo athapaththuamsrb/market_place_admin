@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
 import { Container } from "@mui/system";
+import PopUp from "../../../components/popup";
 
 const columns = [
   { field: "id", headerName: "ID", width: 50, align: "center" },
@@ -57,8 +58,10 @@ const columns = [
   },
 ];
 
-const onRowsSelectionHandler = (ids) => {
-  const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
+const onRowsSelectionHandler = (ids: any[]) => {
+  const selectedRowsData = ids.map((id: any) =>
+    rows.find((row: { id: any }) => row.id === id)
+  );
   console.log(selectedRowsData);
 };
 
@@ -72,12 +75,13 @@ function CustomToolbar() {
 
 const reportedUsers: NextPage = () => {
   const [rows, setRows] = useState([]);
+  const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
-    fetch("/api/rows")
+    fetch("http://localhost:8000/users")
       .then((res) => res.json())
-      .then((data) => setRows(data));
-  });
+      .then((data) => setRows(data.filter((user) => user.Type === "Admin")));
+  }, [openPopup]);
 
   return (
     <div>
@@ -85,7 +89,7 @@ const reportedUsers: NextPage = () => {
         sx={{
           flexGrow: 1,
           position: "relative",
-          width:"145px",
+          width: "145px",
           left: "75%",
           marginTop: "100px",
           marginBottom: "10px",
@@ -94,8 +98,7 @@ const reportedUsers: NextPage = () => {
         }}
       >
         <Button
-      
-          onClick={() => console.log("you submitted")}
+          onClick={() => setOpenPopup(true)}
           type="submit"
           color="primary"
           variant="contained"
@@ -128,6 +131,7 @@ const reportedUsers: NextPage = () => {
           }}
         />
       </Box>
+      <PopUp openPopup={openPopup} setOpenPopup={setOpenPopup}></PopUp>
     </div>
   );
 };
