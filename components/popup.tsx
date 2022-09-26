@@ -11,8 +11,8 @@ import CloseIcon from "@mui/icons-material/Close";
 //import { useNavigate } from "react-router-dom";
 
 export default function PopUp(props) {
-  const { openPopup, setOpenPopup } = props;
-  //const navigate = useNavigate();
+  const { openPopup, setOpenPopup, users, setUsers } = props;
+
   const [Name, setName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [User_ID, setUser_ID] = useState("");
@@ -40,28 +40,36 @@ export default function PopUp(props) {
 
     if (Name && emailAddress && User_ID) {
       //console.log(User_ID, Name, emailAddress);
-      const response = await fetch("http://localhost:8000/users", {
-        method: "POST",
-        body: JSON.stringify({
-          User_ID,
-          Name,
-          Date: "2022/04/04",
-          Total: 6,
-          Created: 8,
-          Volume: 10,
-          Status: "active",
-          Type: "Admin",
-        }),
-        headers: { "Content-type": "application/json" },
-      });
+      // const response = await fetch("http://localhost:8000/users", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     User_ID,
+      //     Name,
+      //     Date: "2022/04/04",
+      //     Total: 6,
+      //     Created: 8,
+      //     Volume: 10,
+      //     Status: "active",
+      //     Type: "Admin",
+      //   }),
+      //   headers: { "Content-type": "application/json" },
+      // });
+      // const data = await response.json();
+      // console.log(data);
+      // setOpenPopup(false);
+      const newAdmin = users.find((user) => user.User_ID === User_ID);
+      newAdmin.Type = "Admin";
+      const response = await fetch(
+        `http://localhost:8000/users/${newAdmin.id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(newAdmin),
+          headers: { "Content-type": "application/json" },
+        }
+      );
       const data = await response.json();
       console.log(data);
       setOpenPopup(false);
-      // fetch("../api/rows", {
-      //   method: "POST",
-      //   headers: { "Content-type": "application/json" },
-      //   body: JSON.stringify({ User_ID, Name, emailAddress }),
-      // });
     }
   };
 

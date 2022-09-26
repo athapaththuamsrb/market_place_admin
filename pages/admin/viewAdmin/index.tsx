@@ -74,13 +74,17 @@ function CustomToolbar() {
 }
 
 const reportedUsers: NextPage = () => {
-  const [rows, setRows] = useState([]);
+  const [admins, setAdmins] = useState([]);
+  const [users, setUsers] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:8000/users")
       .then((res) => res.json())
-      .then((data) => setRows(data.filter((user) => user.Type === "Admin")));
+      .then((data) => {
+        setAdmins(data.filter((user) => user.Type === "Admin"));
+        setUsers(data);
+      });
   }, [openPopup]);
 
   return (
@@ -121,7 +125,7 @@ const reportedUsers: NextPage = () => {
       >
         <DataGrid
           sx={{ m: 2 }}
-          rows={rows}
+          rows={admins}
           columns={columns}
           pageSize={12}
           rowsPerPageOptions={[5]}
@@ -131,7 +135,12 @@ const reportedUsers: NextPage = () => {
           }}
         />
       </Box>
-      <PopUp openPopup={openPopup} setOpenPopup={setOpenPopup}></PopUp>
+      <PopUp
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        users={users}
+        setUsers={setUsers}
+      ></PopUp>
     </div>
   );
 };
