@@ -6,61 +6,16 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
 import { Container } from "@mui/system";
+import PopUp from "../../../components/popup";
 
-const columns = [
-  { field: "id", headerName: "ID", width: 50, align: "center" },
-  { field: "User_ID", headerName: "User_ID", type: "string", width: 250 },
-  { field: "Name", headerName: "Name", type: "string", width: 150 },
-  { field: "Date", headerName: "Joined Date", type: "Date", width: 100 },
-  {
-    field: "Total",
-    headerName: "Total NFTs",
-    type: "Number",
-    width: 100,
-    align: "center",
-  },
-  {
-    field: "Created",
-    headerName: "Created NFTs",
-    type: "Number",
-    width: 100,
-    align: "center",
-  },
-  {
-    field: "Volume",
-    headerName: "Total volume",
-    type: "Number",
-    width: 150,
-    align: "center",
-  },
-  {
-    field: "actions",
-    type: "actions",
-    width: 100,
-    headerName: "Review",
-    getActions: (params: GridRowParams) => [
-      <Tooltip title="Delete admin">
-        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />
-      </Tooltip>,
-      <Tooltip title="Verify admin">
-        <GridActionsCellItem icon={<VerifiedIcon />} label="Verify" />
-      </Tooltip>, //onaction to be put
-      //onClick={toggleAdmin(params.id)}
-    ],
-  },
-];
 
-const onRowsSelectionHandler = (ids) => {
-  const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
-  console.log(selectedRowsData);
-};
 
 function CustomToolbar() {
   return (
@@ -70,22 +25,95 @@ function CustomToolbar() {
   );
 }
 
+
 const reportedUsers: NextPage = () => {
-  const [rows, setRows] = useState([]);
+  const columns = [
+    { field: "id", headerName: "ID", width: 50, align: "center" },
+    { field: "User_ID", headerName: "User_ID", type: "string", width: 250 },
+    { field: "Name", headerName: "Name", type: "string", width: 150 },
+    { field: "Date", headerName: "Joined Date", type: "Date", width: 100 },
+    {
+      field: "Total",
+      headerName: "Total NFTs",
+      type: "Number",
+      width: 100,
+      align: "center",
+    },
+    {
+      field: "Created",
+      headerName: "Created NFTs",
+      type: "Number",
+      width: 100,
+      align: "center",
+    },
+    {
+      field: "Volume",
+      headerName: "Total volume",
+      type: "Number",
+      width: 150,
+      align: "center",
+    },
+    {
+      field: "actions",
+      type: "actions",
+      width: 100,
+      headerName: "Review",
+      getActions: (params: GridRowParams) => [
+        <Tooltip title="Delete admin">
+          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={()=> (handleClickOpen(params.row.id))}/>
+        </Tooltip>
+      ],
+    },
+  ];
+  
+  const onRowsSelectionHandler = (ids: any[]) => {
+    const selectedRowsData = ids.map((id: any) =>
+      users.find((row: { id: any }) => row.id === id)
+    );
+    console.log(selectedRowsData);
+  };
+  const [admins, setAdmins] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [id,setId] = useState('');
 
   useEffect(() => {
-    fetch("/api/rows")
+    fetch("http://localhost:8000/users")
       .then((res) => res.json())
-      .then((data) => setRows(data));
-  });
+      .then((data) => {
+        setAdmins(data.filter((user) => user.Type === "Admin"));
+        setUsers(data);
+      });
+  }, [openPopup,open]);
 
+  const handleClickOpen = (id) => {
+    setOpen(true);
+    setId(id);
+  };
+  
+  const handleClose = (result,id) => () =>{
+    setOpen(false)
+    if(result=='Yes'){
+      const user = admins.find  ((user) => user.id === id);
+      console.log(user);
+      user.Type="User"
+      const res = fetch(`http://localhost:8000/users/${user.id}`,{
+          method: 'PUT',
+          body: JSON.stringify(user),
+          headers:{
+              'Content-Type': 'application/json'
+          }
+      })
+    }  
+  };
   return (
     <div>
       <Box
         sx={{
           flexGrow: 1,
           position: "relative",
-          width:"145px",
+          width: "145px",
           left: "75%",
           marginTop: "100px",
           marginBottom: "10px",
@@ -94,8 +122,7 @@ const reportedUsers: NextPage = () => {
         }}
       >
         <Button
-      
-          onClick={() => console.log("you submitted")}
+          onClick={() => setOpenPopup(true)}
           type="submit"
           color="primary"
           variant="contained"
@@ -118,7 +145,7 @@ const reportedUsers: NextPage = () => {
       >
         <DataGrid
           sx={{ m: 2 }}
-          rows={rows}
+          rows={admins}
           columns={columns}
           pageSize={12}
           rowsPerPageOptions={[5]}
@@ -128,6 +155,29 @@ const reportedUsers: NextPage = () => {
           }}
         />
       </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Confirm Block User "+id+"?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose('Yes',id)} >
+            Yes
+          </Button>
+          <Button onClick={handleClose('No',id)} autoFocus>
+            No
+          </Button> 
+        </DialogActions>
+      </Dialog>
+      <PopUp
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        users={users}
+        setUsers={setUsers}
+      ></PopUp>
     </div>
   );
 };

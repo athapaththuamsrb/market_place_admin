@@ -19,7 +19,7 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "Active",
+      "Status": "reported",
       "Type": "User"
     },
     {
@@ -63,7 +63,7 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "Active",
+      "Status": "active",
       "Type": "User"
     },
     {
@@ -74,7 +74,7 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "reported",
+      "Status": "blocked",
       "Type": "User"
     },
     {
