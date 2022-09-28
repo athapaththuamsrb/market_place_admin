@@ -5,6 +5,7 @@ import {
   GridRowParams,
   GridToolbarContainer,
   GridToolbarExport,
+  GridColDef,
 } from "@mui/x-data-grid";
 import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -13,9 +14,7 @@ import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
 import { Container } from "@mui/system";
-import PopUp from "../../../components/popup";
-
-
+import PopUp from "../../../components/Admin/Popup";
 
 function CustomToolbar() {
   return (
@@ -25,13 +24,36 @@ function CustomToolbar() {
   );
 }
 
-
-const reportedUsers: NextPage = () => {
-  const columns = [
-    { field: "id", headerName: "ID", width: 50, align: "center" },
-    { field: "User_ID", headerName: "User_ID", type: "string", width: 250 },
-    { field: "Name", headerName: "Name", type: "string", width: 150 },
-    { field: "Date", headerName: "Joined Date", type: "Date", width: 100 },
+const reportedUsers: NextPage = (props) => {
+  const columns: GridColDef[] = [
+    {
+      field: "id",
+      headerName: "ID",
+      type: "string",
+      align: "center",
+      width: 50,
+    },
+    {
+      field: "User_ID",
+      headerName: "User_ID",
+      type: "string",
+      align: "center",
+      width: 250,
+    },
+    {
+      field: "Name",
+      headerName: "Name",
+      type: "string",
+      align: "center",
+      width: 150,
+    },
+    {
+      field: "Date",
+      headerName: "Joined Date",
+      type: "Date",
+      align: "center",
+      width: 100,
+    },
     {
       field: "Total",
       headerName: "Total NFTs",
@@ -55,17 +77,22 @@ const reportedUsers: NextPage = () => {
     },
     {
       field: "actions",
+      headerName: "Review",
       type: "actions",
       width: 100,
-      headerName: "Review",
+      align: "center",
       getActions: (params: GridRowParams) => [
         <Tooltip title="Delete admin">
-          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={()=> (handleClickOpen(params.row.id))}/>
-        </Tooltip>
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={() => handleClickOpen(params.row.id)}
+          />
+        </Tooltip>,
       ],
     },
   ];
-  
+
   const onRowsSelectionHandler = (ids: any[]) => {
     const selectedRowsData = ids.map((id: any) =>
       users.find((row: { id: any }) => row.id === id)
@@ -76,7 +103,7 @@ const reportedUsers: NextPage = () => {
   const [users, setUsers] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const [open, setOpen] = useState(false);
-  const [id,setId] = useState('');
+  const [id, setId] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:8000/users")
@@ -85,27 +112,29 @@ const reportedUsers: NextPage = () => {
         setAdmins(data.filter((user) => user.Type === "Admin"));
         setUsers(data);
       });
-  }, [openPopup,open]);
+  }, [openPopup, open]);
 
-  const handleClickOpen = (id) => {
+  const handleClickOpen = (id: string) => {
     setOpen(true);
     setId(id);
   };
-  
-  const handleClose = (result,id) => () =>{
-    setOpen(false)
-    if(result=='Yes'){
-      const user = admins.find  ((user) => user.id === id);
+
+  const handleClose = (result: string, id: string) => () => {
+    setOpen(false);
+    if (result == "Yes") {
+      const user: { id: string; Type: string } = admins.find(
+        (user) => user.id === id
+      );
       console.log(user);
-      user.Type="User"
-      const res = fetch(`http://localhost:8000/users/${user.id}`,{
-          method: 'PUT',
-          body: JSON.stringify(user),
-          headers:{
-              'Content-Type': 'application/json'
-          }
-      })
-    }  
+      user.Type = "User";
+      const res = fetch(`http://localhost:8000/users/${user.id}`, {
+        method: "PUT",
+        body: JSON.stringify(user),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
   };
   return (
     <div>
@@ -161,15 +190,15 @@ const reportedUsers: NextPage = () => {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-          {"Confirm Block User "+id+"?"}
+          {"Confirm Block User " + id + "?"}
         </DialogTitle>
         <DialogActions>
-          <Button autoFocus onClick={handleClose('Yes',id)} >
+          <Button autoFocus onClick={handleClose("Yes", id)}>
             Yes
           </Button>
-          <Button onClick={handleClose('No',id)} autoFocus>
+          <Button onClick={handleClose("No", id)} autoFocus>
             No
-          </Button> 
+          </Button>
         </DialogActions>
       </Dialog>
       <PopUp

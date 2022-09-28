@@ -1,13 +1,11 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import * as React from "react";
+import { Stack } from "@mui/material";
+import Popup from "../components/Popup";
 
-const Home: NextPage = () => {
+export default function Home() {
   return (
-    <div className={styles.container}>     
-    </div>
-  )
+    <Stack direction="row" spacing={2} sx={{ p: 50 }}>
+      <Popup />
+    </Stack>
+  );
 }
-
-export default Home

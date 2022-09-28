@@ -15,21 +15,62 @@ import {
   GridRowParams,
   GridToolbarContainer,
   GridToolbarExport,
+  GridColDef,
 } from "@mui/x-data-grid";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 
-import BlockIcon from '@mui/icons-material/Block';
+import BlockIcon from "@mui/icons-material/Block";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { SetStateAction, useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import Link from "next/link";
 
-const reportedUsers: NextPage = () => {
+const reportedUsers: NextPage = (props) => {
+  // const col:{
+  //   field: string;
+  //   headerName: string;
+  //   type: string;
+  //   width: number;
+  //   align: string;
+  // }[]={}
   const columns = [
-    { field: "id", headerName: "ID", width: 50, align: "center" },
-    { field: "User_ID", headerName: "User_ID", type: "string", width: 300},
-    { field: "Name", headerName: "Name", type: "string", width: 250 },
-    { field: "Date", headerName: "Joined Date", type: "Date", width: 150 },
+    {
+      field: "id",
+      headerName: "ID",
+      type: "number",
+      width: 50,
+      align: "center",
+    },
+    {
+      field: "User_ID",
+      headerName: "User_ID",
+      type: "string",
+      width: 300,
+      align: "center",
+    },
+    {
+      field: "Name",
+      headerName: "Name",
+      type: "string",
+      width: 250,
+      align: "center",
+    },
+    {
+      field: "Date",
+      headerName: "Joined Date",
+      type: "Date",
+      width: 150,
+      align: "center",
+    },
     {
       field: "Total",
       headerName: "Total NFTs",
@@ -68,36 +109,32 @@ const reportedUsers: NextPage = () => {
           <Link href={`/admin/users/${params.row.id}`}>
             <a>View Account</a>
           </Link>
-        </Button>
+        </Button>,
       ],
     },
-  ];  
+  ];
 
-  const [rows, setRows] = useState([]);
-  const [id,setId] = useState('');
-  
+  const [rows, setRows] = useState();
+  const [id, setId] = useState("");
+
   useEffect(() => {
     fetch("/api/rows")
       .then((res) => res.json())
       .then((data) => setRows(data));
-  },[]);  
+  }, []);
 
-   
-  const onRowsSelectionHandler = (ids) => {
+  const onRowsSelectionHandler = (ids: { id: string }[]) => {
     const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
     console.log(selectedRowsData);
   };
   const handleRowClick = (params) => {
     console.log(params.row.id);
-    
   };
 
-  const directPage = (ids) => { 
-    return(
-      <Link href="/admin/report/user"></Link>
-    )
+  const directPage = () => {
+    return <Link href="/admin/report/user"></Link>;
   };
-  
+
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
@@ -117,7 +154,6 @@ const reportedUsers: NextPage = () => {
           height: 750,
           backgroundColor: "white",
           borderRadius: "5px",
-          
         }}
       >
         <DataGrid
@@ -127,14 +163,13 @@ const reportedUsers: NextPage = () => {
           pageSize={11}
           rowsPerPageOptions={[5]}
           onSelectionModelChange={(id) => setId(id)}
-          onRowClick={(id) =>  handleRowClick(id)}
+          onRowClick={(id) => handleRowClick(id)}
           components={{
             Toolbar: CustomToolbar,
           }}
         />
       </Box>
     </div>
-    
   );
 };
 
