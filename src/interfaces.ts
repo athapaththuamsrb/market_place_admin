@@ -69,3 +69,15 @@ export type Profile = {
   bannerImage: string;
   profileImage: string;
 };
+
+export type User = {
+  id: string;
+  User_ID: string;
+  Name: string;
+  Date: Date;
+  Total: number;
+  Created: number;
+  Volume: number;
+  Status: string;
+  Type: string;
+};
