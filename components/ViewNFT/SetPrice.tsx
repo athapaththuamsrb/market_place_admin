@@ -18,7 +18,7 @@ import api from "../../lib/api";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
 import { useFormik, Field } from "formik";
-import * as yup from "Yup";
+import * as yup from "yup";
 import { useSignTypedData } from "wagmi";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";

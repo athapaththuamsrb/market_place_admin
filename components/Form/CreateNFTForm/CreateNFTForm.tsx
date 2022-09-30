@@ -20,7 +20,7 @@ import NFTCollection1Address from "../../../contractsData/NFTCollection1-address
 import NFTCollection1Abi from "../../../contractsData/NFTCollection1.json";
 import ConfirmModal from "../../ui/ConfirmModal";
 import { NFT, SalesOrder } from "../../../src/interfaces";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import { ethers } from "ethers";
 const projectId = "2DI7xsXof3jkeXnqqBcZ4QmiLmW"; // <---------- your Infura Project ID
 

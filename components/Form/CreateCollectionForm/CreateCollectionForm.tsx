@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import ModalPopUp from "../../Modal";
 import { useAccount } from "wagmi";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 
 type CreateFormProps = {
   setMsg: (msg: string) => void;
