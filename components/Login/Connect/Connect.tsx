@@ -8,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Container from "@mui/material/Container";
 import InboxIcon from "@mui/icons-material/Inbox";
 import { useIsMounted } from "../../hooks";
+import Title from "../../../components/ui/Title";
 
 export default function Connect() {
   const isMounted = useIsMounted();
@@ -23,7 +24,7 @@ export default function Connect() {
 
   return (
     <Box>
-      <Typography
+      {/* <Typography
         variant="h3"
         gutterBottom
         component="div"
@@ -34,9 +35,10 @@ export default function Connect() {
         }}
       >
         Connect your wallet
-      </Typography>
+      </Typography> */}
+      <Title firstWord="Connect" secondWord="your wallet" />
       <Typography
-        variant="h5"
+        variant="h6"
         gutterBottom
         component="div"
         sx={{
@@ -45,7 +47,8 @@ export default function Connect() {
           p: 5,
         }}
       >
-        Connect with one of our available wallet providers or create a new one.
+        Connect with your Metamask wallet. <br />If you don't have one, you can
+        select the provider and create a new one.
       </Typography>
       <Container maxWidth="sm">
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -62,6 +65,7 @@ export default function Connect() {
                     key={x.id}
                     onClick={(event) => connect(x)}
                     sx={{
+                      backgroundColor:"#fafafa",
                       borderRadius: "16px",
                       borderColor: "primary.main",
                     }}

@@ -22,12 +22,13 @@ import GroupIcon from "@mui/icons-material/Group";
 import PopUp from "../../../components/Admin/Popup";
 import { User } from "../../../src/interfaces";
 import { QuestionMark } from "@mui/icons-material";
+import Title from "../../../components/ui/Title";
 
 function CustomToolbar() {
   return (
     <GridToolbarContainer
       sx={{
-        backgroundColor: "#CA82FF",
+        backgroundColor: "#FCFCFC",
       }}
     >
       <GridToolbarExport
@@ -35,6 +36,8 @@ function CustomToolbar() {
           mx: 1,
           color: "white",
           backgroundColor: "#CA82FF",
+          marginY:0.15,
+          fontSize:16
         }}
       />
     </GridToolbarContainer>
@@ -154,6 +157,7 @@ const viewAdmins: NextPage = () => {
   };
   return (
     <div>
+      <Title firstWord="Admin" secondWord="Dashboard" />
       <Box
         sx={{
           flexGrow: 1,
@@ -166,19 +170,18 @@ const viewAdmins: NextPage = () => {
           borderRadius: "10px",
         }}
       >
+        {" "}
         <Button
           onClick={() => setOpenPopup(true)}
           type="submit"
-          sx={{
-            mx: 1,
-            color: "white",
-            backgroundColor: "#CA82FF",
-            borderColor: "#CA82FF",
-          }}
+          size="small"
+          color="secondary"
           variant="contained"
-          endIcon={<GroupIcon />}
+          endIcon={<GroupIcon color="disabled"/>}
         >
-          Add Admin
+          <Typography color="white" variant="h6" sx={{ fontWeight:500 }}>
+            Add Admin
+          </Typography>
         </Button>
       </Box>
       <Box

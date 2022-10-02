@@ -72,7 +72,7 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
       const res1 = await axios.post("api/createNFT", {
         ...newSalesOrder,
       });
-      props.setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
+      props.setMsg(res1.status === 201 ? "successful!!" : "Try again!!");
       props.setOpen(true);
     } catch (error) {
       props.setOpen(true);
@@ -84,7 +84,7 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
       <div>
         <Dialog
           fullWidth
-          maxWidth="lg"
+          maxWidth="sm"
           open={props.openModal}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -105,22 +105,34 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
           </Stack>
           <br />
           <br />
-          <Typography sx={{ marginBottom: "20px" }} align="center" variant="h3">
-            item Name : {props.salesOrder.name}
+          <Typography
+            sx={{ marginBottom: "20px", fontWeight: 500 }}
+            align="center"
+            variant="h3"
+          >
+            Item Name : {props.salesOrder.name}
           </Typography>
           {/* <Typography sx={{ marginBottom: "20px" }} align="center" variant="h3">
             {`item Price : ${props.salesOrder.nftData.price} ETH`}
           </Typography> */}
-          <Typography sx={{ marginBottom: "20px" }} align="center" variant="h3">
+          <Typography
+            sx={{ marginBottom: "20px", fontWeight: 500 }}
+            align="center"
+            variant="h3"
+          >
             Creator Fee : 0%
           </Typography>
-          <Typography sx={{ marginBottom: "70px" }} align="center" variant="h3">
+          <Typography
+            sx={{ marginBottom: "50px", fontWeight: 500 }}
+            align="center"
+            variant="h3"
+          >
             {`Total Price : ${props.salesOrder.nftData.price} ETH`}
           </Typography>
           <Box textAlign={"center"}>
             <Button
               onClick={addDB}
-              sx={{ width: "20%", marginBottom: "70px" }}
+              sx={{ width: "40%", marginBottom: "50px" }}
               size="medium"
               color="secondary"
               variant="contained"

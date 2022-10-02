@@ -167,11 +167,15 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               />
               <Button
                 component="span"
-                size="large"
+                size="medium"
                 color="secondary"
                 variant="contained"
               >
-                <Typography color="white" variant="h3">
+                <Typography
+                  color="white"
+                  variant="h4"
+                  sx={{ fontWeight: 900, fontSize: 20 }}
+                >
                   Upload Profile Image
                 </Typography>
               </Button>
@@ -217,8 +221,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 color="secondary"
                 variant="contained"
               >
-                <Typography color="white" variant="h3">
-                  Upload Main Image
+                <Typography
+                  color="white"
+                  variant="h4"
+                  sx={{ fontWeight: 900, fontSize: 20 }}
+                >
+                  Upload Banner Image
                 </Typography>
               </Button>
             </label>
@@ -228,7 +236,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             <br />
             <Box>
               <TextField
-                sx={{ marginBottom: "30px" }}
+                sx={{ marginBottom: "20px" }}
                 id="userName"
                 name="userName"
                 label="User Name"
@@ -247,7 +255,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           </Grid>
           <Grid item xs={2}></Grid>
         </Grid>
-        <Box textAlign={"center"} sx={{ marginTop: "70px" }}>
+        <Box textAlign={"center"} sx={{ marginTop: "40px", marginBottom:"40px" }}>
           <Button
             type="submit"
             disabled={
@@ -261,9 +269,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             style={{ borderWidth: "3px" }}
             size="large"
             color="secondary"
-            variant="outlined"
+            variant="contained"
           >
-            <Typography variant="h2" color="secondary">
+            <Typography variant="h3" color="white" sx={{fontSize:30}}>
               Update Profile
             </Typography>
           </Button>

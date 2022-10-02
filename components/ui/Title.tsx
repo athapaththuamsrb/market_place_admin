@@ -8,7 +8,7 @@ interface TitleProps {
 const Title: FC<TitleProps> = (props) => {
   return (
     <div>
-      <Typography sx={{ marginY: "70px" }} variant="h1" align="center">
+      <Typography sx={{ marginTop: "50px", marginBottom:"20px"}} variant="h1" align="center">
         {`${props.firstWord} `}
         <span>
           <Typography

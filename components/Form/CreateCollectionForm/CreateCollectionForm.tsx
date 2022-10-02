@@ -154,11 +154,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           <Grid item xs={2}></Grid>
           <Grid item xs={8} alignSelf="center" textAlign={"center"}>
             <label htmlFor="logoImage">
-              <Typography variant="body2">
-                This image will also be used for navigation. 350 x 350
-                recommended.
-              </Typography>
-              <br />
               {image["logoImage"] && (
                 <Stack alignItems="center">
                   <Avatar
@@ -186,23 +181,22 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               />
               <Button
                 component="span"
-                size="large"
+                size="medium"
                 color="secondary"
                 variant="contained"
               >
-                <Typography color="white" variant="h3">
+                <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
                   Upload logo image
                 </Typography>
               </Button>
-            </label>
-            <br />
-            <br />
-            <label htmlFor="featuredImage">
-              <Typography variant="body2">
-                This image will be used for featuring your collection on the
-                homepage, category pages, or other promotional areas of OpenSea.
-                600 x 400 recommended.
+              <Typography variant="h6" sx={{ fontSize: 13, marginTop: 0.5 }}>
+                This image will also be used for navigation. 350 x 350
+                recommended.
               </Typography>
+              <br />
+            </label>
+
+            <label htmlFor="featuredImage">
               <br />
               {image["featuredImage"] && (
                 <Stack alignItems="center">
@@ -232,23 +226,22 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               />
               <Button
                 component="span"
-                size="large"
+                size="medium"
                 color="secondary"
                 variant="contained"
               >
-                <Typography color="white" variant="h3">
+                <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
                   Upload featured image
                 </Typography>
               </Button>
+              <Typography variant="h6" sx={{ fontSize: 13, marginTop: 0.5 }}>
+                This image will be used for featuring your collection on the
+                homepage, category pages. 600 x 400 recommended.
+              </Typography>
             </label>
             <br />
-            <br />
+
             <label htmlFor="bannerImage">
-              <Typography variant="body2">
-                This image will appear at the top of your collection page. Avoid
-                including too much text in this banner image, as the dimensions
-                change on different devices. 1400 x 350 recommended.
-              </Typography>
               <br />
               {image["bannerImage"] && (
                 <Stack alignItems="center">
@@ -278,18 +271,20 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               />
               <Button
                 component="span"
-                size="large"
+                size="medium"
                 color="secondary"
                 variant="contained"
               >
-                <Typography color="white" variant="h3">
+                <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
                   Upload banner image
                 </Typography>
               </Button>
+              <Typography variant="h6" sx={{ fontSize: 13, marginTop: 0.5 }}>
+                This image will appear at the top of your collection page. 1400
+                x 350 recommended.
+              </Typography>
             </label>
             <br />
-            <br />
-
             <br />
             <Box>
               <TextField
@@ -299,6 +294,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 label="Collection Name"
                 variant="outlined"
                 fullWidth
+                required
                 value={formik.values.collectionName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -308,11 +304,22 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   {formik.errors.collectionName}
                 </Typography>
               ) : null}
+              <TextField
+                sx={{ marginBottom: "30px" }}
+                id="collectionDescription"
+                name="collectionDescription"
+                label="Description"
+                variant="outlined"
+                multiline
+                fullWidth
+                rows={4}
+              />
+              
             </Box>
           </Grid>
           <Grid item xs={2}></Grid>
         </Grid>
-        <Box textAlign={"center"} sx={{ marginTop: "70px" }}>
+        <Box textAlign={"center"} sx={{ marginY: "40px" }}>
           <Button
             type="submit"
             disabled={
@@ -325,13 +332,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 ? true
                 : false
             }
-            style={{ borderWidth: "3px" }}
             size="large"
             color="secondary"
-            variant="outlined"
+            variant="contained"
           >
-            <Typography variant="h2" color="secondary">
-              Update Profile
+            <Typography variant="h3" color="white" sx={{fontSize:30}}>
+              Create Collection
             </Typography>
           </Button>
         </Box>

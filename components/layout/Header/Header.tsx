@@ -114,13 +114,46 @@ export default function Navbar() {
               </Button>
             )}
             <Button
+              href="/explore-collections"
+              size="small"
+              color="primary"
+              variant="outlined"
+              sx={{ marginX: 1 }}
+            >
+              <Typography
+                color="black"
+                variant="h6"
+                sx={{ fontWeight: 500, fontSize: "medium" }}
+              >
+                Explore
+              </Typography>
+            </Button>
+            {/* <Button
               variant="outlined"
               href="/explore-collections"
               sx={{ mx: 1 }}
             >
               Explore
-            </Button>
+            </Button> */}
+
             <Button
+              href="/create"
+              type="submit"
+              size="small"
+              color="secondary"
+              variant="contained"
+              sx={{ marginX: 1 }}
+            >
+              <Typography
+                color="white"
+                variant="h6"
+                sx={{ fontWeight: 500, fontSize: "medium" }}
+              >
+                Create
+              </Typography>
+            </Button>
+
+            {/* <Button
               variant="contained"
               href="/create"
               sx={{
@@ -131,12 +164,27 @@ export default function Navbar() {
               }}
             >
               Create
-            </Button>
+            </Button> */}
             {/* MetaMask Connect */}
             {isMounted && connectors[0].ready && !ethereumAccount && (
-              <Button variant="outlined" onClick={() => connect(connectors[0])}>
-                Connect Metamask
+              <Button
+                onClick={() => connect(connectors[0])}
+                size="small"
+                color="primary"
+                variant="outlined"
+                sx={{ marginX: 1 }}
+              >
+                <Typography
+                  color="black"
+                  variant="h6"
+                  sx={{ fontWeight: 500, fontSize: "medium" }}
+                >
+                  Connect Metamask
+                </Typography>
               </Button>
+              // <Button variant="outlined" onClick={() => connect(connectors[0])}>
+              //   Connect Metamask
+              // </Button>
             )}
             {isMounted && ethereumAccount && (
               <div>
@@ -166,11 +214,11 @@ export default function Navbar() {
                   }}
                 >
                   <MenuItem onClick={handleClose}>
-                    <AccountCircleOutlinedIcon />
+                    <AccountCircleOutlinedIcon sx={{ marginRight: 1 }}/>
                     <Link href={"/account"}>Profile</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <CollectionsBookmarkIcon />
+                    <CollectionsBookmarkIcon sx={{ marginRight: 1 }}/>
                     <Link href={"/account/collection"}>My Collection</Link>
                   </MenuItem>
                   <MenuItem
@@ -179,7 +227,7 @@ export default function Navbar() {
                       handleClose();
                     }}
                   >
-                    <Logout />
+                    <Logout sx={{ marginRight: 1 }}/>
                     Disconnect
                   </MenuItem>
                 </Menu>

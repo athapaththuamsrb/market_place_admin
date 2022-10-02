@@ -80,7 +80,7 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
           <Typography
             variant="h5"
             component="div"
-            style={{ flexGrow: 1, fontWeight: 500 }}
+            style={{ flexGrow: 1, fontWeight: 600 }}
           >
             Admin Details Form
           </Typography>
@@ -154,14 +154,6 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
 
       <DialogActions>
         <Button
-          // variant="contained"
-          // sx={{
-          //   mx: 1,
-          //   color: "#777777",
-          //   backgroundColor: "white",
-          // }}
-          variant="outlined"
-          sx={{ mx: 1 }}
           onClick={() => {
             setName("");
             setUser_ID("");
@@ -171,21 +163,32 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
             setEmailAddressError(false);
             setOpenPopup(false);
           }}
+          size="small"
+          color="primary"
+          variant="outlined"
         >
-          Cancel
+          <Typography
+            color="black"
+            variant="h6"
+            sx={{ fontWeight: 500, fontSize: "medium" }}
+          >
+            Cancel
+          </Typography>
         </Button>
         <Button
-          variant="contained"
-          type="submit"
           onClick={() => handleSubmit()}
-          sx={{
-            mx: 1,
-            color: "white",
-            backgroundColor: "#CA82FF",
-            borderColor: "#CA82FF",
-          }}
+          type="submit"
+          size="small"
+          color="secondary"
+          variant="contained"
         >
-          Submit
+          <Typography
+            color="white"
+            variant="h6"
+            sx={{ fontWeight: 500, fontSize: "medium" }}
+          >
+            Submit
+          </Typography>
         </Button>
       </DialogActions>
     </Dialog>

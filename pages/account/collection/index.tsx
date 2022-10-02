@@ -6,6 +6,8 @@ import { useAccount, useConnect } from "wagmi";
 import { useGetMyNFT, useIsMounted } from "../../../components/hooks";
 import Connect from "../../../components/Login/Connect";
 import LinearProgress from "@mui/material/LinearProgress";
+import Title from "../../../components/ui/Title";
+
 const Collection: NextPage = (props) => {
   const isMounted = useIsMounted();
   const { activeConnector } = useConnect();
@@ -28,14 +30,25 @@ const Collection: NextPage = (props) => {
   return isMounted && activeConnector ? (
     <Box sx={{ pt: 5 }}>
       <Container>
-        <Typography variant="h1" gutterBottom>
+        <Title firstWord="My" secondWord="Collection" />
+        {/* <Typography variant="h1" gutterBottom>
           My Collection
-        </Typography>
-        <Typography variant="body2" gutterBottom>
+        </Typography> */}
+        <Typography variant="h6" gutterBottom align="center">
           Create, curate, and manage collections of unique NFTs to share and
           sell.
         </Typography>
         <Button
+          href="/account/collection/create"
+          size="small"
+          color="secondary"
+          variant="contained"
+        >
+          <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
+            Create a collection
+          </Typography>
+        </Button>
+        {/* <Button
           variant="contained"
           sx={{
             color: "white",
@@ -45,17 +58,19 @@ const Collection: NextPage = (props) => {
           href="/account/collection/create"
         >
           Create a collection
-        </Button>
+        </Button> */}
         {isMounted && activeConnector ? (
           <Box>
+            <br/>
             {isPending && (
               <Box sx={{ width: "100%" }}>
                 <LinearProgress />
               </Box>
             )}
+            <br/>
             {data.length === 0 ? (
               <Typography color="black" align="center" variant="h2">
-                No NFT Exit
+                No NFT Exists
               </Typography>
             ) : (
               <NFTGrid nftCardEls={nftEls} />

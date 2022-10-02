@@ -284,7 +284,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             </Box>
           </Grid>
         </Grid>
-        <Box textAlign={"center"}>
+        <Box
+          textAlign={"center"}
+          sx={{
+            marginBottom: "50px",
+          }}
+        >
           <Button
             type="submit"
             disabled={
@@ -298,12 +303,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             }
             onClick={() => props.setOpenModal(true)}
             style={{ borderWidth: "3px" }}
-            sx={{ marginTop: "70px" }}
+            sx={{ marginTop: "50px" }}
             size="large"
             color="secondary"
-            variant="outlined"
+            variant="contained"
           >
-            <Typography variant="h2" color="secondary">
+            <Typography variant="h2" color="white" sx={{fontSize:30}}>
               Create
             </Typography>
           </Button>

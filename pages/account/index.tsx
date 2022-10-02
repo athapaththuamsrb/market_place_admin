@@ -99,16 +99,16 @@ const MyNFTs: NextPage = (props) => {
         <Typography variant="h4" sx={{ mt: 1 }} gutterBottom>
           Account balance: {balance?.formatted} {balance?.symbol}
         </Typography>
+
         <Button
           variant="contained"
-          sx={{
-            color: "white",
-            backgroundColor: "blue",
-            my: 3,
-          }}
+          size="small"
+          color="secondary"
           href="/account/edit"
         >
-          Edit profile
+          <Typography color="white" variant="h6">
+            Edit profile
+          </Typography>
         </Button>
         {isMounted && activeConnector ? (
           <Box>
