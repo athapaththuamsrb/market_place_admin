@@ -11,30 +11,21 @@
 import { NextPage } from "next";
 import {
   DataGrid,
-  GridActionsCellItem,
+  GridActionsColDef,
+  GridColDef,
   GridRowParams,
   GridToolbarContainer,
   GridToolbarExport,
-  GridColDef,
 } from "@mui/x-data-grid";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Typography,
 } from "@mui/material";
 
-import BlockIcon from "@mui/icons-material/Block";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import { SetStateAction, useEffect, useState } from "react";
-import Tooltip from "@mui/material/Tooltip";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const reportedUsers: NextPage = (props) => {
+const allUsers: NextPage = () => {
   // const col:{
   //   field: string;
   //   headerName: string;
@@ -42,7 +33,7 @@ const reportedUsers: NextPage = (props) => {
   //   width: number;
   //   align: string;
   // }[]={}
-  const columns = [
+  const column =  [
     {
       field: "id",
       headerName: "ID",
@@ -105,7 +96,7 @@ const reportedUsers: NextPage = (props) => {
       width: 200,
       headerName: "View",
       getActions: (params: GridRowParams) => [
-        <Button variant="solid" color="primary">
+        <Button variant="outlined" color="primary">
           <Link href={`/admin/users/${params.row.id}`}>
             <a>View Account</a>
           </Link>
@@ -114,7 +105,7 @@ const reportedUsers: NextPage = (props) => {
     },
   ];
 
-  const [rows, setRows] = useState();
+  const [rows, setRows] = useState([]);
   const [id, setId] = useState("");
 
   useEffect(() => {
@@ -122,18 +113,6 @@ const reportedUsers: NextPage = (props) => {
       .then((res) => res.json())
       .then((data) => setRows(data));
   }, []);
-
-  const onRowsSelectionHandler = (ids: { id: string }[]) => {
-    const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
-    console.log(selectedRowsData);
-  };
-  const handleRowClick = (params) => {
-    console.log(params.row.id);
-  };
-
-  const directPage = () => {
-    return <Link href="/admin/report/user"></Link>;
-  };
 
   function CustomToolbar() {
     return (
@@ -159,11 +138,8 @@ const reportedUsers: NextPage = (props) => {
         <DataGrid
           sx={{ m: 0 }}
           rows={rows}
-          columns={columns}
-          pageSize={11}
+          columns={column}
           rowsPerPageOptions={[5]}
-          onSelectionModelChange={(id) => setId(id)}
-          onRowClick={(id) => handleRowClick(id)}
           components={{
             Toolbar: CustomToolbar,
           }}
@@ -173,4 +149,4 @@ const reportedUsers: NextPage = (props) => {
   );
 };
 
-export default reportedUsers;
+export default allUsers;

@@ -5,16 +5,14 @@ import {
   GridRowParams,
   GridToolbarContainer,
   GridToolbarExport,
-  GridColDef,
 } from "@mui/x-data-grid";
 import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import VerifiedIcon from "@mui/icons-material/Verified";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
-import { Container } from "@mui/system";
 import PopUp from "../../../components/Admin/Popup";
+import { User } from "../../../src/interfaces";
 
 function CustomToolbar() {
   return (
@@ -24,8 +22,8 @@ function CustomToolbar() {
   );
 }
 
-const reportedUsers: NextPage = (props) => {
-  const columns: GridColDef[] = [
+const viewAdmins: NextPage = () => {
+  const columns = [
     {
       field: "id",
       headerName: "ID",
@@ -95,12 +93,12 @@ const reportedUsers: NextPage = (props) => {
 
   const onRowsSelectionHandler = (ids: any[]) => {
     const selectedRowsData = ids.map((id: any) =>
-      users.find((row: { id: any }) => row.id === id)
+      users.find((row: { id: string }) => row.id === id)
     );
     console.log(selectedRowsData);
   };
-  const [admins, setAdmins] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [admins, setAdmins] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [openPopup, setOpenPopup] = useState(false);
   const [open, setOpen] = useState(false);
   const [id, setId] = useState("");
@@ -109,7 +107,7 @@ const reportedUsers: NextPage = (props) => {
     fetch("http://localhost:8000/users")
       .then((res) => res.json())
       .then((data) => {
-        setAdmins(data.filter((user) => user.Type === "Admin"));
+        setAdmins(data.filter((user: User) => user.Type === "Admin"));
         setUsers(data);
       });
   }, [openPopup, open]);
@@ -122,11 +120,10 @@ const reportedUsers: NextPage = (props) => {
   const handleClose = (result: string, id: string) => () => {
     setOpen(false);
     if (result == "Yes") {
-      const user: { id: string; Type: string } = admins.find(
-        (user) => user.id === id
-      );
+      const user: User = admins.find((user) => user.id === id)!;
       console.log(user);
       user.Type = "User";
+
       const res = fetch(`http://localhost:8000/users/${user.id}`, {
         method: "PUT",
         body: JSON.stringify(user),
@@ -205,10 +202,9 @@ const reportedUsers: NextPage = (props) => {
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
         users={users}
-        setUsers={setUsers}
       ></PopUp>
     </div>
   );
 };
 
-export default reportedUsers;
+export default viewAdmins;

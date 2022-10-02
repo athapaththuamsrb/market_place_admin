@@ -7,21 +7,18 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { User } from "../../../src/interfaces";
+import axios, { Axios } from "axios";
+
 type AdminPopupProps = {
   openPopup: boolean;
-  setOpenPopup: (open: boolean) => void;
-  users;
-  setUsers;
-  // users: { id: string; key: string }[];
-  // setMsg: (msg: string) => void;
-  // msg: string;
+  setOpenPopup: (openPopup: boolean) => void;
+  users: User[];
 };
 const Popup: FC<AdminPopupProps> = ({
   openPopup,
   setOpenPopup,
   users,
-  setUsers,
 }) => {
   const [Name, setName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
@@ -30,10 +27,7 @@ const Popup: FC<AdminPopupProps> = ({
   const [emailAddressError, setEmailAddressError] = useState(false);
   const [User_IDError, setUser_IDError] = useState(false);
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLInputElement | HTMLInputElement>
-  ) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setUser_IDError(false);
     setNameError(false);
     setEmailAddressError(false);
@@ -51,38 +45,30 @@ const Popup: FC<AdminPopupProps> = ({
     }
 
     if (Name && emailAddress && User_ID) {
-      //console.log(User_ID, Name, emailAddress);
-      // const response = await fetch("http://localhost:8000/users", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     User_ID,
-      //     Name,
-      //     Date: "2022/04/04",
-      //     Total: 6,
-      //     Created: 8,
-      //     Volume: 10,
-      //     Status: "active",
-      //     Type: "Admin",
-      //   }),
-      //   headers: { "Content-type": "application/json" },
-      // });
+      const newAdmin: User = users.find(
+        (user: User) => user.User_ID === User_ID
+      )!;
+      newAdmin.Type = "Admin";
+      axios
+        .put(`http://localhost:8000/users/${newAdmin.id}`, newAdmin)
+        .then(() => {
+          setEmailAddress("");
+          setName("");
+          setUser_ID("");
+          setOpenPopup(false);
+          alert("successfully added");
+          console.log("vxjhbfv");
+        });
+      // const response = await fetch(
+      //   `http://localhost:8000/users/${newAdmin.id}`,
+      //   {
+      //     method: "PUT",
+      //     body: JSON.stringify(newAdmin),
+      //     headers: { "Content-type": "application/json" },
+      //   }
+      // );
       // const data = await response.json();
       // console.log(data);
-      // setOpenPopup(false);
-      const newAdmin = users.find((user) => user.User_ID === User_ID);
-      newAdmin.Type = "Admin";
-      //TODO fetch -> axios
-      const response = await fetch(
-        `http://localhost:8000/users/${newAdmin.id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(newAdmin),
-          headers: { "Content-type": "application/json" },
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-      setOpenPopup(false);
     }
   };
 
@@ -169,7 +155,7 @@ const Popup: FC<AdminPopupProps> = ({
         <Button
           variant="contained"
           type="submit"
-          onClick={(e) => handleSubmit(e)}
+          onClick={() => handleSubmit()}
         >
           Submit
         </Button>
