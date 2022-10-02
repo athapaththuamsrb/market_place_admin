@@ -30,7 +30,7 @@ export default function BasicModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Title firstWord="Welcome, " secondWord="User" />
+          <Title firstWord="Welcome to" secondWord="Exclusives" />
           <Grid
             container
             direction="row"
@@ -45,7 +45,14 @@ export default function BasicModal() {
               </Button>
             </Link>
             <Link href="/create">
-              <Button size="large" color="primary" variant="contained">
+              <Button
+                size="large"
+                color="primary"
+                variant="contained"
+                sx={{
+                  marginX: "10px",
+                }}
+              >
                 <Typography color="white" variant="h3">
                   Create
                 </Typography>

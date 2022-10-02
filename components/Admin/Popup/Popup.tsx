@@ -9,17 +9,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
 import { User } from "../../../src/interfaces";
 import axios, { Axios } from "axios";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../../../src/theme";
 
 type AdminPopupProps = {
   openPopup: boolean;
   setOpenPopup: (openPopup: boolean) => void;
   users: User[];
 };
-const Popup: FC<AdminPopupProps> = ({
-  openPopup,
-  setOpenPopup,
-  users,
-}) => {
+const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
   const [Name, setName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [User_ID, setUser_ID] = useState("");
@@ -56,8 +54,6 @@ const Popup: FC<AdminPopupProps> = ({
           setName("");
           setUser_ID("");
           setOpenPopup(false);
-          alert("successfully added");
-          console.log("vxjhbfv");
         });
       // const response = await fetch(
       //   `http://localhost:8000/users/${newAdmin.id}`,
@@ -74,9 +70,18 @@ const Popup: FC<AdminPopupProps> = ({
 
   return (
     <Dialog open={openPopup}>
-      <DialogTitle>
+      <DialogTitle
+        sx={{
+          backgroundColor: "#CA82FF",
+          color: "white",
+        }}
+      >
         <div style={{ display: "flex" }}>
-          <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+          <Typography
+            variant="h5"
+            component="div"
+            style={{ flexGrow: 1, fontWeight: 500 }}
+          >
             Admin Details Form
           </Typography>
 
@@ -91,11 +96,20 @@ const Popup: FC<AdminPopupProps> = ({
               setOpenPopup(false);
             }}
           >
-            <CloseIcon color="error" />
+            <CloseIcon
+              sx={{
+                color: "white",
+              }}
+            />
           </IconButton>
         </div>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent
+        dividers
+        sx={{
+          fontWeight: 100,
+        }}
+      >
         <TextField
           value={User_ID}
           onChange={(e) => setUser_ID(e.target.value)}
@@ -137,9 +151,17 @@ const Popup: FC<AdminPopupProps> = ({
           error={emailAddressError}
         />
       </DialogContent>
+
       <DialogActions>
         <Button
+          // variant="contained"
+          // sx={{
+          //   mx: 1,
+          //   color: "#777777",
+          //   backgroundColor: "white",
+          // }}
           variant="outlined"
+          sx={{ mx: 1 }}
           onClick={() => {
             setName("");
             setUser_ID("");
@@ -156,6 +178,12 @@ const Popup: FC<AdminPopupProps> = ({
           variant="contained"
           type="submit"
           onClick={() => handleSubmit()}
+          sx={{
+            mx: 1,
+            color: "white",
+            backgroundColor: "#CA82FF",
+            borderColor: "#CA82FF",
+          }}
         >
           Submit
         </Button>

@@ -6,18 +6,37 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
 import PopUp from "../../../components/Admin/Popup";
 import { User } from "../../../src/interfaces";
+import { QuestionMark } from "@mui/icons-material";
 
 function CustomToolbar() {
   return (
-    <GridToolbarContainer>
-      <GridToolbarExport />
+    <GridToolbarContainer
+      sx={{
+        backgroundColor: "#CA82FF",
+      }}
+    >
+      <GridToolbarExport
+        sx={{
+          mx: 1,
+          color: "white",
+          backgroundColor: "#CA82FF",
+        }}
+      />
     </GridToolbarContainer>
   );
 }
@@ -28,7 +47,7 @@ const viewAdmins: NextPage = () => {
       field: "id",
       headerName: "ID",
       type: "string",
-      align: "center",
+      align: "left",
       width: 50,
     },
     {
@@ -42,14 +61,14 @@ const viewAdmins: NextPage = () => {
       field: "Name",
       headerName: "Name",
       type: "string",
-      align: "center",
+      align: "left",
       width: 150,
     },
     {
       field: "Date",
       headerName: "Joined Date",
       type: "Date",
-      align: "center",
+      align: "left",
       width: 100,
     },
     {
@@ -141,7 +160,7 @@ const viewAdmins: NextPage = () => {
           position: "relative",
           width: "145px",
           left: "75%",
-          marginTop: "100px",
+          marginTop: "30px",
           marginBottom: "10px",
           height: 40,
           borderRadius: "10px",
@@ -150,7 +169,12 @@ const viewAdmins: NextPage = () => {
         <Button
           onClick={() => setOpenPopup(true)}
           type="submit"
-          color="primary"
+          sx={{
+            mx: 1,
+            color: "white",
+            backgroundColor: "#CA82FF",
+            borderColor: "#CA82FF",
+          }}
           variant="contained"
           endIcon={<GroupIcon />}
         >
@@ -163,14 +187,20 @@ const viewAdmins: NextPage = () => {
           width: "72%",
           marginX: "auto",
           marginTop: "10px",
-          marginBottom: "100px",
+          marginBottom: "50px",
           height: 750,
           backgroundColor: "white",
           borderRadius: "10px",
         }}
       >
         <DataGrid
-          sx={{ m: 2 }}
+          sx={{
+            m: 2,
+            fontWeight: 400,
+            align: "center",
+            backgroundColor: "#fcfcfc",
+            borderRadius: "10px",
+          }}
           rows={admins}
           columns={columns}
           pageSize={12}
@@ -187,7 +217,12 @@ const viewAdmins: NextPage = () => {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-          {"Confirm Block User " + id + "?"}
+          {"Are you sure?"}
+          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 300 }}>
+            {"Are you sure that you want to remove admin privileges from " +
+              id +
+              "?"}
+          </Typography>
         </DialogTitle>
         <DialogActions>
           <Button autoFocus onClick={handleClose("Yes", id)}>

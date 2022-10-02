@@ -79,11 +79,11 @@ export default function Navbar() {
                 flexShrink: 0,
               }}
             >
-              <Box>
+              <Box marginRight="5px">
                 <Image
                   height={30}
                   width={30}
-                  src={"/android-chrome-512x512.png"}
+                  src={"/logo-background.png"}
                   alt={"logo"}
                   loading="lazy"
                 />
@@ -121,19 +121,20 @@ export default function Navbar() {
               Explore
             </Button>
             <Button
-              variant="outlined"
+              variant="contained"
               href="/create"
               sx={{
                 mx: 1,
                 color: "white",
-                backgroundColor: "blue",
+                backgroundColor: "#CA82FF",
+                borderColor:"#CA82FF",
               }}
             >
               Create
             </Button>
             {/* MetaMask Connect */}
             {isMounted && connectors[0].ready && !ethereumAccount && (
-              <Button variant="text" onClick={() => connect(connectors[0])}>
+              <Button variant="outlined" onClick={() => connect(connectors[0])}>
                 Connect Metamask
               </Button>
             )}
