@@ -17,12 +17,13 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Title from "../../components/ui/Title";
 import AdminMenu from "../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import GroupIcon from "@mui/icons-material/Group";
+import axios from "axios";
 
 const allUsers: NextPage = () => {
   const column = [
@@ -99,11 +100,23 @@ const allUsers: NextPage = () => {
 
   const [rows, setRows] = useState([]);
   const [id, setId] = useState("");
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users")
-      .then((res) => res.json())
-      .then((data) => setRows(data));
+    setTimeout(() => {
+      axios
+        .get("http://localhost:8000/users")
+        .then((res) => {
+          setRows(res.data);
+          setIsPending(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setError(error.message);
+        });
+    }, 300);
   }, []);
 
   function CustomToolbar() {
@@ -127,8 +140,12 @@ const allUsers: NextPage = () => {
   }
   return (
     <div>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title firstWord="Admin" secondWord="Dashboard" />
-
       <Grid
         container
         direction="row"
@@ -140,7 +157,7 @@ const allUsers: NextPage = () => {
             size="small"
             color="secondary"
             variant="contained"
-            endIcon={<AddCircleIcon color="disabled" />}
+            endIcon={<GroupIcon color="disabled" />}
             sx={{
               marginX: "20px",
             }}

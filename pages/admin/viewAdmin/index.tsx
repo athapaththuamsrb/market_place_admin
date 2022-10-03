@@ -15,6 +15,7 @@ import {
   DialogTitle,
   Typography,
   Grid,
+  LinearProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ import AdminMenu from "../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../components/ui/Title";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import axios from "axios";
 
 function CustomToolbar() {
   return (
@@ -127,14 +129,24 @@ const viewAdmins: NextPage = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [open, setOpen] = useState(false);
   const [id, setId] = useState("");
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setAdmins(data.filter((user: User) => user.Type === "Admin"));
-        setUsers(data);
-      });
+    setTimeout(() => {
+      axios
+        .get("http://localhost:8000/users")
+        .then((res) => {
+          setUsers(res.data);
+          setAdmins(res.data.filter((user: User) => user.Type === "Admin"));
+          setIsPending(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setError(error.message);
+        });
+    }, 300);
   }, [openPopup, open]);
 
   const handleClickOpen = (id: string) => {
@@ -148,18 +160,27 @@ const viewAdmins: NextPage = () => {
       const user: User = admins.find((user) => user.id === id)!;
       console.log(user);
       user.Type = "User";
-
-      const res = fetch(`http://localhost:8000/users/${user.id}`, {
-        method: "PUT",
-        body: JSON.stringify(user),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      setTimeout(() => {
+        axios
+          .put(`http://localhost:8000/users/${user.id}`, JSON.stringify(user))
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
       });
     }
   };
   return (
     <div>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title firstWord="Admin" secondWord="Panel" />
 
       <Grid

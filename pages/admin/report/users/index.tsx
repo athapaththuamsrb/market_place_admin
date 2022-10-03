@@ -13,6 +13,7 @@ import {
   DialogActions,
   DialogTitle,
   Grid,
+  LinearProgress,
   Link,
   Typography,
 } from "@mui/material";
@@ -24,6 +25,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { User } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Title from "../../../../components/ui/Title";
+import axios from "axios";
 
 function CustomToolbar() {
   return (
@@ -120,13 +122,23 @@ const reportedUsers: NextPage = () => {
   const [openVerify, setOpenVerify] = useState(false);
   const [id, setId] = useState("");
   const [status, setStatus] = useState("");
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setRows(data.filter((user: User) => user.Status === "reported"));
-      });
+    setTimeout(() => {
+      axios
+        .get("http://localhost:8000/users")
+        .then((res) => {
+          setRows(res.data.filter((user: User) => user.Status === "reported"));
+          setIsPending(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setError(error.message);
+        });
+    },300);
   }, [openBlock, openVerify]);
 
   const handleClickOpenBlock = (id: string) => {
@@ -140,12 +152,17 @@ const reportedUsers: NextPage = () => {
       const user: User = rows.find((user) => user.id === id)!;
       console.log(user);
       user.Status = "Blocked";
-      const res = fetch(`http://localhost:8000/users/${user.id}`, {
-        method: "PUT",
-        body: JSON.stringify(user),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      setTimeout(() => {
+        axios
+          .put(`http://localhost:8000/users/${user.id}`, JSON.stringify(user))
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
       });
     }
   };
@@ -160,12 +177,17 @@ const reportedUsers: NextPage = () => {
     if (result == "Yes") {
       const user: User = rows.find((user) => user.id === id)!;
       user.Status = "Active";
-      const res = fetch(`http://localhost:8000/users/${user.id}`, {
-        method: "PUT",
-        body: JSON.stringify(user),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      setTimeout(() => {
+        axios
+          .put(`http://localhost:8000/users/${user.id}`, JSON.stringify(user))
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
       });
     }
   };
@@ -179,6 +201,11 @@ const reportedUsers: NextPage = () => {
 
   return (
     <div>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title firstWord="Reported" secondWord="Users" />
       <Grid
         container
