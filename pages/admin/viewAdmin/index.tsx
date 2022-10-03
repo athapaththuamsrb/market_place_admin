@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  Grid,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
@@ -21,8 +22,10 @@ import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
 import PopUp from "../../../components/Admin/Popup";
 import { User } from "../../../src/interfaces";
-import { QuestionMark } from "@mui/icons-material";
+import AdminMenu from "../../../components/Admin/AdminMenu";
+import Link from "@mui/material/Link";
 import Title from "../../../components/ui/Title";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function CustomToolbar() {
   return (
@@ -36,8 +39,8 @@ function CustomToolbar() {
           mx: 1,
           color: "white",
           backgroundColor: "#CA82FF",
-          marginY:0.15,
-          fontSize:16
+          marginY: 0.15,
+          fontSize: 16,
         }}
       />
     </GridToolbarContainer>
@@ -157,8 +160,8 @@ const viewAdmins: NextPage = () => {
   };
   return (
     <div>
-      <Title firstWord="Admin" secondWord="Dashboard" />
-      <Box
+      <Title firstWord="Admin" secondWord="Panel" />
+      {/* <Box
         sx={{
           flexGrow: 1,
           position: "relative",
@@ -170,7 +173,7 @@ const viewAdmins: NextPage = () => {
           borderRadius: "10px",
         }}
       >
-        {" "}
+       
         <Button
           onClick={() => setOpenPopup(true)}
           type="submit"
@@ -183,7 +186,46 @@ const viewAdmins: NextPage = () => {
             Add Admin
           </Typography>
         </Button>
-      </Box>
+      </Box> */}
+
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Link href="/admin" underline="none">
+          <Button
+            size="small"
+            color="secondary"
+            variant="contained"
+            endIcon={<GroupIcon color="disabled" />}
+            sx={{
+              marginX: "40px",
+            }}
+          >
+            <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
+              Admin Dashboard
+            </Typography>
+          </Button>
+        </Link>
+        <AdminMenu />
+        <Button
+          onClick={() => setOpenPopup(true)}
+          type="submit"
+          size="small"
+          color="secondary"
+          variant="contained"
+          endIcon={<AddCircleIcon color="disabled" />}
+          sx={{
+            marginX: "40px",
+          }}
+        >
+          <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
+            Add Admin
+          </Typography>
+        </Button>
+      </Grid>
       <Box
         sx={{
           flexGrow: 1,

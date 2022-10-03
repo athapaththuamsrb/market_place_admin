@@ -17,63 +17,55 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import {
-  Box,
-  Button,
-} from "@mui/material";
-
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Title from "../../components/ui/Title";
+import AdminMenu from "../../components/Admin/AdminMenu";
+import Link from "@mui/material/Link";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 const allUsers: NextPage = () => {
-  // const col:{
-  //   field: string;
-  //   headerName: string;
-  //   type: string;
-  //   width: number;
-  //   align: string;
-  // }[]={}
-  const column =  [
+  const column = [
     {
       field: "id",
       headerName: "ID",
-      type: "number",
+      type: "string",
       width: 50,
-      align: "center",
+      align: "left",
     },
     {
       field: "User_ID",
       headerName: "User_ID",
       type: "string",
-      width: 300,
+      width: 250,
       align: "center",
     },
     {
       field: "Name",
       headerName: "Name",
       type: "string",
-      width: 250,
-      align: "center",
+      width: 150,
+      align: "left",
     },
     {
       field: "Date",
       headerName: "Joined Date",
       type: "Date",
-      width: 150,
-      align: "center",
+      width: 100,
+      align: "left",
     },
     {
       field: "Total",
       headerName: "Total NFTs",
       type: "Number",
-      width: 150,
+      width: 100,
       align: "center",
     },
     {
       field: "Created",
       headerName: "Created NFTs",
       type: "Number",
-      width: 150,
+      width: 100,
       align: "center",
     },
     {
@@ -87,8 +79,8 @@ const allUsers: NextPage = () => {
       field: "Status",
       headerName: "Status",
       type: "string",
-      width: 150,
-      align: "center",
+      width: 100,
+      align: "left",
     },
     {
       field: "actions",
@@ -96,8 +88,8 @@ const allUsers: NextPage = () => {
       width: 200,
       headerName: "View",
       getActions: (params: GridRowParams) => [
-        <Button variant="outlined" color="primary">
-          <Link href={`/admin/users/${params.row.id}`}>
+        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+          <Link href={`/admin/users/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
         </Button>,
@@ -116,27 +108,71 @@ const allUsers: NextPage = () => {
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
+      <GridToolbarContainer
+        sx={{
+          backgroundColor: "#FCFCFC",
+        }}
+      >
+        <GridToolbarExport
+          sx={{
+            mx: 1,
+            color: "white",
+            backgroundColor: "#CA82FF",
+            marginY: 0.15,
+            fontSize: 16,
+          }}
+        />
       </GridToolbarContainer>
     );
   }
   return (
     <div>
+      <Title firstWord="Admin" secondWord="Dashboard" />
+
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Link href="/admin/viewAdmin" underline="none">
+          <Button
+            size="small"
+            color="secondary"
+            variant="contained"
+            endIcon={<AddCircleIcon color="disabled" />}
+            sx={{
+              marginX: "20px",
+            }}
+          >
+            <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
+              Admin Panel
+            </Typography>
+          </Button>
+        </Link>
+        <AdminMenu />
+      </Grid>
+
       <Box
         sx={{
           flexGrow: 1,
-          width: "85%",
+          width: "72%",
           marginX: "auto",
-          marginTop: "100px",
-          marginBottom: "100px",
+          marginTop: "10px",
+          marginBottom: "50px",
           height: 750,
           backgroundColor: "white",
-          borderRadius: "5px",
+          borderRadius: "10px",
         }}
       >
         <DataGrid
-          sx={{ m: 0 }}
+          sx={{
+            m: 2,
+            fontWeight: 400,
+            align: "center",
+            backgroundColor: "#fcfcfc",
+            borderRadius: "10px",
+          }}
           rows={rows}
           columns={column}
           rowsPerPageOptions={[5]}
