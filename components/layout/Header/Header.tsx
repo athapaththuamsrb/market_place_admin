@@ -9,7 +9,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import { useTheme } from "@mui/material/styles";
 import SearchBar from "./Search";
-import Link from "next/link";
+import Link from "@mui/material/Link";
 import Image from "next/image";
 import Button from "@mui/material/Button";
 import RenderMobileMenu from "./RenderMobileMenu";
@@ -67,7 +67,7 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar sx={{ backgroundColor: "white" }}>
-          <Link href="/">
+          <Link href="/" underline="none">
             <Box
               sx={{
                 display: "flex",
@@ -214,12 +214,16 @@ export default function Navbar() {
                   }}
                 >
                   <MenuItem onClick={handleClose}>
-                    <AccountCircleOutlinedIcon sx={{ marginRight: 1 }}/>
-                    <Link href={"/account"}>Profile</Link>
+                    <AccountCircleOutlinedIcon sx={{ marginRight: 1 }} />
+                    <Link href={"/account"} underline="none">
+                      Profile
+                    </Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <CollectionsBookmarkIcon sx={{ marginRight: 1 }}/>
-                    <Link href={"/account/collection"}>My Collection</Link>
+                    <CollectionsBookmarkIcon sx={{ marginRight: 1 }} />
+                    <Link href={"/account/collection"} underline="none">
+                      My Collection
+                    </Link>
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
@@ -227,7 +231,7 @@ export default function Navbar() {
                       handleClose();
                     }}
                   >
-                    <Logout sx={{ marginRight: 1 }}/>
+                    <Logout sx={{ marginRight: 1 }} />
                     Disconnect
                   </MenuItem>
                 </Menu>
