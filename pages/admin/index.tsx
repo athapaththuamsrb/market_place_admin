@@ -101,7 +101,7 @@ const allUsers: NextPage = () => {
   const [id, setId] = useState("");
 
   useEffect(() => {
-    fetch("/api/rows")
+    fetch("http://localhost:8000/users")
       .then((res) => res.json())
       .then((data) => setRows(data));
   }, []);

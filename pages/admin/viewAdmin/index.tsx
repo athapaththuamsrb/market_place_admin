@@ -25,7 +25,7 @@ import { User } from "../../../src/interfaces";
 import AdminMenu from "../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../components/ui/Title";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 function CustomToolbar() {
   return (
@@ -161,32 +161,6 @@ const viewAdmins: NextPage = () => {
   return (
     <div>
       <Title firstWord="Admin" secondWord="Panel" />
-      {/* <Box
-        sx={{
-          flexGrow: 1,
-          position: "relative",
-          width: "145px",
-          left: "75%",
-          marginTop: "30px",
-          marginBottom: "10px",
-          height: 40,
-          borderRadius: "10px",
-        }}
-      >
-       
-        <Button
-          onClick={() => setOpenPopup(true)}
-          type="submit"
-          size="small"
-          color="secondary"
-          variant="contained"
-          endIcon={<GroupIcon color="disabled"/>}
-        >
-          <Typography color="white" variant="h6" sx={{ fontWeight:500 }}>
-            Add Admin
-          </Typography>
-        </Button>
-      </Box> */}
 
       <Grid
         container
@@ -201,7 +175,7 @@ const viewAdmins: NextPage = () => {
             variant="contained"
             endIcon={<GroupIcon color="disabled" />}
             sx={{
-              marginX: "40px",
+              marginX: "10px",
             }}
           >
             <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
@@ -218,7 +192,7 @@ const viewAdmins: NextPage = () => {
           variant="contained"
           endIcon={<AddCircleIcon color="disabled" />}
           sx={{
-            marginX: "40px",
+            marginX: "10px",
           }}
         >
           <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>

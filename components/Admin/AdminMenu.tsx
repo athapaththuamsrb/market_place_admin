@@ -8,6 +8,7 @@ import CollectionsIcon from "@mui/icons-material/Collections";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Typography } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
+import Link from "@mui/material/Link";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -93,18 +94,28 @@ export default function CustomizedMenus() {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
-          <ImageIcon />
-          Reported NFTs
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          <PersonIcon />
-          Reported Users
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          <CollectionsIcon />
-          Reported Collections
-        </MenuItem>
+        <Link href="/admin/report/nft" underline="none">
+          <MenuItem
+            onClick={handleClose}
+            disableRipple
+            href="/admin/report/nft"
+          >
+            <ImageIcon />
+            Reported NFTs
+          </MenuItem>
+        </Link>
+        <Link href="/admin/report/users" underline="none">
+          <MenuItem onClick={handleClose} disableRipple>
+            <PersonIcon />
+            Reported Users
+          </MenuItem>
+        </Link>
+        <Link href="/admin/report/collection" underline="none">
+          <MenuItem onClick={handleClose} disableRipple>
+            <CollectionsIcon />
+            Reported Collections
+          </MenuItem>
+        </Link>
       </StyledMenu>
     </div>
   );
