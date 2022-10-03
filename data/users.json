@@ -8,8 +8,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "Admin"
+      "Status": "Active",
+      "Type": "Admin",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 2,
@@ -17,10 +20,13 @@
       "Name": "Mary",
       "Date": "2022/04/05",
       "Total": 6,
-      "Created": 8,
+      "Created": 4,
       "Volume": 10,
-      "Status": "reported",
-      "Type": "User"
+      "Status": "Reported",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 3,
@@ -30,8 +36,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "User"
+      "Status": "Reported",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 4,
@@ -41,8 +50,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "User"
+      "Status": "Active",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 5,
@@ -53,7 +65,10 @@
       "Created": 8,
       "Volume": 10,
       "Status": "Blocked",
-      "Type": "User"
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 6,
@@ -63,8 +78,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "User"
+      "Status": "Reported",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 7,
@@ -75,7 +93,10 @@
       "Created": 8,
       "Volume": 10,
       "Status": "blocked",
-      "Type": "User"
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 8,
@@ -85,8 +106,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "Admin"
+      "Status": "Active",
+      "Type": "Admin",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 9,
@@ -96,8 +120,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "Admin"
+      "Status": "Active",
+      "Type": "Admin",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 10,
@@ -107,8 +134,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "Super_Admin"
+      "Status": "Active",
+      "Type": "Super_Admin",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 11,
@@ -118,8 +148,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "User"
+      "Status": "Active",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 12,
@@ -129,8 +162,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "User"
+      "Status": "Active",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 13,
@@ -140,8 +176,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "User"
+      "Status": "Active",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "id": 14,
@@ -151,8 +190,11 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "User"
+      "Status": "Active",
+      "Type": "User",
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "User_ID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e5",
@@ -161,9 +203,12 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
+      "Status": "Active",
       "Type": "Admin",
-      "id": 15
+      "id": 15,
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "User_ID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e6",
@@ -172,9 +217,12 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
+      "Status": "Active",
       "Type": "Admin",
-      "id": 16
+      "id": 16,
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "User_ID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e7",
@@ -183,9 +231,12 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
+      "Status": "Active",
       "Type": "Admin",
-      "id": 17
+      "id": 17,
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
     },
     {
       "User_ID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e8",
@@ -194,9 +245,166 @@
       "Total": 6,
       "Created": 8,
       "Volume": 10,
-      "Status": "active",
-      "Type": "Admin",
-      "id": 18
+      "Status": "Active",
+      "Type": "User",
+      "id": 18,
+      "reportType": "Fake account",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
+    }
+  ],
+  "collections": [
+    {
+      "id": 1,
+      "collectionName": "Badminton",
+      "collectionID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f1",
+      "category": "sport",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e1",
+      "createdDate": "2022-04-05",
+      "NFTcount": 123,
+      "floorPrize": 123,
+      "totalPrize": 123,
+      "status": "Active",
+      "reportType": "Fake collection",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d1",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 2,
+      "collectionName": "Music",
+      "collectionID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f2",
+      "category": "sport",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e2",
+      "createdDate": "2022-04-05",
+      "NFTcount": 123,
+      "floorPrize": 123,
+      "totalPrize": 123,
+      "status": "Reported",
+      "reportType": "Spam",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d2",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 3,
+      "collectionName": "Sea",
+      "collectionID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
+      "category": "nature",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e3",
+      "createdDate": "2022-04-05",
+      "NFTcount": 123,
+      "floorPrize": 123,
+      "totalPrize": 123,
+      "status": "Blocked",
+      "reportType": "Sensitive content",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d3",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 4,
+      "collectionName": "Landscapes",
+      "collectionID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f4",
+      "category": "photography",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e4",
+      "createdDate": "2022-04-05",
+      "NFTcount": 123,
+      "floorPrize": 123,
+      "totalPrize": 123,
+      "status": "Active",
+      "reportType": "In the wrong category",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d4",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 5,
+      "collectionName": "Mountains",
+      "collectionID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f5",
+      "category": "nature",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e5",
+      "createdDate": "2022-04-05",
+      "NFTcount": 123,
+      "floorPrize": 123,
+      "totalPrize": 123,
+      "status": "Reported",
+      "reportType": "Spam",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d5",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 6,
+      "collectionName": "Hockey",
+      "collectionID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f6",
+      "category": "sport",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e6",
+      "createdDate": "2022-04-05",
+      "NFTcount": 123,
+      "floorPrize": 123,
+      "totalPrize": 123,
+      "status": "Reported",
+      "reportType": "Fake collection or possible scam",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d6",
+      "reportedDate": "2022-09-01"
+    }
+  ],
+  "NFTs": [
+    {
+      "id": 1,
+      "name": "Monkeys",
+      "nftID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7a0",
+      "collection": "Nature Monkeys",
+      "creator": "Hello",
+      "creatorID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f0",
+      "owner": "Helan",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e0",
+      "createdDate": "2022-09-01",
+      "status": "Reported",
+      "reportType": "Spam",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d5",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 2,
+      "name": "Vintage",
+      "nftID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7a1",
+      "collection": "Nature Monkeys",
+      "creator": "Hello",
+      "creatorID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f1",
+      "owner": "Helan",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e1",
+      "createdDate": "2022-09-01",
+      "status": "Active",
+      "reportType": "Fake NFT",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d5",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 3,
+      "name": "Avatar",
+      "nftID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7a2",
+      "collection": "Movie",
+      "creator": "Hello",
+      "creatorID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f2",
+      "owner": "Helan",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e2",
+      "createdDate": "2022-09-01",
+      "status": "Reported",
+      "reportType": "Spam",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d5",
+      "reportedDate": "2022-09-01"
+    },
+    {
+      "id": 4,
+      "name": "Strangers",
+      "nftID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7a3",
+      "collection": "Stranger things",
+      "creator": "Hello",
+      "creatorID": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7f3",
+      "owner": "Helan",
+      "ownerId": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7e3",
+      "createdDate": "2022-09-01",
+      "status": "Active",
+      "reportType": "Spam",
+      "reportedBy": "0x84eBf03cb02370eaCa1F0Ac93ee59081d263A7d5",
+      "reportedDate": "2022-09-01"
     }
   ]
 }

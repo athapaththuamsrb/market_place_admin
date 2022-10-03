@@ -63,14 +63,14 @@ const viewAdmins: NextPage = () => {
       headerName: "User_ID",
       type: "string",
       align: "center",
-      width: 250,
+      width: 400,
     },
     {
       field: "Name",
       headerName: "Name",
       type: "string",
       align: "left",
-      width: 150,
+      width: 200,
     },
     {
       field: "Date",
@@ -104,9 +104,14 @@ const viewAdmins: NextPage = () => {
       field: "actions",
       headerName: "Review",
       type: "actions",
-      width: 100,
+      width: 200,
       align: "center",
       getActions: (params: GridRowParams) => [
+        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+          <Link href={`../users/${params.row.id}`} underline="hover">
+            <a>View Account</a>
+          </Link>
+        </Button>,
         <Tooltip title="Delete admin">
           <GridActionsCellItem
             icon={<DeleteIcon />}
@@ -162,7 +167,7 @@ const viewAdmins: NextPage = () => {
       user.Type = "User";
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, JSON.stringify(user))
+          .put(`http://localhost:8000/users/${user.id}`, user)
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -224,7 +229,7 @@ const viewAdmins: NextPage = () => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "72%",
+          width: "90%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",

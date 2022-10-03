@@ -38,14 +38,14 @@ const allUsers: NextPage = () => {
       field: "User_ID",
       headerName: "User_ID",
       type: "string",
-      width: 250,
+      width: 300,
       align: "center",
     },
     {
       field: "Name",
       headerName: "Name",
       type: "string",
-      width: 150,
+      width: 200,
       align: "left",
     },
     {
@@ -173,7 +173,7 @@ const allUsers: NextPage = () => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "72%",
+          width: "90%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",

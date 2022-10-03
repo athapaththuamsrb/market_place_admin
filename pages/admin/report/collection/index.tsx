@@ -14,16 +14,18 @@ import {
   DialogTitle,
   Typography,
   Grid,
+  LinearProgress,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
-import PopUp from "../../../../components/Admin/Popup";
-import { User } from "../../../../src/interfaces";
+import { Collection, User } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../../components/ui/Title";
+import axios from "axios";
+import BlockIcon from "@mui/icons-material/Block";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 function CustomToolbar() {
   return (
@@ -50,114 +52,172 @@ const viewReportedCollections: NextPage = () => {
     {
       field: "id",
       headerName: "ID",
-      type: "string",
+      type: "String",
       align: "left",
       width: 50,
     },
     {
-      field: "User_ID",
-      headerName: "User_ID",
-      type: "string",
-      align: "center",
-      width: 250,
-    },
-    {
-      field: "Name",
-      headerName: "Name",
-      type: "string",
+      field: "collectionName",
+      headerName: "Collection",
+      type: "String",
       align: "left",
-      width: 150,
+      width: 130,
     },
     {
-      field: "Date",
-      headerName: "Joined Date",
-      type: "Date",
+      field: "collectionID",
+      headerName: "Collection ID",
+      type: "String",
       align: "left",
-      width: 100,
+      width: 300,
     },
     {
-      field: "Total",
-      headerName: "Total NFTs",
-      type: "Number",
-      width: 100,
-      align: "center",
+      field: "reportedBy",
+      headerName: "Reported By",
+      type: "String",
+      align: "left",
+      width: 300,
     },
     {
-      field: "Created",
-      headerName: "Created NFTs",
-      type: "Number",
-      width: 100,
-      align: "center",
+      field: "reportType",
+      headerName: "Reported Type",
+      type: "String",
+      width: 200,
+      align: "left",
     },
     {
-      field: "Volume",
-      headerName: "Total volume",
-      type: "Number",
-      width: 150,
-      align: "center",
+      field: "reportedDate",
+      headerName: "Reported Date",
+      type: "String",
+      width: 110,
+      align: "left",
     },
     {
       field: "actions",
       headerName: "Review",
       type: "actions",
-      width: 100,
+      width: 240,
       align: "center",
       getActions: (params: GridRowParams) => [
-        <Tooltip title="Delete admin">
+        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+          <Link href={`../../account/collections/${params.row.id}`} underline="hover">
+            <a>View Collection</a>
+          </Link>
+        </Button>,
+        <Tooltip title="Block Collection">
           <GridActionsCellItem
-            icon={<DeleteIcon />}
+            icon={<BlockIcon />}
             label="Delete"
-            onClick={() => handleClickOpen(params.row.id)}
+            color="error"
+            onClick={() => handleClickOpenBlock(params.row.id)}
+          />
+        </Tooltip>,
+        <Tooltip title="Verify Collection">
+          <GridActionsCellItem
+            icon={<VerifiedIcon />}
+            label="Verify"
+            color="success"
+            onClick={() => handleClickOpenVerify(params.row.id)}
           />
         </Tooltip>,
       ],
     },
   ];
 
-  const onRowsSelectionHandler = (ids: any[]) => {
-    const selectedRowsData = ids.map((id: any) =>
-      users.find((row: { id: string }) => row.id === id)
-    );
-    console.log(selectedRowsData);
-  };
-  const [admins, setAdmins] = useState<User[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [openBlock, setOpenBlock] = useState(false);
+  const [openVerify, setOpenVerify] = useState(false);
   const [id, setId] = useState("");
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setAdmins(data.filter((user: User) => user.Type === "Admin"));
-        setUsers(data);
-      });
-  }, [openPopup, open]);
+    setTimeout(() => {
+      axios
+        .get("http://localhost:8000/collections")
+        .then((res) => {
+          setCollections(
+            res.data.filter(
+              (collection: Collection) => collection.status === "Reported"
+            )
+          );
+          setIsPending(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setError(error.message);
+        });
+    }, 300);
+  }, [openBlock, openVerify]);
 
-  const handleClickOpen = (id: string) => {
-    setOpen(true);
+  const handleClickOpenBlock = (id: string) => {
+    setOpenBlock(true);
     setId(id);
   };
 
-  const handleClose = (result: string, id: string) => () => {
-    setOpen(false);
+  const handleCloseBlock = (result: string, id: string) => () => {
+    setOpenBlock(false);
     if (result == "Yes") {
-      const user: User = admins.find((user) => user.id === id)!;
-      console.log(user);
-      user.Type = "User";
+      const collection: Collection = collections.find(
+        (collection) => collection.id === id
+      )!;
+      console.log(collection);
+      collection.status = "Blocked";
+      setTimeout(() => {
+        collection;
+        axios
+          .put(
+            `http://localhost:8000/collections/${collection.id}`,
+            collection
+          )
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
+      });
+    }
+  };
 
-      const res = fetch(`http://localhost:8000/users/${user.id}`, {
-        method: "PUT",
-        body: JSON.stringify(user),
-        headers: {
-          "Content-Type": "application/json",
-        },
+  const handleClickOpenVerify = (id: string) => {
+    setOpenVerify(true);
+    setId(id);
+  };
+
+  const handleCloseVerify = (result: string, id: string) => () => {
+    setOpenVerify(false);
+    if (result == "Yes") {
+      const collection: Collection = collections.find(
+        (collection) => collection.id === id
+      )!;
+      collection.status = "Active";
+      setTimeout(() => {
+        axios
+          .put(
+            `http://localhost:8000/collections/${collection.id}`,
+            collection
+          )
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
       });
     }
   };
   return (
     <div>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title firstWord="Reported" secondWord="Collections" />
       <Grid
         container
@@ -185,7 +245,7 @@ const viewReportedCollections: NextPage = () => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "72%",
+          width: "90%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",
@@ -202,43 +262,56 @@ const viewReportedCollections: NextPage = () => {
             backgroundColor: "#fcfcfc",
             borderRadius: "10px",
           }}
-          rows={admins}
+          rows={collections}
           columns={columns}
           pageSize={12}
           rowsPerPageOptions={[5]}
-          onSelectionModelChange={(id) => onRowsSelectionHandler(id)}
           components={{
             Toolbar: CustomToolbar,
           }}
         />
       </Box>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openBlock}
+        onClose={handleCloseBlock}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
           {"Are you sure?"}
-          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 300 }}>
-            {"Are you sure that you want to remove admin privileges from " +
-              id +
-              "?"}
+          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
+            {"Are you sure that you want to block " + id + "?"}
           </Typography>
         </DialogTitle>
         <DialogActions>
-          <Button autoFocus onClick={handleClose("Yes", id)}>
+          <Button autoFocus onClick={handleCloseBlock("Yes", id)}>
             Yes
           </Button>
-          <Button onClick={handleClose("No", id)} autoFocus>
+          <Button onClick={handleCloseBlock("No", id)} autoFocus>
             No
           </Button>
         </DialogActions>
       </Dialog>
-      <PopUp
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-        users={users}
-      ></PopUp>
+
+      <Dialog
+        open={openVerify}
+        onClose={handleCloseVerify}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Are you sure?"}
+          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
+            {"Are you sure that you want to verify user " + id + "?"}
+          </Typography>
+        </DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseVerify("Yes", id)}>
+            Yes
+          </Button>
+          <Button onClick={handleCloseVerify("No", id)} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

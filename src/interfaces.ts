@@ -80,4 +80,38 @@ export type User = {
   Volume: number;
   Status: string;
   Type: string;
+  reportType: string;
+  reportedBy: string;
+  reportedDate: Date;
+};
+
+export type Collection = {
+  id: string;
+  collectionName: string;
+  collectionID: string;
+  category: string;
+  ownerId: string;
+  createdDate: Date;
+  NFTcount: Number;
+  floorPrize: Number;
+  totalPrize: Number;
+  status: string;
+  reportType: string;
+  reportedBy: string;
+  reportedDate: Date;
+};
+export type NFT_Report = {
+  id: string;
+  name: string;
+  nftID: string;
+  collection: string;
+  creator: string;
+  creatorID: string;
+  owner: string;
+  ownerId: string;
+  createdDate: string;
+  status: string;
+  reportType: string;
+  reportedBy: string;
+  reportedDate: Date;
 };

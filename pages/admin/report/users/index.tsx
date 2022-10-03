@@ -54,7 +54,7 @@ const reportedUsers: NextPage = () => {
       field: "User_ID",
       headerName: "User_ID",
       type: "string",
-      width: 250,
+      width: 270,
       align: "center",
     },
     {
@@ -65,19 +65,26 @@ const reportedUsers: NextPage = () => {
       align: "left",
     },
     {
-      field: "Report Type",
+      field: "reportType",
       headerName: "Report Type",
       type: "string",
-      width: 200,
+      width: 150,
       align: "left",
     },
 
     {
-      field: "Date",
+      field: "reportedDate",
       headerName: "Reported Date",
       type: "Date",
-      width: 100,
+      width: 130,
       align: "left",
+    },
+    {
+      field: "reportedBy",
+      headerName: "Reported By",
+      type: "string",
+      width: 270,
+      align: "center",
     },
     {
       field: "actions",
@@ -108,13 +115,6 @@ const reportedUsers: NextPage = () => {
         </Tooltip>,
       ],
     },
-    {
-      field: "ReportedBy",
-      headerName: "Reported By",
-      type: "string",
-      width: 250,
-      align: "center",
-    },
   ];
 
   const [rows, setRows] = useState<User[]>([]);
@@ -130,7 +130,7 @@ const reportedUsers: NextPage = () => {
       axios
         .get("http://localhost:8000/users")
         .then((res) => {
-          setRows(res.data.filter((user: User) => user.Status === "reported"));
+          setRows(res.data.filter((user: User) => user.Status === "Reported"));
           setIsPending(false);
           setError(null);
         })
@@ -138,7 +138,7 @@ const reportedUsers: NextPage = () => {
           setIsPending(false);
           setError(error.message);
         });
-    },300);
+    }, 300);
   }, [openBlock, openVerify]);
 
   const handleClickOpenBlock = (id: string) => {
@@ -154,7 +154,7 @@ const reportedUsers: NextPage = () => {
       user.Status = "Blocked";
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, JSON.stringify(user))
+          .put(`http://localhost:8000/users/${user.id}`, user)
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -179,7 +179,7 @@ const reportedUsers: NextPage = () => {
       user.Status = "Active";
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, JSON.stringify(user))
+          .put(`http://localhost:8000/users/${user.id}`, user)
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -233,7 +233,7 @@ const reportedUsers: NextPage = () => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "72%",
+          width: "90%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",

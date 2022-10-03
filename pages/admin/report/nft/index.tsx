@@ -11,20 +11,21 @@ import {
   Button,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
   Typography,
   Grid,
+  LinearProgress,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
-import PopUp from "../../../../components/Admin/Popup";
-import { User } from "../../../../src/interfaces";
+import { NFT_Report } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../../components/ui/Title";
+import axios from "axios";
+import BlockIcon from "@mui/icons-material/Block";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 function CustomToolbar() {
   return (
@@ -51,114 +52,160 @@ const viewReportedNFTs: NextPage = () => {
     {
       field: "id",
       headerName: "ID",
-      type: "string",
+      type: "String",
       align: "left",
       width: 50,
     },
     {
-      field: "User_ID",
-      headerName: "User_ID",
-      type: "string",
-      align: "center",
-      width: 250,
-    },
-    {
-      field: "Name",
-      headerName: "Name",
-      type: "string",
+      field: "name",
+      headerName: "NFT",
+      type: "String",
       align: "left",
-      width: 150,
+      width: 130,
     },
     {
-      field: "Date",
-      headerName: "Joined Date",
-      type: "Date",
+      field: "nftID",
+      headerName: "NFT ID",
+      type: "String",
       align: "left",
-      width: 100,
+      width: 320,
     },
     {
-      field: "Total",
-      headerName: "Total NFTs",
-      type: "Number",
-      width: 100,
-      align: "center",
+      field: "reportedBy",
+      headerName: "Reported By",
+      type: "String",
+      align: "left",
+      width: 320,
     },
     {
-      field: "Created",
-      headerName: "Created NFTs",
-      type: "Number",
-      width: 100,
-      align: "center",
+      field: "reportType",
+      headerName: "Reported Type",
+      type: "String",
+      width: 200,
+      align: "left",
     },
     {
-      field: "Volume",
-      headerName: "Total volume",
-      type: "Number",
-      width: 150,
-      align: "center",
+      field: "reportedDate",
+      headerName: "Reported Date",
+      type: "String",
+      width: 110,
+      align: "left",
     },
     {
       field: "actions",
       headerName: "Review",
       type: "actions",
-      width: 100,
+      width: 200,
       align: "center",
       getActions: (params: GridRowParams) => [
-        <Tooltip title="Delete admin">
+        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+          <Link href={`../../account/nfts/${params.row.id}`} underline="hover">
+            <a>View NFT</a>
+          </Link>
+        </Button>,
+        <Tooltip title="Block NFT">
           <GridActionsCellItem
-            icon={<DeleteIcon />}
+            icon={<BlockIcon />}
             label="Delete"
-            onClick={() => handleClickOpen(params.row.id)}
+            color="error"
+            onClick={() => handleClickOpenBlock(params.row.id)}
+          />
+        </Tooltip>,
+        <Tooltip title="Verify NFT">
+          <GridActionsCellItem
+            icon={<VerifiedIcon />}
+            label="Verify"
+            color="success"
+            onClick={() => handleClickOpenVerify(params.row.id)}
           />
         </Tooltip>,
       ],
     },
   ];
 
-  const onRowsSelectionHandler = (ids: any[]) => {
-    const selectedRowsData = ids.map((id: any) =>
-      users.find((row: { id: string }) => row.id === id)
-    );
-    console.log(selectedRowsData);
-  };
-  const [admins, setAdmins] = useState<User[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [nfts, setNFTs] = useState<NFT_Report[]>([]);
+  const [openBlock, setOpenBlock] = useState(false);
+  const [openVerify, setOpenVerify] = useState(false);
   const [id, setId] = useState("");
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setAdmins(data.filter((user: User) => user.Type === "Admin"));
-        setUsers(data);
-      });
-  }, [openPopup, open]);
+    setTimeout(() => {
+      axios
+        .get("http://localhost:8000/nfts")
+        .then((res) => {
+          setNFTs(
+            res.data.filter((nft: NFT_Report) => nft.status === "Reported")
+          );
+          setIsPending(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setError(error.message);
+        });
+    }, 300);
+  }, [openBlock, openVerify]);
 
-  const handleClickOpen = (id: string) => {
-    setOpen(true);
+  const handleClickOpenBlock = (id: string) => {
+    setOpenBlock(true);
     setId(id);
   };
 
-  const handleClose = (result: string, id: string) => () => {
-    setOpen(false);
+  const handleCloseBlock = (result: string, id: string) => () => {
+    setOpenBlock(false);
     if (result == "Yes") {
-      const user: User = admins.find((user) => user.id === id)!;
-      console.log(user);
-      user.Type = "User";
+      const nft: NFT_Report = nfts.find((nft) => nft.id === id)!;
+      console.log(nft);
+      nft.status = "Blocked";
+      setTimeout(() => {
+        nft;
+        axios
+          .put(`http://localhost:8000/nfts/${nft.id}`, nft)
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
+      });
+    }
+  };
 
-      const res = fetch(`http://localhost:8000/users/${user.id}`, {
-        method: "PUT",
-        body: JSON.stringify(user),
-        headers: {
-          "Content-Type": "application/json",
-        },
+  const handleClickOpenVerify = (id: string) => {
+    setOpenVerify(true);
+    setId(id);
+  };
+
+  const handleCloseVerify = (result: string, id: string) => () => {
+    setOpenVerify(false);
+    if (result == "Yes") {
+      const nft: NFT_Report = nfts.find((nft) => nft.id === id)!;
+      nft.status = "Active";
+      setTimeout(() => {
+        axios
+          .put(`http://localhost:8000/nfts/${nft.id}`, nft)
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
       });
     }
   };
   return (
     <div>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title firstWord="Reported" secondWord="NFTs" />
       <Grid
         container
@@ -186,7 +233,7 @@ const viewReportedNFTs: NextPage = () => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "72%",
+          width: "90%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",
@@ -203,43 +250,56 @@ const viewReportedNFTs: NextPage = () => {
             backgroundColor: "#fcfcfc",
             borderRadius: "10px",
           }}
-          rows={admins}
+          rows={nfts}
           columns={columns}
           pageSize={12}
           rowsPerPageOptions={[5]}
-          onSelectionModelChange={(id) => onRowsSelectionHandler(id)}
           components={{
             Toolbar: CustomToolbar,
           }}
         />
       </Box>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openBlock}
+        onClose={handleCloseBlock}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
           {"Are you sure?"}
-          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 300 }}>
-            {"Are you sure that you want to remove admin privileges from " +
-              id +
-              "?"}
+          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
+            {"Are you sure that you want to block " + id + "?"}
           </Typography>
         </DialogTitle>
         <DialogActions>
-          <Button autoFocus onClick={handleClose("Yes", id)}>
+          <Button autoFocus onClick={handleCloseBlock("Yes", id)}>
             Yes
           </Button>
-          <Button onClick={handleClose("No", id)} autoFocus>
+          <Button onClick={handleCloseBlock("No", id)} autoFocus>
             No
           </Button>
         </DialogActions>
       </Dialog>
-      <PopUp
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-        users={users}
-      ></PopUp>
+
+      <Dialog
+        open={openVerify}
+        onClose={handleCloseVerify}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Are you sure?"}
+          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
+            {"Are you sure that you want to verify user " + id + "?"}
+          </Typography>
+        </DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseVerify("Yes", id)}>
+            Yes
+          </Button>
+          <Button onClick={handleCloseVerify("No", id)} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
