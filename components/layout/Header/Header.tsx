@@ -14,7 +14,7 @@ import Image from "next/image";
 import Button from "@mui/material/Button";
 import RenderMobileMenu from "./RenderMobileMenu";
 import { useConnect, useDisconnect, useAccount } from "wagmi";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useIsMounted, useGetMyProfile } from "../../hooks";
 import { useRouter } from "next/router";
 import Avatar from "@mui/material/Avatar";
@@ -23,8 +23,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Logout from "@mui/icons-material/Logout";
 
 export default function Navbar() {
-  const { connect, connectors } = useConnect();
+  const { connect, connectors, activeConnector } = useConnect();
   const { data: ethereumAccount } = useAccount();
+
   const { disconnect } = useDisconnect();
   const theme = useTheme();
   const router = useRouter();
@@ -46,11 +47,6 @@ export default function Navbar() {
     setMobileMoreAnchorEl(null);
   };
   const anchorRef = useRef();
-  // const handleMenuClose = () => {
-  //   setAnchorEl(null);
-  //   handleMobileMenuClose();
-  // };
-
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -128,14 +124,6 @@ export default function Navbar() {
                 Explore
               </Typography>
             </Button>
-            {/* <Button
-              variant="outlined"
-              href="/explore-collections"
-              sx={{ mx: 1 }}
-            >
-              Explore
-            </Button> */}
-
             <Button
               href="/create"
               type="submit"
@@ -152,20 +140,6 @@ export default function Navbar() {
                 Create
               </Typography>
             </Button>
-
-            {/* <Button
-              variant="contained"
-              href="/create"
-              sx={{
-                mx: 1,
-                color: "white",
-                backgroundColor: "#CA82FF",
-                borderColor:"#CA82FF",
-              }}
-            >
-              Create
-            </Button> */}
-            {/* MetaMask Connect */}
             {isMounted && connectors[0].ready && !ethereumAccount && (
               <Button
                 onClick={() => connect(connectors[0])}
@@ -182,9 +156,6 @@ export default function Navbar() {
                   Connect Metamask
                 </Typography>
               </Button>
-              // <Button variant="outlined" onClick={() => connect(connectors[0])}>
-              //   Connect Metamask
-              // </Button>
             )}
             {isMounted && ethereumAccount && (
               <div>

@@ -17,6 +17,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ListingHistoryTable from "../ui/ListingHistoryTable";
+import { useIsMounted } from "../hooks";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -30,12 +31,12 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     contractInterface: MarketplaceAbi.abi,
     signerOrProvider: signer,
   });
+  const isMounted = useIsMounted();
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [isPending, setIsPendging] = useState(false);
   const { data: account } = useAccount();
-  console.log(router.pathname);
   const setStateNFT = async (key: string, value: boolean, price: string) => {
     try {
       setIsPendging(true);
@@ -114,7 +115,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     }
     setIsPendging(false);
   };
-  return (
+  return isMounted ? (
     <Box>
       <Title
         firstWord={
@@ -233,7 +234,24 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         variant="h2"
                         sx={{ fontSize: 20 }}
                       >
-                        SELL
+                        FIX SELL
+                      </Typography>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        router.push(`${router.asPath}/set-bid-sell-value`);
+                      }}
+                      size="small"
+                      color="secondary"
+                      variant="contained"
+                      sx={{ ml: 2 }}
+                    >
+                      <Typography
+                        color="white"
+                        variant="h2"
+                        sx={{ fontSize: 20 }}
+                      >
+                        BID SELL
                       </Typography>
                     </Button>
                   </Box>
@@ -288,6 +306,10 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         </Grid>
       </Box>
       <ModalPopUp msg={msg} open={open} setOpen={setOpen} setMsg={setMsg} />
+    </Box>
+  ) : (
+    <Box sx={{ width: "100%" }}>
+      <LinearProgress />
     </Box>
   );
 };

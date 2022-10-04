@@ -12,20 +12,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       let user = await prisma.user.findUnique({
         where: userData,
       });
-      if (user) {
-        const profile: Profile = {
-          bannerImage: user.bannerImage,
-          profileImage: user.profileImage,
-          type: user.type,
-          userName: user.userName,
-          walletAddress: user.walletAddress,
-        };
-        res
-          .status(201)
-          .json({ message: "successfully get", success: true, data: profile });
-      } else {
-        throw new Error("User is not exit");
+      if (!user) {
+        user = await prisma.user.create({
+          data: userData,
+        });
       }
+      const profile: Profile = {
+        bannerImage: user.bannerImage,
+        profileImage: user.profileImage,
+        type: user.type,
+        userName: user.userName,
+        walletAddress: user.walletAddress,
+      };
+      res
+        .status(201)
+        .json({ message: "successfully get", success: true, data: profile });
     } catch (error) {
       await prisma.$disconnect();
       res

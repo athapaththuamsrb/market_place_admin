@@ -35,18 +35,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
       const finslNFT: NFT_card[] = [];
-      for await (const nft of nfts) {
-        const list: NFT_card = {
-          id: nft.id,
-          price: nft.price,
-          image: nft.image,
-          name: nft.name,
-          listed: nft.listed,
-          category: nft.category,
-          ownerWalletAddress: userData.walletAddress,
-        };
+      if (nfts.length !== 0) {
+        for await (const nft of nfts) {
+          const list: NFT_card = {
+            id: nft.id,
+            price: nft.price,
+            image: nft.image,
+            name: nft.name,
+            listed: nft.listed,
+            category: nft.category,
+            ownerWalletAddress: userData.walletAddress,
+          };
 
-        finslNFT.push(list);
+          finslNFT.push(list);
+        }
       }
 
       const { data } = await axios.get(
