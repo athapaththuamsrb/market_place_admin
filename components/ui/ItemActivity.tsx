@@ -17,24 +17,24 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: "event", label: "Event", minWidth: 170 },
-  { id: "price", label: "Price", minWidth: 100 },
+  { id: "event", label: "Event", minWidth: 100 },
+  { id: "price", label: "Price", minWidth: 50 },
   {
     id: "from",
     label: "From",
-    minWidth: 170,
+    minWidth: 80,
     align: "left",
   },
   {
     id: "to",
     label: "To",
-    minWidth: 170,
+    minWidth: 80,
     align: "left",
   },
   {
     id: "date",
     label: "Date",
-    minWidth: 170,
+    minWidth: 80,
     align: "left",
   },
 ];
@@ -58,11 +58,11 @@ function createData(
 }
 
 const rows = [
-  createData("Transfer", "72.99", "D7C380", "bluechips_vault", "2 days ago"),
-  createData("Sale", "72.99", "E57388", "Internet-Explorer", "10 days ago"),
-  createData("Transfer", "72.99", "D7C380", "bluechips_vault", "2 days ago"),
-  createData("Sale", "72.99", "E57388", "Internet-Explorer", "10 days ago"),
-  createData("Transfer", "72.99", "D7C380", "bluechips_vault", "2 days ago"),
+  createData("Transfer", "72.99", "D7C380", "bluechips", "2 days ago"),
+  createData("Sale", "72.99", "E57388", "Explorer", "10 days ago"),
+  createData("Transfer", "72.99", "D7C380", "bluechips", "2 days ago"),
+  createData("Sale", "72.99", "E57388", "Explorer", "10 days ago"),
+  createData("Transfer", "72.99", "D7C380", "bluechips", "2 days ago"),
   createData("Sale", "72.99", "E57388", "Internet-Explorer", "10 days ago"),
 ];
 
@@ -91,7 +91,7 @@ export default function StickyHeadTable() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{ minWidth: column.minWidth }} 
                 >
                   {column.label}
                 </TableCell>
@@ -107,10 +107,8 @@ export default function StickyHeadTable() {
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
+                        <TableCell key={column.id} align={column.align} sx={{fontWeight: 400, fontSize: 15}}>
+                          {value}
                         </TableCell>
                       );
                     })}
