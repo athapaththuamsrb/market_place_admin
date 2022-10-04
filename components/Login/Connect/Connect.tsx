@@ -47,8 +47,9 @@ export default function Connect() {
           p: 5,
         }}
       >
-        Connect with your Metamask wallet. <br />If you don't have one, you can
-        select the provider and create a new one.
+        Connect with your Metamask wallet. <br />
+        If you don{"'"}t have one, you can select the provider and create a new
+        one.
       </Typography>
       <Container maxWidth="sm">
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -65,7 +66,7 @@ export default function Connect() {
                     key={x.id}
                     onClick={(event) => connect(x)}
                     sx={{
-                      backgroundColor:"#fafafa",
+                      backgroundColor: "#fafafa",
                       borderRadius: "16px",
                       borderColor: "primary.main",
                     }}
