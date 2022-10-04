@@ -4,7 +4,7 @@ import { Typography, Button, Grid, Avatar, Stack } from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
-import { useSigner, useContract, useAccount } from "wagmi";
+import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import MarketplaceAbi from "../../contractsData/Marketplace.json";
 import { ethers } from "ethers";
@@ -37,6 +37,14 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const router = useRouter();
   const [isPending, setIsPendging] = useState(false);
   const { data: account } = useAccount();
+  const {
+    activeConnector,
+    connect,
+    connectors,
+    error,
+    isConnecting,
+    pendingConnector,
+  } = useConnect();
   const setStateNFT = async (key: string, value: boolean, price: string) => {
     try {
       setIsPendging(true);
@@ -197,7 +205,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   </Typography>
                 </div>
               )}
-              {account?.address === props.salesOrder?.walletAddress &&
+              {activeConnector &&
+                account?.address === props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
                   <Box textAlign={"right"}>
                     <Button
@@ -218,7 +227,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     </Button>
                   </Box>
                 )}
-              {account?.address === props.salesOrder?.walletAddress &&
+              {activeConnector &&
+                account?.address === props.salesOrder?.walletAddress &&
                 !props.salesOrder?.listed && (
                   <Box textAlign={"right"}>
                     <Button
@@ -256,7 +266,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     </Button>
                   </Box>
                 )}
-              {account?.address !== props.salesOrder?.walletAddress &&
+              {activeConnector &&
+                account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
                   <Box textAlign={"right"}>
                     <Button
