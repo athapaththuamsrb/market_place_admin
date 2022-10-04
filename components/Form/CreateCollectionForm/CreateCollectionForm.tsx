@@ -88,6 +88,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
   const formik = useFormik({
     initialValues: {
       collectionName: "",
+      featuredImage: undefined,
+      bannerImage: undefined,
+      logoImage: undefined,
     },
     validationSchema: Yup.object({
       collectionName: Yup.string()
@@ -314,7 +317,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 fullWidth
                 rows={4}
               />
-              
             </Box>
           </Grid>
           <Grid item xs={2}></Grid>
@@ -336,7 +338,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             color="secondary"
             variant="contained"
           >
-            <Typography variant="h3" color="white" sx={{fontSize:30}}>
+            <Typography variant="h3" color="white" sx={{ fontSize: 30 }}>
               Create Collection
             </Typography>
           </Button>
