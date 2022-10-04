@@ -3,7 +3,7 @@ import { NFT_load } from "../../src/interfaces";
 import { Typography, Button, Grid, Avatar, Stack } from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
-import FurtherDetails from "./FurtherDetails";
+import FurtherDetails2 from "./FurtherDetails2";
 import { useSigner, useContract, useAccount } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import MarketplaceAbi from "../../contractsData/Marketplace.json";
@@ -16,7 +16,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ListingHistoryTable from "../ui/ListingHistoryTable";
+import ListingHistoryTable from "../ui/ItemActivity";
 import { useIsMounted } from "../hooks";
 
 interface ViewNFTProps {
@@ -282,7 +282,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
         <Grid container columnSpacing={2}>
           <Grid alignSelf={"center"} item xs={6}>
-            <FurtherDetails
+            <FurtherDetails2
               creator={props.salesOrder?.creatorWalletAddress}
               tokenID={props.salesOrder?.tokenID}
               collection={props.salesOrder?.collection}
@@ -296,7 +296,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography>Listing History</Typography>
+                <Typography>Item Activity</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <ListingHistoryTable />
