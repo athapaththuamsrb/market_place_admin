@@ -4,7 +4,7 @@ import { Typography, Button, Grid, Avatar, Stack } from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
-import { useSigner, useContract, useAccount } from "wagmi";
+import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import MarketplaceAbi from "../../contractsData/Marketplace.json";
 import { ethers } from "ethers";
@@ -16,9 +16,13 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ListingHistoryTable from "../ui/ListingHistoryTable";
+
+import ListingHistoryTable from "../ui/ItemActivity";
+import { useIsMounted } from "../hooks";
+
 import OfferPopup from "../OfferPopup";
 import ReportPopup from "../ReportPopup";
+
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -32,6 +36,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     contractInterface: MarketplaceAbi.abi,
     signerOrProvider: signer,
   });
+  const isMounted = useIsMounted();
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -39,7 +44,14 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const { data: account } = useAccount();
-  console.log(router.pathname);
+  const {
+    activeConnector,
+    connect,
+    connectors,
+    error,
+    isConnecting,
+    pendingConnector,
+  } = useConnect();
   const setStateNFT = async (key: string, value: boolean, price: string) => {
     try {
       setIsPendging(true);
@@ -118,7 +130,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     }
     setIsPendging(false);
   };
-  return (
+  return isMounted ? (
     <Box>
       <Title
         firstWord={
@@ -221,7 +233,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   </Typography>
                 </div>
               )}
-              {account?.address === props.salesOrder?.walletAddress &&
+              {activeConnector &&
+                account?.address === props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
                   <Box textAlign={"right"}>
                     <Button
@@ -242,7 +255,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     </Button>
                   </Box>
                 )}
-              {account?.address === props.salesOrder?.walletAddress &&
+              {activeConnector &&
+                account?.address === props.salesOrder?.walletAddress &&
                 !props.salesOrder?.listed && (
                   <Box textAlign={"right"}>
                     <Button
@@ -258,12 +272,30 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         variant="h2"
                         sx={{ fontSize: 20 }}
                       >
-                        SELL
+                        FIX SELL
+                      </Typography>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        router.push(`${router.asPath}/set-bid-sell-value`);
+                      }}
+                      size="small"
+                      color="secondary"
+                      variant="contained"
+                      sx={{ ml: 2 }}
+                    >
+                      <Typography
+                        color="white"
+                        variant="h2"
+                        sx={{ fontSize: 20 }}
+                      >
+                        BID SELL
                       </Typography>
                     </Button>
                   </Box>
                 )}
-              {account?.address !== props.salesOrder?.walletAddress &&
+              {activeConnector &&
+                account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
                   <Box textAlign={"right"} display= "flex" justifyContent="space-evenly">
                     <Button
@@ -324,7 +356,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography>Listing History</Typography>
+                <Typography>Item Activity</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <ListingHistoryTable />
@@ -334,6 +366,10 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         </Grid>
       </Box>
       <ModalPopUp msg={msg} open={open} setOpen={setOpen} setMsg={setMsg} />
+    </Box>
+  ) : (
+    <Box sx={{ width: "100%" }}>
+      <LinearProgress />
     </Box>
   );
 };

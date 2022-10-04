@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { Box, Button, CardActionArea, CardActions } from "@mui/material";
 import Link from "next/link";
 import { useAccount } from "wagmi";
 interface NFTProps {
@@ -31,12 +31,12 @@ const NFT: FC<NFTProps> = (props) => {
               alt="green iguana"
             />
             <CardContent>
-              <Typography variant="h3" component="div" textAlign={"center"}>
+              <Typography variant="h3" component="div" textAlign={"center"} sx={{fontSize:20}}>
                 {props.name}
               </Typography>
               {props.price !== "0" && (
                 <Typography
-                  sx={{ padding: "10px", borderTop: "1px solid" }}
+                  sx={{ padding: "2px", borderTop: "1px solid" }}
                   variant="h4"
                   color="text.primary"
                   textAlign={"center"}
@@ -48,17 +48,34 @@ const NFT: FC<NFTProps> = (props) => {
           </CardActionArea>
           <CardActions>
             {account?.address !== props.ownerWalletAddress && props.listed && (
-              <Button size="small" color="primary" variant="contained">
+              <Button
+                size="small"
+                color="primary"
+                variant="contained"
+                sx={{ marginX: "32%" }} href={`/view/${props.ownerWalletAddress}/${props.id}`}
+              >
                 BUY
               </Button>
             )}
             {!props.listed && (
-              <Button size="small" color="primary" variant="contained">
+              <Button
+                size="small"
+                color="primary"
+                variant="contained"
+                sx={{ marginX: "32%" }}
+                href={`/view/${props.ownerWalletAddress}/${props.id}`}
+              >
                 VIEW
               </Button>
             )}
             {account?.address === props.ownerWalletAddress && props.listed && (
-              <Button size="small" color="primary" variant="contained">
+              <Button
+                size="small"
+                color="primary"
+                variant="contained"
+                sx={{ marginLeft: "32%" }}
+                href={`/view/${props.ownerWalletAddress}/${props.id}`}
+              >
                 SELL
               </Button>
             )}

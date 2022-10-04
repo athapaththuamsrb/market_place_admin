@@ -42,19 +42,21 @@ export const useGetMyProfile = () => {
   const [errorProfile, setErrorProfile] = useState(null);
   useEffect(() => {
     setTimeout(() => {
-      axios
-        .post("/api/getMyProfile", {
-          data: { address: account?.address },
-        })
-        .then((res) => {
-          setProfile(res.data.data);
-          setIsPendingProfile(false);
-          setErrorProfile(null);
-        })
-        .catch((error) => {
-          setIsPendingProfile(false);
-          setErrorProfile(error.message);
-        });
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getMyProfile", {
+            data: { address: account?.address },
+          })
+          .then((res) => {
+            setProfile(res.data.data);
+            setIsPendingProfile(false);
+            setErrorProfile(null);
+          })
+          .catch((error) => {
+            setIsPendingProfile(false);
+            setErrorProfile(error.message);
+          });
+      }
     }, 3000);
   }, [account?.address]);
   return { profile, isPendingProfile, errorProfile };
