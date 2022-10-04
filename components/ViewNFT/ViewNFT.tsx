@@ -3,7 +3,7 @@ import { NFT_load } from "../../src/interfaces";
 import { Typography, Button, Grid, Avatar, Stack } from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
-import FurtherDetails2 from "./FurtherDetails2";
+import FurtherDetails from "./FurtherDetails";
 import { useSigner, useContract, useAccount } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import MarketplaceAbi from "../../contractsData/Marketplace.json";
@@ -282,7 +282,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
         <Grid container columnSpacing={2}>
           <Grid alignSelf={"center"} item xs={6}>
-            <FurtherDetails2
+            <FurtherDetails
               creator={props.salesOrder?.creatorWalletAddress}
               tokenID={props.salesOrder?.tokenID}
               collection={props.salesOrder?.collection}
