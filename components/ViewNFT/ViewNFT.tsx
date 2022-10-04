@@ -16,8 +16,13 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import ListingHistoryTable from "../ui/ItemActivity";
 import { useIsMounted } from "../hooks";
+
+import OfferPopup from "../OfferPopup";
+import ReportPopup from "../ReportPopup";
+
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -36,6 +41,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [isPending, setIsPendging] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [openReportPopup, setOpenReportPopup] = useState(false);
   const { data: account } = useAccount();
   const {
     activeConnector,
@@ -157,7 +164,27 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
             </Stack>
           </Grid>
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
+              
             <Box sx={{ width: "90%", marginX: "auto" }}>
+              <Box textAlign={"right"} marginTop={'10px'}>
+                      <Button
+                        onClick={()=>setOpenReportPopup(true)}
+                        size="small"
+                        color="secondary"
+                        variant="contained"
+                      >
+                        <Typography
+                          color="white"
+                          sx={{ fontWeight: 600, fontSize: 20 }}
+                        >
+                          Report NFT
+                        </Typography>
+                      </Button>
+                </Box>
+                <ReportPopup
+                  openReportPopup = {openReportPopup}
+                  setOpenReportPopup = {setOpenReportPopup}
+                ></ReportPopup>
               <Typography
                 variant="h2"
                 align="left"
@@ -165,6 +192,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               >
                 {props.salesOrder?.name}
               </Typography>
+              
               <Typography
                 sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 14 }}
                 color="gray"
@@ -269,7 +297,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
-                  <Box textAlign={"right"}>
+                  <Box textAlign={"right"} display= "flex" justifyContent="space-evenly">
                     <Button
                       onClick={mintAndBuy}
                       size="small"
@@ -280,14 +308,35 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         color="white"
                         sx={{ fontWeight: 600, fontSize: 20 }}
                       >
-                        BUY
+                        BUY NFT
+                      </Typography>
+                    </Button>
+                    
+                    <Button
+                      //onClick={() => setOpenPopup(true)}
+                      onClick={()=>setOpenPopup(true)}
+                      size="small"
+                      color="secondary"
+                      variant="contained"
+                    >
+                      <Typography
+                        color="white"
+                        sx={{ fontWeight: 600, fontSize: 20 }}
+                      >
+                        Make Offer
                       </Typography>
                     </Button>
                   </Box>
                 )}
+                <OfferPopup
+                  openPopup = {openPopup}
+                  setOpenPopup = {setOpenPopup}
+                ></OfferPopup>
+                
             </Box>
           </Grid>
         </Grid>
+        
       </Box>
       <br />
       <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
