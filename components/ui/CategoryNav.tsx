@@ -67,7 +67,7 @@ const CategoryNav: FC<CategoryNavProps> = (props) => {
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
-        <Box sx={{ marginX: "auto", marginBottom: "72px" }}>
+        <Box sx={{ marginX: "auto", marginBottom: "20px" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tabs
               centered

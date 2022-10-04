@@ -21,7 +21,7 @@ const MyTabBar: FC<CategoryNavProps> = (props) => {
     let filternfts: NFT_card[] = props.nfts;
     const nftEls = filternfts.map((salesOrder) => {
       return (
-        <Grid key={salesOrder.id} item xs={3} sx={{marginTop:-6, marginLeft:-10}}>
+        <Grid key={salesOrder.id} item xs={3}>
           <NFT
             id={salesOrder.id}
             listed={salesOrder.listed}
@@ -52,7 +52,7 @@ const MyTabBar: FC<CategoryNavProps> = (props) => {
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
-        <Box sx={{ marginX: "auto", marginBottom: "72px" }}>
+        <Box sx={{ marginX: "auto", marginBottom: "20px" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tabs
               centered
