@@ -12,6 +12,12 @@ import api from "../../lib/api";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
 import ModalPopUp from "../Modal";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ListingHistoryTable from "../ui/ListingHistoryTable";
+
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
@@ -125,7 +131,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         </Box>
       )}
       <Box sx={{ width: "70%", marginX: "auto" }}>
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid alignSelf={"center"} item xs={6}>
             <Stack alignItems="center">
               <Avatar
@@ -135,35 +141,39 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   width: 400,
                   height: 400,
                   boxShadow: 3,
+                  borderRadius: 1,
                 }}
                 variant="square"
               />
             </Stack>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
-              <Typography variant="h2" align="center">
+              <Typography
+                variant="h2"
+                align="left"
+                sx={{ marginTop: "30px", marginBottom: "5px" }}
+              >
                 {props.salesOrder?.name}
               </Typography>
               <Typography
-                sx={{ marginBottom: "20px" }}
-                color="secondary"
-                variant="h3"
-                align="center"
+                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 14 }}
+                color="gray"
+                align="left"
               >
-                {props.salesOrder?.walletAddress}
+                {"Contract Address: " + props.salesOrder?.walletAddress}
               </Typography>
               <Typography
-                sx={{ marginBottom: "20px" }}
-                variant="h2"
-                align="center"
-              >
-                Description
-              </Typography>
-              <Typography
-                sx={{ marginBottom: "20px" }}
+                sx={{ marginBottom: "10px" }}
                 variant="h4"
-                align="center"
+                align="left"
+              >
+                Description:
+              </Typography>
+              <Typography
+                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
+                color="gray"
+                align="left"
               >
                 {props.salesOrder?.description}
               </Typography>
@@ -171,15 +181,15 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 <div>
                   <Typography
                     sx={{ marginBottom: "20px" }}
-                    variant="h2"
-                    align="center"
+                    variant="h4"
+                    align="left"
                   >
                     Price
                   </Typography>
                   <Typography
                     sx={{ marginBottom: "20px" }}
                     variant="h3"
-                    align="center"
+                    align="left"
                     color={"secondary"}
                   >
                     {`${props.salesOrder?.price} ETH`}
@@ -188,17 +198,20 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               )}
               {account?.address === props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
-                  <Box textAlign={"center"}>
+                  <Box textAlign={"right"}>
                     <Button
                       onClick={() => {
                         setStateNFT("listed", false, "0");
                         props.salesOrder.price = "0";
                       }}
-                      size="medium"
+                      size="small"
                       color="secondary"
                       variant="contained"
                     >
-                      <Typography color="white" variant="h2">
+                      <Typography
+                        color="white"
+                        sx={{ fontWeight: 600, fontSize: 20 }}
+                      >
                         REMOVE SELL
                       </Typography>
                     </Button>
@@ -206,16 +219,20 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 )}
               {account?.address === props.salesOrder?.walletAddress &&
                 !props.salesOrder?.listed && (
-                  <Box textAlign={"center"}>
+                  <Box textAlign={"right"}>
                     <Button
                       onClick={() => {
                         router.push(`${router.asPath}/set-sell-value`);
                       }}
-                      size="medium"
+                      size="small"
                       color="secondary"
                       variant="contained"
                     >
-                      <Typography color="white" variant="h2">
+                      <Typography
+                        color="white"
+                        variant="h2"
+                        sx={{ fontSize: 20 }}
+                      >
                         SELL
                       </Typography>
                     </Button>
@@ -223,14 +240,17 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 )}
               {account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
-                  <Box textAlign={"center"}>
+                  <Box textAlign={"right"}>
                     <Button
                       onClick={mintAndBuy}
-                      size="medium"
+                      size="small"
                       color="secondary"
                       variant="contained"
                     >
-                      <Typography color="white" variant="h2">
+                      <Typography
+                        color="white"
+                        sx={{ fontWeight: 600, fontSize: 20 }}
+                      >
                         BUY
                       </Typography>
                     </Button>
@@ -241,12 +261,32 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         </Grid>
       </Box>
       <br />
-      <FurtherDetails
-        creator={props.salesOrder?.creatorWalletAddress}
-        tokenID={props.salesOrder?.tokenID}
-        collection={props.salesOrder?.collection}
-        uri={props.salesOrder?.uri}
-      />
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
+        <Grid container columnSpacing={2}>
+          <Grid alignSelf={"center"} item xs={6}>
+            <FurtherDetails
+              creator={props.salesOrder?.creatorWalletAddress}
+              tokenID={props.salesOrder?.tokenID}
+              collection={props.salesOrder?.collection}
+              uri={props.salesOrder?.uri}
+            />
+          </Grid>
+          <Grid alignSelf={"center"} item xs={6}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Listing History</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ListingHistoryTable />
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+        </Grid>
+      </Box>
       <ModalPopUp msg={msg} open={open} setOpen={setOpen} setMsg={setMsg} />
     </Box>
   );

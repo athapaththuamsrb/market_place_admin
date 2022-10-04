@@ -27,7 +27,7 @@ const SetSellValue: NextPage<ViewProps> = (
         <SetPrice salesOrder={props.nft} />
       ) : (
         <Typography variant="h2" align="center">
-          HAVEN{"'"}T PERMITION TO ACCESS THIS PAGE GO EXPLORE PAGE{" "}
+          HAVEN{"'"}T PERMISSION TO ACCESS THIS PAGE GO EXPLORE PAGE{" "}
           <Link href="/explore-collection">HERE</Link>
         </Typography>
       )}

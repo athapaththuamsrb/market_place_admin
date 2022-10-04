@@ -16,12 +16,12 @@ const MyTabBar: FC<CategoryNavProps> = (props) => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  const tabs = ["Collection", "Creat"];
+  const tabs = ["Collection", "Created"];
   const nftPanel = tabs.map((item) => {
     let filternfts: NFT_card[] = props.nfts;
     const nftEls = filternfts.map((salesOrder) => {
       return (
-        <Grid key={salesOrder.id} item xs={3}>
+        <Grid key={salesOrder.id} item xs={3} sx={{marginTop:-6, marginLeft:-10}}>
           <NFT
             id={salesOrder.id}
             listed={salesOrder.listed}

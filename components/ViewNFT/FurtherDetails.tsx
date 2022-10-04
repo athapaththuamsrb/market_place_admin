@@ -66,7 +66,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
         <Typography
           sx={{ marginTop: "60px" }}
           variant="h4"
-          align="center"
+          align="left"
           color={"primary"}
         >
           Further Details :
@@ -74,59 +74,94 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Typography
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "10px",
+            marginLeft: "40px",
+            fontWeight: 400,
+            fontSize: 15,
+          }}
           variant="h4"
-          align="center"
-          color={"primary"}
+          align="left"
+          color={"gray"}
         >
           Token ID : {props.tokenID}
         </Typography>
         <Typography
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "10px",
+            marginLeft: "40px",
+            fontWeight: 400,
+            fontSize: 15,
+          }}
           variant="h4"
-          align="center"
-          color={"primary"}
+          align="left"
+          color={"gray"}
         >
           Creator : {props.creator}
         </Typography>
         <Typography
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "10px",
+            marginLeft: "40px",
+            fontWeight: 400,
+            fontSize: 15,
+          }}
           variant="h4"
-          align="center"
-          color={"primary"}
+          align="left"
+          color={"gray"}
         >
           Token Standard : ERC721
         </Typography>
         <Typography
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "10px",
+            marginLeft: "40px",
+            fontWeight: 400,
+            fontSize: 15,
+          }}
           variant="h4"
-          align="center"
-          color={"primary"}
+          align="left"
+          color={"gray"}
         >
           Contract Address : {props.collection}
         </Typography>
         <Typography
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "10px",
+            marginLeft: "40px",
+            fontWeight: 400,
+            fontSize: 15,
+          }}
           variant="h4"
-          align="center"
-          color={"primary"}
+          align="left"
+          color={"gray"}
         >
           Blockchain : Etheruem
         </Typography>
         <Typography
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "10px",
+            marginLeft: "40px",
+            fontWeight: 400,
+            fontSize: 15,
+          }}
           variant="h4"
-          align="center"
-          color={"primary"}
+          align="left"
+          color={"gray"}
         >
           Metadata : {props.uri}
         </Typography>
 
         <Typography
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "10px",
+            marginLeft: "40px",
+            fontWeight: 400,
+            fontSize: 15,
+          }}
           variant="h4"
-          align="center"
-          color={"primary"}
+          align="left"
+          color={"gray"}
         >
           Creator Fee : 0%
         </Typography>

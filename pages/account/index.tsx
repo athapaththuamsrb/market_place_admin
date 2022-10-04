@@ -8,6 +8,7 @@ import {
   Avatar,
   Stack,
   ImageListItem,
+  Divider,
 } from "@mui/material";
 import NFTcard from "../../components/ui/NFT";
 import { useAccount, useConnect, useBalance } from "wagmi";
@@ -77,26 +78,30 @@ const MyNFTs: NextPage = (props) => {
             <Avatar
               alt="Remy Sharp"
               src={profile?.profileImage}
-              sx={{ width: 100, height: 100, boxShadow: 3, mt: -10, ml: 2 }}
+              sx={{ width: 200, height: 200, boxShadow: 3, mt: "-10%", ml: 20 }}
             />
           </Stack>
         </ImageListItem>
       )}
       <Container sx={{ pt: 5 }}>
-        <Typography variant="h2" sx={{ mt: 1 }} gutterBottom>
+        <Typography variant="h2" sx={{ mt: -3 }} gutterBottom>
           {profile?.userName}
         </Typography>
-        <Typography variant="h4" sx={{ mt: 1 }} gutterBottom>
+        <Typography variant="h4" sx={{ mt: 0, fontWeight: 500 }} gutterBottom>
           <Image
-            height={30}
-            width={30}
+            height={17}
+            width={17}
             src={"/ethereum.png"}
             alt={"logo"}
             loading="lazy"
           />
           {account?.address}
         </Typography>
-        <Typography variant="h4" sx={{ mt: 1 }} gutterBottom>
+        <Typography
+          variant="h4"
+          sx={{ mt: 1, mb: 3, fontWeight: 500 }}
+          gutterBottom
+        >
           Account balance: {balance?.formatted} {balance?.symbol}
         </Typography>
 
@@ -113,17 +118,28 @@ const MyNFTs: NextPage = (props) => {
         {isMounted && activeConnector ? (
           <Box>
             {isPending && (
-              <Box sx={{ width: "100%" }}>
+              <Box sx={{ width: "100%", mt: 3 }}>
                 <LinearProgress />
               </Box>
             )}
-            {data.length === 0 ? (
-              <Typography color="black" align="center" variant="h2">
-                No NFT Exit
-              </Typography>
-            ) : (
-              <MyTabBar nfts={data} />
-            )}
+
+            <Box sx={{ marginBottom: "1%" }}>
+              {data.length === 0 ? (
+                <Box>
+                  <Divider sx={{ mt: 3 }} />
+                  <Typography
+                    color="black"
+                    align="center"
+                    variant="h2"
+                    sx={{ mt: 3 }}
+                  >
+                    No NFTs Exists!
+                  </Typography>
+                </Box>
+              ) : (
+                <MyTabBar nfts={data} />
+              )}
+            </Box>
           </Box>
         ) : (
           <Connect />

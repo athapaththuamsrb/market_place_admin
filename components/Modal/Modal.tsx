@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useRouter } from "next/router";
+import { Typography } from "@mui/material";
 
 type AlertDialogProps = {
   msg: string;
@@ -35,10 +36,12 @@ const AlertDialog: FC<AlertDialogProps> = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Create status"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Creating Status"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {props.msg}
+            <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 500 }}>
+              {props.msg}
+            </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

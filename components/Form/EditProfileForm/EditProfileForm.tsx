@@ -118,7 +118,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               userwalletAddress: account?.address,
             },
           });
-          props.setMsg(res.status === 201 ? "successfull!!" : "Try again!!");
+          props.setMsg(res.status === 201 ? "Successfully updated!!" : "Try again!!");
           props.setOpen(true);
         }
       } catch (error) {
@@ -186,7 +186,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Typography variant="body2">
                 This image will appear at the top of your collection page. Avoid
                 including too much text in this banner image, as the dimensions
-                change on different devices. 1400 x 350 recommended.
+                change on different devices. 1536 x 350 recommended.
               </Typography>
               <br />
               {image["bannerImage"] && (
