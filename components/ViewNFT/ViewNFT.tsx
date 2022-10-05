@@ -131,6 +131,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   };
   return isMounted ? (
     <Box>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title
         firstWord={
           account?.address === props.salesOrder?.walletAddress ||
@@ -140,11 +145,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         }
         secondWord="NFT"
       />
-      {isPending && (
-        <Box sx={{ width: "100%" }}>
-          <LinearProgress />
-        </Box>
-      )}
       <Box sx={{ width: "70%", marginX: "auto" }}>
         <Grid container>
           <Grid alignSelf={"center"} item xs={6}>

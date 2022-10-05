@@ -49,7 +49,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const [isRoyality, setIsRoyality] = useState(false);
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
-  const [toggle,setToggle] = useState<string>("FIX");
+  const [toggle, setToggle] = useState<string>("FIX");
   console.log("royality", props.salesOrder.royality);
   // console.log(
   //   "xxx",
@@ -155,6 +155,11 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const { signTypedDataAsync } = useSignTypedData();
   return (
     <Box>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title
         firstWord={
           account?.address === props.salesOrder?.walletAddress ||
@@ -164,11 +169,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         }
         secondWord="NFT"
       />
-      {isPending && (
-        <Box sx={{ width: "100%" }}>
-          <LinearProgress />
-        </Box>
-      )}
+
       <Box sx={{ width: "70%", marginX: "auto" }}>
         <Grid container>
           <Grid alignSelf={"center"} item xs={6}>
@@ -185,7 +186,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 variant="square"
               />
             </Stack>
-            
           </Grid>
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
@@ -197,34 +197,48 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                   onChange={handleChange}
                   aria-label="Platform"
                   fullWidth
-                  sx= {{marginY: "20px"}}
+                  sx={{ marginY: "20px" }}
                 >
-                  <ToggleButton value="FIX" onClick={() => {setToggle("FIX")}}>FIX</ToggleButton>
-                  <ToggleButton value="BID"  onClick={() => {setToggle("BID")}}>BID</ToggleButton>
+                  <ToggleButton
+                    value="FIX"
+                    onClick={() => {
+                      setToggle("FIX");
+                    }}
+                  >
+                    FIX
+                  </ToggleButton>
+                  <ToggleButton
+                    value="BID"
+                    onClick={() => {
+                      setToggle("BID");
+                    }}
+                  >
+                    BID
+                  </ToggleButton>
                 </ToggleButtonGroup>
                 <Typography
-                variant="h2"
-                align="left"
-                sx={{ marginTop: "10px", marginBottom: "5px" }}
-              >
-                {props.salesOrder?.name}
-              </Typography>
-              
-              <Typography
-                sx={{ marginBottom: "10px" }}
-                variant="h4"
-                align="left"
-              >
-                Description:
-              </Typography>
-              <Typography
-                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
-                color="gray"
-                align="left"
-              >
-                {props.salesOrder?.description}
-              </Typography>
-              
+                  variant="h2"
+                  align="left"
+                  sx={{ marginTop: "10px", marginBottom: "5px" }}
+                >
+                  {props.salesOrder?.name}
+                </Typography>
+
+                <Typography
+                  sx={{ marginBottom: "10px" }}
+                  variant="h4"
+                  align="left"
+                >
+                  Description:
+                </Typography>
+                <Typography
+                  sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
+                  color="gray"
+                  align="left"
+                >
+                  {props.salesOrder?.description}
+                </Typography>
+
                 <TextField
                   sx={{ marginBottom: "5px" }}
                   id="price"
@@ -258,20 +272,20 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                   </Typography>
                 ) : null}
                 <Box textAlign={"right"}>
-                 <Button
+                  <Button
                     type="submit"
                     size="small"
                     color="secondary"
                     variant="contained"
-
                   >
-                    <Typography 
-                      color="white" 
+                    <Typography
+                      color="white"
                       variant="h2"
-                      sx={{ fontSize: 20 }}>
+                      sx={{ fontSize: 20 }}
+                    >
                       SELL ORDER
                     </Typography>
-                  </Button> 
+                  </Button>
                 </Box>
               </form>
             </Box>
