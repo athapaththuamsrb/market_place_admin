@@ -180,26 +180,28 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           </Grid>
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
-              <Box textAlign={"right"} marginTop={"10px"}>
-                <IconButton id="long-button" onClick={handleClick}>
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="long-menu"
-                  anchorEl={anchorEl}
-                  open={open1}
-                  onClose={handleClose}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      setOpenReportPopup(true), setAnchorEl(null);
-                    }}
-                    sx={{ fontWeight: 500, fontSize: 14 }}
-                  >
-                    Report NFT
-                  </MenuItem>
-                </Menu>
-                {/* <Button
+              {activeConnector &&
+                account?.address !== props.salesOrder?.walletAddress && (
+                  <Box textAlign={"right"} marginTop={"10px"}>
+                    <IconButton id="long-button" onClick={handleClick}>
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      id="long-menu"
+                      anchorEl={anchorEl}
+                      open={open1}
+                      onClose={handleClose}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          setOpenReportPopup(true), setAnchorEl(null);
+                        }}
+                        sx={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        Report NFT
+                      </MenuItem>
+                    </Menu>
+                    {/* <Button
                   onClick={() => setOpenReportPopup(true)}
                   size="small"
                   color="secondary"
@@ -212,7 +214,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     Report NFT
                   </Typography>
                 </Button> */}
-              </Box>
+                  </Box>
+                )}
               <ReportPopup
                 openReportPopup={openReportPopup}
                 setOpenReportPopup={setOpenReportPopup}
