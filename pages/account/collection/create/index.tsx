@@ -39,6 +39,7 @@ const CreatePage: NextPage = (props) => {
     name: "",
     description: "",
     image: "",
+    royality: 0,
   });
 
   return isMounted && activeConnector ? (
@@ -52,11 +53,6 @@ const CreatePage: NextPage = (props) => {
       <br />
       <br />
       <CreateCollectionForm
-        setSalesOrder={setSalesOrder}
-        ipfsImage={ipfsImage}
-        setIpfsImage={setIpfsImage}
-        salesOrder={salesOrder}
-        openModal={openModal}
         setMsg={setMsg}
         open={open}
         msg={msg}

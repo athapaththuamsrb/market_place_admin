@@ -32,6 +32,7 @@ const Edit: NextPage = (props) => {
     name: "",
     description: "",
     image: "",
+    royality: 0,
   });
   const {
     getRootProps,
