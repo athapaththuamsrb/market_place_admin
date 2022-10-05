@@ -55,7 +55,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     isConnecting,
     pendingConnector,
   } = useConnect();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const open1 = Boolean(anchorEl);
@@ -67,6 +66,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const setStateNFT = async (key: string, value: boolean, price: string) => {
     try {
       setIsPendging(true);
@@ -120,7 +120,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         { value: ethers.utils.parseEther(props.salesOrder.price) }
       );
-      setMsg("successfull!!");
+      setMsg("Successful!");
       setOpen(true);
       setStateNFT("sold", true, "0");
     } else {
@@ -139,7 +139,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         { value: ethers.utils.parseEther(props.salesOrder.price) }
       );
-      setMsg("successfull!!");
+      setMsg("Successful!");
       setOpen(true);
       setStateNFT("sold", true, "0");
     }
@@ -147,11 +147,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   };
   return isMounted ? (
     <Box>
-      {isPending && (
-        <Box sx={{ width: "100%" }}>
-          <LinearProgress />
-        </Box>
-      )}
       <Title
         firstWord={
           account?.address === props.salesOrder?.walletAddress ||
@@ -161,6 +156,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         }
         secondWord="NFT"
       />
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Box sx={{ width: "70%", marginX: "auto" }}>
         <Grid container>
           <Grid alignSelf={"center"} item xs={6}>
@@ -180,6 +180,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           </Grid>
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
+              {/* report button */}
               <Box textAlign={"right"} marginTop={"10px"}>
                 <IconButton id="long-button" onClick={handleClick}>
                   <MoreVertIcon />
@@ -234,13 +235,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               </Typography>
               <Typography
                 sx={{ marginBottom: "10px" }}
-                variant="h4"
+                variant="h3"
                 align="left"
               >
                 Description:
               </Typography>
               <Typography
-                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
+                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 16 }}
                 color="gray"
                 align="left"
               >
@@ -304,7 +305,24 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         variant="h2"
                         sx={{ fontSize: 20 }}
                       >
-                        SELL
+                        FIX SELL
+                      </Typography>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        router.push(`${router.asPath}/set-bid-sell-value`);
+                      }}
+                      size="small"
+                      color="secondary"
+                      variant="contained"
+                      sx={{ ml: 2 }}
+                    >
+                      <Typography
+                        color="white"
+                        variant="h2"
+                        sx={{ fontSize: 20 }}
+                      >
+                        BID SELL
                       </Typography>
                     </Button>
                   </Box>
