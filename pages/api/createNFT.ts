@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const body = req.body;
-
     const userData = {
       walletAddress: body.nftData.creator,
     };
@@ -36,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
       try {
-        const newEntry = await prisma.nFT.create({
+        await prisma.nFT.create({
           data: {
             category: body.nftData.category,
             collection: body.nftData.collection,
@@ -49,6 +48,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             description: body.description,
             image: body.image,
             name: body.name,
+            royality: Number(body.royality),
           },
         });
         await prisma.$disconnect();

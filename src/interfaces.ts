@@ -26,6 +26,7 @@ export type SalesOrder = {
   name: string;
   description: string;
   image: string;
+  royality: number;
 };
 export type NFT_load = {
   id: string;

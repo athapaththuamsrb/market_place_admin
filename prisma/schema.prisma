@@ -69,6 +69,7 @@ model NFT {
   name        String
   royality    Int      @default(0)
   listed      Boolean  @default(false) //when we want sell  it this feld become true otherwise this false(after create it) 
+  sale_way    String   @default("NONE")
   timestamp   DateTime @default(now())
   isDelete    Boolean  @default(false)
 }
@@ -77,4 +78,10 @@ enum TYPE {
   ADMIN
   SUPER_ADMIN
   USER
+}
+
+enum SALE_WAY {
+  NONE
+  BID
+  FIX
 }

@@ -25,7 +25,6 @@ import NFTCollection1Abi from "../../../contractsData/NFTCollection1.json";
 import ConfirmModal from "../../ui/ConfirmModal";
 import { NFT, SalesOrder } from "../../../src/interfaces";
 import * as Yup from "yup";
-import { ethers } from "ethers";
 const projectId = "2DI7xsXof3jkeXnqqBcZ4QmiLmW"; // <---------- your Infura Project ID
 
 const projectSecret = "13f77964b78b57d2159a682b364cf50d"; // <---------- your Infura Secret
@@ -100,7 +99,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         .positive()
         .integer()
         .max(100, "maximum value is 100%")
-        .min(0, "maximum value is 0%"),
+        .min(0, "minimum value is 0%"),
     }),
     onSubmit: async (values) => {
       const withIpfs = { ...values, image: props.ipfsImage };
@@ -135,6 +134,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           name: withIpfs.name,
           description: withIpfs.description,
           image: withIpfs.image,
+          royality: isRoyality ? values.royality : 0,
         });
       } catch (error) {
         console.log("ipfs uri upload error: ", error);
@@ -163,7 +163,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     setIsRoyality(event.target.checked);
   };
   const [isRoyality, setIsRoyality] = useState(false);
-  const [royality, setRoyality] = useState(0);
 
   return (
     <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
@@ -321,6 +320,13 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   onChange={formik.handleChange}
                 />
               )}
+              {isRoyality &&
+              formik.touched.royality &&
+              formik.errors.royality ? (
+                <Typography color="red" variant="body2">
+                  {formik.errors.royality}
+                </Typography>
+              ) : null}
             </Box>
           </Grid>
         </Grid>
@@ -337,6 +343,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               formik.errors.name ||
               formik.errors.category ||
               formik.errors.description ||
+              (isRoyality && formik.errors.royality) ||
               props.ipfsImage === "/db5dbf90c8c83d650e1022220b4d707e.jpg"
                 ? true
                 : false

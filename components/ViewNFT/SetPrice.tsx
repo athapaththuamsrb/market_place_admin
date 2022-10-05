@@ -33,11 +33,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const router = useRouter();
   const [isPending, setIsPendging] = useState(false);
   const { data: account } = useAccount();
-  const [royality, setRoyality] = useState(
-    props.salesOrder.creatorWalletAddress !== props.salesOrder.walletAddress
-      ? props.salesOrder.royality
-      : 0
-  );
+
   const [alignment, setAlignment] = useState("FIX");
 
   const handleChange = (
@@ -46,32 +42,18 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   ) => {
     setAlignment(newAlignment);
   };
-  const [isRoyality, setIsRoyality] = useState(false);
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
-  const [toggle,setToggle] = useState<string>("FIX");
-  console.log("royality", props.salesOrder.royality);
-  // console.log(
-  //   "xxx",
-  //   props.salesOrder.creatorWalletAddress !== props.salesOrder.walletAddress
-  // );
+  const [toggle, setToggle] = useState<string>("FIX");
+  console.log(props.salesOrder);
   const formik = useFormik({
     initialValues: {
       price: "",
-      royality: royality,
     },
     validationSchema: yup.object({
       price: yup.string().required("required field"),
-      royality: yup
-        .number()
-        .required("required field")
-        .positive()
-        .integer()
-        .max(100, "maximum value is 100%")
-        .min(0, "maximum value is 0%"),
     }),
-    onSubmit: async (values: { price: string; royality: number }) => {
-      console.log("came-up", royality);
+    onSubmit: async (values: { price: string }) => {
       try {
         const signature = await signTypedDataAsync({
           domain,
@@ -82,17 +64,14 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
             creator: props.salesOrder.creatorWalletAddress,
             category: props.salesOrder.category,
             collection: props.salesOrder.collection,
-            royality: values.royality,
+            royality: props.salesOrder.royality,
             price: ethers.utils.parseEther(values.price), //TODO PRICE
           },
         });
-        console.log("came-down");
 
         setIsPendging(true);
         setMsg("processing.....");
-        console.log("came-1");
         if (props.salesOrder.id.length === 46) {
-          console.log("came-2");
           const res1 = await api.post("/api/addNFTToDB", {
             data: {
               category: props.salesOrder.category,
@@ -106,12 +85,12 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
               description: props.salesOrder.description,
               image: props.salesOrder.image,
               name: props.salesOrder.name,
-              royality: values.royality,
+              royality: props.salesOrder.royality,
+              saleWay: alignment,
             },
           });
           setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
         } else {
-          console.log("values.royality", values.royality);
           const res1 = await api.post("/api/setStateNFT", {
             data: {
               filed: "listed",
@@ -119,7 +98,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
               id: props.salesOrder.id,
               price: values.price,
               signature: signature,
-              royality: values.royality,
+              saleWay: alignment,
             },
           });
           setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
@@ -127,7 +106,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         setIsPendging(false);
         setOpen(true);
         formik.values.price = "";
-        formik.values.royality = 0;
         router.push("/explore-collections");
       } catch (error) {
         console.log(error);
@@ -185,7 +163,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 variant="square"
               />
             </Stack>
-            
           </Grid>
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
@@ -197,34 +174,48 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                   onChange={handleChange}
                   aria-label="Platform"
                   fullWidth
-                  sx= {{marginY: "20px"}}
+                  sx={{ marginY: "20px" }}
                 >
-                  <ToggleButton value="FIX" onClick={() => {setToggle("FIX")}}>FIX</ToggleButton>
-                  <ToggleButton value="BID"  onClick={() => {setToggle("BID")}}>BID</ToggleButton>
+                  <ToggleButton
+                    value="FIX"
+                    onClick={() => {
+                      setToggle("FIX");
+                    }}
+                  >
+                    FIX
+                  </ToggleButton>
+                  <ToggleButton
+                    value="BID"
+                    onClick={() => {
+                      setToggle("BID");
+                    }}
+                  >
+                    BID
+                  </ToggleButton>
                 </ToggleButtonGroup>
                 <Typography
-                variant="h2"
-                align="left"
-                sx={{ marginTop: "10px", marginBottom: "5px" }}
-              >
-                {props.salesOrder?.name}
-              </Typography>
-              
-              <Typography
-                sx={{ marginBottom: "10px" }}
-                variant="h4"
-                align="left"
-              >
-                Description:
-              </Typography>
-              <Typography
-                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
-                color="gray"
-                align="left"
-              >
-                {props.salesOrder?.description}
-              </Typography>
-              
+                  variant="h2"
+                  align="left"
+                  sx={{ marginTop: "10px", marginBottom: "5px" }}
+                >
+                  {props.salesOrder?.name}
+                </Typography>
+
+                <Typography
+                  sx={{ marginBottom: "10px" }}
+                  variant="h4"
+                  align="left"
+                >
+                  Description:
+                </Typography>
+                <Typography
+                  sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
+                  color="gray"
+                  align="left"
+                >
+                  {props.salesOrder?.description}
+                </Typography>
+
                 <TextField
                   sx={{ marginBottom: "5px" }}
                   id="price"
@@ -258,20 +249,20 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                   </Typography>
                 ) : null}
                 <Box textAlign={"right"}>
-                 <Button
+                  <Button
                     type="submit"
                     size="small"
                     color="secondary"
                     variant="contained"
-
                   >
-                    <Typography 
-                      color="white" 
+                    <Typography
+                      color="white"
                       variant="h2"
-                      sx={{ fontSize: 20 }}>
+                      sx={{ fontSize: 20 }}
+                    >
                       SELL ORDER
                     </Typography>
-                  </Button> 
+                  </Button>
                 </Box>
               </form>
             </Box>

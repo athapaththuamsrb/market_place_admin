@@ -10,16 +10,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       switch (filed) {
         case "listed":
-          const royality = Number(req.body.data.royality);
           const oldNFT = await prisma.nFT.findFirst({
             where: {
               id: id,
               isDelete: false,
             },
           });
-
+          //console.log(oldNFT);
           if (oldNFT) {
             if (value) {
+              const sale_way = req.body.data.saleWay;
+              //console.log(sale_way);
               await prisma.nFT.create({
                 data: {
                   category: oldNFT.category,
@@ -34,7 +35,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   image: oldNFT.image,
                   name: oldNFT.name,
                   listed: true,
-                  royality: royality,
+                  royality: oldNFT.royality,
+                  sale_way: sale_way,
                 },
               });
               await prisma.nFT.update({
@@ -53,7 +55,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: {
                   listed: false,
                   price: "0",
-                  royality: 0,
                 },
               });
             }
@@ -87,6 +88,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 sold: true,
                 listed: false,
                 royality: oldNFT1.royality,
+                sale_way: oldNFT1.sale_way,
               },
             });
             await prisma.nFT.update({

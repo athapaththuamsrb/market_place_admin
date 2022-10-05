@@ -59,7 +59,7 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
         creator: props.salesOrder.nftData.creator,
         category: props.salesOrder.nftData.category,
         collection: props.salesOrder.nftData.collection,
-        royality: 0,
+        royality: props.salesOrder.royality,
         price: ethers.utils.parseEther("0"), //TODO PRICE
       },
     });
@@ -112,9 +112,6 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
           >
             Item Name : {props.salesOrder.name}
           </Typography>
-          {/* <Typography sx={{ marginBottom: "20px" }} align="center" variant="h3">
-            {`item Price : ${props.salesOrder.nftData.price} ETH`}
-          </Typography> */}
           <Typography
             sx={{ marginBottom: "20px", fontWeight: 500 }}
             align="center"

@@ -165,19 +165,21 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
               <Box textAlign={"right"} marginTop={"10px"}>
-                <Button
-                  onClick={() => setOpenReportPopup(true)}
-                  size="small"
-                  color="secondary"
-                  variant="contained"
-                >
-                  <Typography
-                    color="white"
-                    sx={{ fontWeight: 600, fontSize: 20 }}
+                {activeConnector && (
+                  <Button
+                    onClick={() => setOpenReportPopup(true)}
+                    size="small"
+                    color="secondary"
+                    variant="contained"
                   >
-                    Report NFT
-                  </Typography>
-                </Button>
+                    <Typography
+                      color="white"
+                      sx={{ fontWeight: 600, fontSize: 20 }}
+                    >
+                      Report NFT
+                    </Typography>
+                  </Button>
+                )}
               </Box>
               <ReportPopup
                 openReportPopup={openReportPopup}
