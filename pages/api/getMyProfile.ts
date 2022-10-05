@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       };
       res
         .status(201)
-        .json({ message: "successfully get", success: true, data: profile });
+        .json({ message: "Successfully get", success: true, data: profile });
     } catch (error) {
       await prisma.$disconnect();
       res

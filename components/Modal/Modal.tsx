@@ -36,17 +36,40 @@ const AlertDialog: FC<AlertDialogProps> = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Creating Status"}</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+          sx={{
+            backgroundColor: "#CA82FF",
+            color: "white",
+          }}
+          id="alert-dialog-title"
+        >
+          {/* {"Status"} */}
+          <Typography
+            variant="h5"
+            component="div"
+            style={{ flexGrow: 1, fontWeight: 600 }}
+          >
+            Status
+          </Typography>
+        </DialogTitle>
+        <DialogContent
+          dividers
+          sx={{
+            fontWeight: 100,
+            width: "400px",
+          }}
+        >
           <DialogContentText id="alert-dialog-description">
-            <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 500 }}>
+            <Typography variant="h6" sx={{ fontSize: 18, fontWeight: 500 }}>
               {props.msg}
             </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} autoFocus>
-            OK
+            <Typography variant="h6" sx={{ fontSize: 18, fontWeight: 500 }}>
+              OK
+            </Typography>
           </Button>
         </DialogActions>
       </Dialog>

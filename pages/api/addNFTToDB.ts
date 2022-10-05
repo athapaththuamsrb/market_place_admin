@@ -69,7 +69,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       await prisma.$disconnect();
-      res.status(201).json({ message: "successfully add", success: true });
+      res.status(201).json({ message: "Successfully add", success: true });
     } catch {
       await prisma.$disconnect();
       res.status(400).json({ message: "Bad request", success: false });

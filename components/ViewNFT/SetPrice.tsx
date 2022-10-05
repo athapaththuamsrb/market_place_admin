@@ -34,11 +34,10 @@ interface ViewNFTProps {
 }
 const SetPrice: FC<ViewNFTProps> = (props) => {
   const router = useRouter();
-  const [isPending, setIsPendging] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const { data: account } = useAccount();
-
   const [alignment, setAlignment] = useState("FIX");
-
+  const [toggle, setToggle] = useState<string>("FIX");
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: string
@@ -47,7 +46,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   };
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
-  const [toggle, setToggle] = useState<string>("FIX");
+
   const formik = useFormik({
     initialValues: {
       price: "",
@@ -71,7 +70,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
           },
         });
 
-        setIsPendging(true);
+        setIsPending(true);
         setMsg("processing.....");
         if (props.salesOrder.id.length === 46) {
           const res1 = await api.post("/api/addNFTToDB", {
@@ -91,7 +90,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
               saleWay: alignment,
             },
           });
-          setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
+          setMsg(res1.status === 201 ? "Successful!" : "Try again!!");
         } else {
           const res1 = await api.post("/api/setStateNFT", {
             data: {
@@ -103,9 +102,9 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
               saleWay: alignment,
             },
           });
-          setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
+          setMsg(res1.status === 201 ? "Successful!" : "Try again!!");
         }
-        setIsPendging(false);
+        setIsPending(false);
         setOpen(true);
         formik.values.price = "";
         router.push("/explore-collections");

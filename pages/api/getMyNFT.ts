@@ -85,7 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       res
         .status(201)
-        .json({ message: "successfully get", success: true, data: finslNFT });
+        .json({ message: "Successfully received", success: true, data: finslNFT });
     } catch (error) {
       await prisma.$disconnect();
       res

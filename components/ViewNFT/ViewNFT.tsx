@@ -43,10 +43,12 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const [isPending, setIsPendging] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const { data: account } = useAccount();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open1 = Boolean(anchorEl);
   const {
     activeConnector,
     connect,
@@ -56,10 +58,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     pendingConnector,
   } = useConnect();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const open1 = Boolean(anchorEl);
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -67,9 +65,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const setStateNFT = async (key: string, value: boolean, price: string) => {
     try {
-      setIsPendging(true);
+      setIsPending(true);
+
       switch (key) {
         case "listed":
           await api.post("/api/setStateNFT", {
@@ -82,24 +82,27 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           });
           props.salesOrder.listed = value;
           break;
+
         case "sold":
           await api.post("/api/setStateNFT", {
             data: { filed: key, value, id: props.salesOrder.id, price: price },
           });
           props.salesOrder.sold = value;
           break;
+
         default:
-          console.log("undefine");
+          console.log("undefined");
       }
-      setIsPendging(false);
+
+      setIsPending(false);
     } catch (error) {
       console.log("update error");
-      setIsPendging(false);
+      setIsPending(false);
     }
   };
   const mintAndBuy = async () => {
     //TODO adding data to blockchain
-    setIsPendging(true);
+    setIsPending(true);
 
     // console.log(nftData);
     if (
@@ -120,7 +123,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         { value: ethers.utils.parseEther(props.salesOrder.price) }
       );
-      setMsg("successfull!!");
+      setMsg("Successful!");
       setOpen(true);
       setStateNFT("sold", true, "0");
     } else {
@@ -139,11 +142,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         { value: ethers.utils.parseEther(props.salesOrder.price) }
       );
-      setMsg("successfull!!");
+      setMsg("Successful!");
       setOpen(true);
       setStateNFT("sold", true, "0");
     }
-    setIsPendging(false);
+    setIsPending(false);
   };
   return isMounted ? (
     <Box>
@@ -166,7 +169,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           <Grid alignSelf={"center"} item xs={6}>
             <Stack alignItems="center">
               <Avatar
-                alt="Remy Sharp"
+                alt="avatar"
                 src={props.salesOrder?.image}
                 sx={{
                   width: 400,
@@ -180,6 +183,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           </Grid>
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
+              {/* Report option */}
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress && (
                   <Box textAlign={"right"} marginTop={"10px"}>
@@ -201,29 +205,17 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         Report NFT
                       </MenuItem>
                     </Menu>
-                    {/* <Button
-                  onClick={() => setOpenReportPopup(true)}
-                  size="small"
-                  color="secondary"
-                  variant="contained"
-                >
-                  <Typography
-                    color="white"
-                    sx={{ fontWeight: 600, fontSize: 20 }}
-                  >
-                    Report NFT
-                  </Typography>
-                </Button> */}
+                    <ReportPopup
+                      openReportPopup={openReportPopup}
+                      setOpenReportPopup={setOpenReportPopup}
+                    ></ReportPopup>
                   </Box>
                 )}
-              <ReportPopup
-                openReportPopup={openReportPopup}
-                setOpenReportPopup={setOpenReportPopup}
-              ></ReportPopup>
+
               <Typography
                 variant="h2"
                 align="left"
-                sx={{ marginTop: "0px", marginBottom: "5px" }}
+                sx={{ marginTop: "10px", marginBottom: "5px" }}
               >
                 {props.salesOrder?.name}
               </Typography>
@@ -235,13 +227,15 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               >
                 {"Contract Address: " + props.salesOrder?.walletAddress}
               </Typography>
+
               <Typography
                 sx={{ marginBottom: "10px" }}
                 variant="h4"
                 align="left"
               >
-                Description:
+                Description :
               </Typography>
+
               <Typography
                 sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
                 color="gray"
@@ -249,25 +243,29 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               >
                 {props.salesOrder?.description}
               </Typography>
+
+              {/* Price */}
               {props.salesOrder?.price !== "0" && (
                 <div>
                   <Typography
-                    sx={{ marginBottom: "20px" }}
+                    sx={{ marginBottom: "10px" }}
                     variant="h4"
                     align="left"
                   >
-                    Price
+                    Price :
                   </Typography>
                   <Typography
                     sx={{ marginBottom: "20px" }}
                     variant="h3"
                     align="left"
-                    color={"secondary"}
+                    color={"primary"}
                   >
                     {`${props.salesOrder?.price} ETH`}
                   </Typography>
                 </div>
               )}
+
+              {/* Remove sell */}
               {activeConnector &&
                 account?.address === props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
@@ -290,6 +288,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     </Button>
                   </Box>
                 )}
+
+              {/* Sell */}
               {activeConnector &&
                 account?.address === props.salesOrder?.walletAddress &&
                 !props.salesOrder?.listed && (
@@ -312,6 +312,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     </Button>
                   </Box>
                 )}
+
+              {/* Buy , make offer*/}
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
@@ -345,15 +347,16 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         color="white"
                         sx={{ fontWeight: 600, fontSize: 20 }}
                       >
-                        Make Offer
+                        MAKE OFFER
                       </Typography>
                     </Button>
+
+                    <OfferPopup
+                      openPopup={openPopup}
+                      setOpenPopup={setOpenPopup}
+                    ></OfferPopup>
                   </Box>
                 )}
-              <OfferPopup
-                openPopup={openPopup}
-                setOpenPopup={setOpenPopup}
-              ></OfferPopup>
             </Box>
           </Grid>
         </Grid>

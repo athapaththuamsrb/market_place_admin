@@ -41,14 +41,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         await prisma.$disconnect();
-        res.status(201).json({ message: "successfully add", success: true });
+        res.status(201).json({ message: "Successfully added", success: true });
       }
     } catch {
       await prisma.$disconnect();
       res.status(400).json({ message: "Bad request", success: false });
     }
   } else {
-    res.status(405).json({ message: "Method not alloed", success: false });
+    res.status(405).json({ message: "Method not allowed", success: false });
   }
 };
 export default handler;

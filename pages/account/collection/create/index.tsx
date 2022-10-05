@@ -44,7 +44,7 @@ const CreatePage: NextPage = (props) => {
 
   return isMounted && activeConnector ? (
     <div>
-      <Title firstWord="Create" secondWord="NFT" />
+      <Title firstWord="Create" secondWord="Collection" />
       {msg === "processing....." && (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />

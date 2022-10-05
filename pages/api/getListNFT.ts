@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await prisma.$disconnect();
       res
         .status(201)
-        .json({ message: "successfully get", success: true, data: nfts });
+        .json({ message: "Successfully get", success: true, data: nfts });
     } catch (err) {
       await prisma.$disconnect();
       console.log(err);

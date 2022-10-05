@@ -139,7 +139,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               userwalletAddress: account?.address,
             },
           });
-          props.setMsg(res.status === 200 ? "successfull!!" : "Try again!!");
+          props.setMsg(res.status === 200 ? "Successful!" : "Try again!!");
           props.setOpen(true);
         }
       } catch (error) {

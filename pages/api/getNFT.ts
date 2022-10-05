@@ -57,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               },
             ];
             res.status(201).json({
-              message: "successfully get",
+              message: "Successfully received",
               success: true,
               data: list,
             });
@@ -116,7 +116,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               },
             ];
             res.status(201).json({
-              message: "successfully get",
+              message: "Successfully get",
               success: true,
               data: finalNFT,
             });
