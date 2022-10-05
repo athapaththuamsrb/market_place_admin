@@ -20,12 +20,15 @@ import { useRouter } from "next/router";
 import { useFormik, Field } from "formik";
 import * as yup from "yup";
 import { useSignTypedData } from "wagmi";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import ModalPopUp from "../Modal";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ListingHistoryTable from "../ui/ItemActivity";
+
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
@@ -45,7 +48,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [toggle, setToggle] = useState<string>("FIX");
-  console.log(props.salesOrder);
   const formik = useFormik({
     initialValues: {
       price: "",
@@ -133,6 +135,11 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const { signTypedDataAsync } = useSignTypedData();
   return (
     <Box>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title
         firstWord={
           account?.address === props.salesOrder?.walletAddress ||
@@ -142,11 +149,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         }
         secondWord="NFT"
       />
-      {isPending && (
-        <Box sx={{ width: "100%" }}>
-          <LinearProgress />
-        </Box>
-      )}
+
       <Box sx={{ width: "70%", marginX: "auto" }}>
         <Grid container>
           <Grid alignSelf={"center"} item xs={6}>
@@ -196,7 +199,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 <Typography
                   variant="h2"
                   align="left"
-                  sx={{ marginTop: "10px", marginBottom: "5px" }}
+                  sx={{ marginTop: "0px", marginBottom: "5px" }}
                 >
                   {props.salesOrder?.name}
                 </Typography>
@@ -254,6 +257,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                     size="small"
                     color="secondary"
                     variant="contained"
+                    sx={{ marginTop: 2 }}
                   >
                     <Typography
                       color="white"
@@ -266,6 +270,33 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 </Box>
               </form>
             </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      <br />
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
+        <Grid container columnSpacing={2}>
+          <Grid alignSelf={"center"} item xs={6}>
+            <FurtherDetails
+              creator={props.salesOrder?.creatorWalletAddress}
+              tokenID={props.salesOrder?.tokenID}
+              collection={props.salesOrder?.collection}
+              uri={props.salesOrder?.uri}
+            />
+          </Grid>
+          <Grid alignSelf={"center"} item xs={6}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Item Activity</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ListingHistoryTable />
+              </AccordionDetails>
+            </Accordion>
           </Grid>
         </Grid>
       </Box>

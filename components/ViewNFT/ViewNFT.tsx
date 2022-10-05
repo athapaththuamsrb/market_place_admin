@@ -16,12 +16,16 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ListingHistoryTable from "../ui/ItemActivity";
 import { useIsMounted } from "../hooks";
 
 import OfferPopup from "../OfferPopup";
 import ReportPopup from "../ReportPopup";
+import React from "react";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -51,6 +55,18 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     isConnecting,
     pendingConnector,
   } = useConnect();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const open1 = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const setStateNFT = async (key: string, value: boolean, price: string) => {
     try {
       setIsPendging(true);
@@ -131,6 +147,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   };
   return isMounted ? (
     <Box>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Title
         firstWord={
           account?.address === props.salesOrder?.walletAddress ||
@@ -140,11 +161,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         }
         secondWord="NFT"
       />
-      {isPending && (
-        <Box sx={{ width: "100%" }}>
-          <LinearProgress />
-        </Box>
-      )}
       <Box sx={{ width: "70%", marginX: "auto" }}>
         <Grid container>
           <Grid alignSelf={"center"} item xs={6}>
@@ -165,21 +181,37 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
               <Box textAlign={"right"} marginTop={"10px"}>
-                {activeConnector && (
-                  <Button
-                    onClick={() => setOpenReportPopup(true)}
-                    size="small"
-                    color="secondary"
-                    variant="contained"
+                <IconButton id="long-button" onClick={handleClick}>
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  anchorEl={anchorEl}
+                  open={open1}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      setOpenReportPopup(true), setAnchorEl(null);
+                    }}
+                    sx={{ fontWeight: 500, fontSize: 14 }}
                   >
-                    <Typography
-                      color="white"
-                      sx={{ fontWeight: 600, fontSize: 20 }}
-                    >
-                      Report NFT
-                    </Typography>
-                  </Button>
-                )}
+                    Report NFT
+                  </MenuItem>
+                </Menu>
+                {/* <Button
+                  onClick={() => setOpenReportPopup(true)}
+                  size="small"
+                  color="secondary"
+                  variant="contained"
+                >
+                  <Typography
+                    color="white"
+                    sx={{ fontWeight: 600, fontSize: 20 }}
+                  >
+                    Report NFT
+                  </Typography>
+                </Button> */}
               </Box>
               <ReportPopup
                 openReportPopup={openReportPopup}
@@ -188,7 +220,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               <Typography
                 variant="h2"
                 align="left"
-                sx={{ marginTop: "30px", marginBottom: "5px" }}
+                sx={{ marginTop: "0px", marginBottom: "5px" }}
               >
                 {props.salesOrder?.name}
               </Typography>
