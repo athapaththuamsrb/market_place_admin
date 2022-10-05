@@ -23,7 +23,6 @@ import { useIsMounted } from "../hooks";
 import OfferPopup from "../OfferPopup";
 import ReportPopup from "../ReportPopup";
 
-
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
@@ -164,27 +163,26 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
             </Stack>
           </Grid>
           <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
-              
             <Box sx={{ width: "90%", marginX: "auto" }}>
-              <Box textAlign={"right"} marginTop={'10px'}>
-                      <Button
-                        onClick={()=>setOpenReportPopup(true)}
-                        size="small"
-                        color="secondary"
-                        variant="contained"
-                      >
-                        <Typography
-                          color="white"
-                          sx={{ fontWeight: 600, fontSize: 20 }}
-                        >
-                          Report NFT
-                        </Typography>
-                      </Button>
-                </Box>
-                <ReportPopup
-                  openReportPopup = {openReportPopup}
-                  setOpenReportPopup = {setOpenReportPopup}
-                ></ReportPopup>
+              <Box textAlign={"right"} marginTop={"10px"}>
+                <Button
+                  onClick={() => setOpenReportPopup(true)}
+                  size="small"
+                  color="secondary"
+                  variant="contained"
+                >
+                  <Typography
+                    color="white"
+                    sx={{ fontWeight: 600, fontSize: 20 }}
+                  >
+                    Report NFT
+                  </Typography>
+                </Button>
+              </Box>
+              <ReportPopup
+                openReportPopup={openReportPopup}
+                setOpenReportPopup={setOpenReportPopup}
+              ></ReportPopup>
               <Typography
                 variant="h2"
                 align="left"
@@ -192,7 +190,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               >
                 {props.salesOrder?.name}
               </Typography>
-              
+
               <Typography
                 sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 14 }}
                 color="gray"
@@ -272,24 +270,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         variant="h2"
                         sx={{ fontSize: 20 }}
                       >
-                        FIX SELL
-                      </Typography>
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        router.push(`${router.asPath}/set-bid-sell-value`);
-                      }}
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                      sx={{ ml: 2 }}
-                    >
-                      <Typography
-                        color="white"
-                        variant="h2"
-                        sx={{ fontSize: 20 }}
-                      >
-                        BID SELL
+                        SELL
                       </Typography>
                     </Button>
                   </Box>
@@ -297,7 +278,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
-                  <Box textAlign={"right"} display= "flex" justifyContent="space-evenly">
+                  <Box
+                    textAlign={"right"}
+                    display="flex"
+                    justifyContent="space-evenly"
+                  >
                     <Button
                       onClick={mintAndBuy}
                       size="small"
@@ -311,10 +296,10 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         BUY NFT
                       </Typography>
                     </Button>
-                    
+
                     <Button
                       //onClick={() => setOpenPopup(true)}
-                      onClick={()=>setOpenPopup(true)}
+                      onClick={() => setOpenPopup(true)}
                       size="small"
                       color="secondary"
                       variant="contained"
@@ -328,15 +313,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     </Button>
                   </Box>
                 )}
-                <OfferPopup
-                  openPopup = {openPopup}
-                  setOpenPopup = {setOpenPopup}
-                ></OfferPopup>
-                
+              <OfferPopup
+                openPopup={openPopup}
+                setOpenPopup={setOpenPopup}
+              ></OfferPopup>
             </Box>
           </Grid>
         </Grid>
-        
       </Box>
       <br />
       <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>

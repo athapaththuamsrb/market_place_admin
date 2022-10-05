@@ -24,6 +24,8 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import ModalPopUp from "../Modal";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
@@ -36,6 +38,14 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
       ? props.salesOrder.royality
       : 0
   );
+  const [alignment, setAlignment] = useState("FIX");
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string
+  ) => {
+    setAlignment(newAlignment);
+  };
   const [isRoyality, setIsRoyality] = useState(false);
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -142,9 +152,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
     ],
   };
   const { signTypedDataAsync } = useSignTypedData();
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsRoyality(event.target.checked);
-  };
   return (
     <div>
       <Title
@@ -190,6 +197,16 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
           <Grid item xs={4}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
               <form onSubmit={formik.handleSubmit}>
+                <ToggleButtonGroup
+                  color="primary"
+                  value={alignment}
+                  exclusive
+                  onChange={handleChange}
+                  aria-label="Platform"
+                >
+                  <ToggleButton value="FIX">FIX</ToggleButton>
+                  <ToggleButton value="BID">BID</ToggleButton>
+                </ToggleButtonGroup>
                 <TextField
                   sx={{ marginBottom: "30px" }}
                   id="price"
@@ -205,34 +222,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                     {formik.errors.price}
                   </Typography>
                 ) : null}
-                {props.salesOrder.creatorWalletAddress ===
-                  props.salesOrder.walletAddress && (
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={isRoyality}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Do you need to get royality fee?"
-                    />
-                  </FormGroup>
-                )}
-                {props.salesOrder.creatorWalletAddress ===
-                  props.salesOrder.walletAddress &&
-                  isRoyality && (
-                    <TextField
-                      sx={{ marginBottom: "30px" }}
-                      id="royality"
-                      label="royality"
-                      variant="outlined"
-                      fullWidth
-                      name="royality"
-                      value={formik.values.royality}
-                      onChange={formik.handleChange}
-                    />
-                  )}
                 <Box textAlign={"center"}>
                   <Button
                     type="submit"

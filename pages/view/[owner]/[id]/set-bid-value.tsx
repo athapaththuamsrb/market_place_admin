@@ -8,10 +8,12 @@ import { Typography, IconButton, Stack } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
 import axios, { Axios } from "axios";
-import { DatePicker, DesktopDateTimePicker, LocalizationProvider } from "@mui/lab";
-import dayjs, { Dayjs } from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import {
+  DatePicker,
+  DesktopDateTimePicker,
+  LocalizationProvider,
+} from "@mui/lab";
+import dayjs, { Dayjs } from "dayjs";
 
 type BidPopupProps = {
   openPopup: boolean;
@@ -19,9 +21,8 @@ type BidPopupProps = {
 };
 const SetBidValue: FC<BidPopupProps> = ({ openPopup, setOpenPopup }) => {
   const [value, setValue] = useState<Dayjs | null>(
-    dayjs('2014-08-18T21:11:54'),
+    dayjs("2014-08-18T21:11:54")
   );
-
   return (
     <Dialog open={openPopup}>
       <DialogTitle
@@ -56,10 +57,9 @@ const SetBidValue: FC<BidPopupProps> = ({ openPopup, setOpenPopup }) => {
             />
           </IconButton>
         </div>
-        
       </DialogTitle>
       <DialogContent
-      dividers
+        dividers
         sx={{
           fontWeight: 100,
         }}
@@ -89,15 +89,14 @@ const SetBidValue: FC<BidPopupProps> = ({ openPopup, setOpenPopup }) => {
           required
           type="date"
           defaultValue={"01/01/2022"}
-         // error={ExpirationError}
+          // error={ExpirationError}
         />
       </DialogContent>
 
       <DialogActions>
-      <Button
+        <Button
           //onClick={() => handleChange(value)}
           onClick={() => setOpenPopup(false)}
-          
           type="submit"
           size="small"
           color="secondary"
