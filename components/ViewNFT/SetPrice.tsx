@@ -222,7 +222,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 <Typography
                   variant="h2"
                   align="left"
-                  sx={{ marginTop: "10px", marginBottom: "5px" }}
+                  sx={{ marginTop: "0px", marginBottom: "5px" }}
                 >
                   {props.salesOrder?.name}
                 </Typography>
@@ -280,6 +280,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                     size="small"
                     color="secondary"
                     variant="contained"
+                    sx={{marginTop:2}}
                   >
                     <Typography
                       color="white"
