@@ -49,6 +49,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const [isRoyality, setIsRoyality] = useState(false);
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [toggle,setToggle] = useState<string>("FIX");
   console.log("royality", props.salesOrder.royality);
   // console.log(
   //   "xxx",
@@ -61,6 +62,13 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
     },
     validationSchema: yup.object({
       price: yup.string().required("required field"),
+      royality: yup
+        .number()
+        .required("required field")
+        .positive()
+        .integer()
+        .max(100, "maximum value is 100%")
+        .min(0, "maximum value is 0%"),
     }),
     onSubmit: async (values: { price: string; royality: number }) => {
       console.log("came-up", royality);
@@ -146,12 +154,12 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   };
   const { signTypedDataAsync } = useSignTypedData();
   return (
-    <div>
+    <Box>
       <Title
         firstWord={
           account?.address === props.salesOrder?.walletAddress ||
           !props.salesOrder?.listed
-            ? "View"
+            ? "List"
             : "Buy"
         }
         secondWord="NFT"
@@ -161,11 +169,9 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
           <LinearProgress />
         </Box>
       )}
-      <br />
-      <br />
       <Box sx={{ width: "70%", marginX: "auto" }}>
-        <Grid container spacing={12}>
-          <Grid alignSelf={"center"} item xs={8}>
+        <Grid container>
+          <Grid alignSelf={"center"} item xs={6}>
             <Stack alignItems="center">
               <Avatar
                 alt="Remy Sharp"
@@ -174,34 +180,53 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                   width: 400,
                   height: 400,
                   boxShadow: 3,
+                  borderRadius: 1,
                 }}
                 variant="square"
               />
             </Stack>
-            <br />
-            <br />
-            <FurtherDetails
-              creator={props.salesOrder?.creatorWalletAddress}
-              tokenID={props.salesOrder?.tokenID}
-              collection={props.salesOrder?.collection}
-              uri={props.salesOrder?.uri}
-            />
+            
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
               <form onSubmit={formik.handleSubmit}>
                 <ToggleButtonGroup
-                  color="primary"
+                  color="secondary"
                   value={alignment}
                   exclusive
                   onChange={handleChange}
                   aria-label="Platform"
+                  fullWidth
+                  sx= {{marginY: "20px"}}
                 >
-                  <ToggleButton value="FIX">FIX</ToggleButton>
-                  <ToggleButton value="BID">BID</ToggleButton>
+                  <ToggleButton value="FIX" onClick={() => {setToggle("FIX")}}>FIX</ToggleButton>
+                  <ToggleButton value="BID"  onClick={() => {setToggle("BID")}}>BID</ToggleButton>
                 </ToggleButtonGroup>
+                <Typography
+                variant="h2"
+                align="left"
+                sx={{ marginTop: "10px", marginBottom: "5px" }}
+              >
+                {props.salesOrder?.name}
+              </Typography>
+              
+              <Typography
+                sx={{ marginBottom: "10px" }}
+                variant="h4"
+                align="left"
+              >
+                Description:
+              </Typography>
+              <Typography
+                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
+                color="gray"
+                align="left"
+              >
+                {props.salesOrder?.description}
+              </Typography>
+              
                 <TextField
-                  sx={{ marginBottom: "30px" }}
+                  sx={{ marginBottom: "5px" }}
                   id="price"
                   label="Price"
                   variant="outlined"
@@ -210,22 +235,43 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                   value={formik.values.price}
                   onChange={formik.handleChange}
                 />
+                {toggle === "BID" && (
+                  <TextField
+                    //value={Expiration}
+                    //onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => console.log("Set date")}
+                    autoFocus
+                    margin="dense"
+                    id="Expiration"
+                    fullWidth
+                    variant="outlined"
+                    required
+                    type="date"
+                    defaultValue={"01/01/2022"}
+                    // error={ExpirationError}
+                  />
+                )}
+
                 {formik.touched.price && formik.errors.price ? (
                   <Typography sx={{ color: "error.main" }}>
                     {formik.errors.price}
                   </Typography>
                 ) : null}
-                <Box textAlign={"center"}>
-                  <Button
+                <Box textAlign={"right"}>
+                 <Button
                     type="submit"
                     size="small"
                     color="secondary"
                     variant="contained"
+
                   >
-                    <Typography color="white" variant="h2">
+                    <Typography 
+                      color="white" 
+                      variant="h2"
+                      sx={{ fontSize: 20 }}>
                       SELL ORDER
                     </Typography>
-                  </Button>
+                  </Button> 
                 </Box>
               </form>
             </Box>
@@ -233,7 +279,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         </Grid>
       </Box>
       <ModalPopUp msg={msg} open={open} setOpen={setOpen} setMsg={setMsg} />
-    </div>
+    </Box>
   );
 };
 
