@@ -1,9 +1,8 @@
-import { Box, Grid } from "@mui/material";
 import React, { FC, SyntheticEvent, useState } from "react";
 import { useFormik } from "formik";
-import { styled } from "@mui/material/styles";
 import {
   Button,
+  styled,
   Typography,
   TextField,
   Select,
@@ -12,6 +11,11 @@ import {
   MenuItem,
   Avatar,
   Stack,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  Box,
+  Grid,
 } from "@mui/material";
 import Image from "next/image";
 import { useSigner, useContract } from "wagmi";
@@ -71,6 +75,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       description: "",
       category: "",
       collection: "",
+      royality: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().trim().required("Required"),
@@ -90,6 +95,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         ])
         .required("Required"),
       collection: Yup.string().length(42, "exact size").required("Required"),
+      royality: Yup.number()
+        .required("required field")
+        .positive()
+        .integer()
+        .max(100, "maximum value is 100%")
+        .min(0, "maximum value is 0%"),
     }),
     onSubmit: async (values) => {
       const withIpfs = { ...values, image: props.ipfsImage };
@@ -148,6 +159,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       }
     }
   };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsRoyality(event.target.checked);
+  };
+  const [isRoyality, setIsRoyality] = useState(false);
+  const [royality, setRoyality] = useState(0);
+
   return (
     <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
       <form onSubmit={formik.handleSubmit}>
@@ -282,6 +299,29 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 </Typography>
               ) : null}
             </Box>
+            <Box>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={isRoyality} onChange={handleChange} />
+                  }
+                  label="Do you need to get royality fee?"
+                />
+              </FormGroup>
+
+              {isRoyality && (
+                <TextField
+                  sx={{ marginBottom: "30px" }}
+                  id="royality"
+                  label="royality"
+                  variant="outlined"
+                  fullWidth
+                  name="royality"
+                  value={formik.values.royality}
+                  onChange={formik.handleChange}
+                />
+              )}
+            </Box>
           </Grid>
         </Grid>
         <Box
@@ -308,7 +348,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             color="secondary"
             variant="contained"
           >
-            <Typography variant="h2" color="white" sx={{fontSize:30}}>
+            <Typography variant="h2" color="white" sx={{ fontSize: 30 }}>
               Create
             </Typography>
           </Button>

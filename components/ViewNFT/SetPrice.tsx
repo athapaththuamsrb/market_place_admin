@@ -61,13 +61,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
     },
     validationSchema: yup.object({
       price: yup.string().required("required field"),
-      royality: yup
-        .number()
-        .required("required field")
-        .positive()
-        .integer()
-        .max(100, "maximum value is 100%")
-        .min(0, "maximum value is 0%"),
     }),
     onSubmit: async (values: { price: string; royality: number }) => {
       console.log("came-up", royality);
