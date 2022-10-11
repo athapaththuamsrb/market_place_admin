@@ -32,7 +32,7 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
-  const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
+  const { profile, isPendingProfile, errorProfile } = useGetMyProfile(); //TODO JWT
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [anchorE2, setAnchorE2] = React.useState<null | HTMLElement>(null);

@@ -113,6 +113,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             collection: withIpfs.collection,
             image: withIpfs.image,
             creator: await signer?.getAddress(),
+            royalty: withIpfs.royality,
           })
         );
         const uri = `https://exclusives.infura-ipfs.io/ipfs/${result.path}`;
