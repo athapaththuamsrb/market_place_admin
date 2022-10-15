@@ -55,28 +55,24 @@ const ViewAdmins: NextPage = (props) => {
       field: "id",
       headerName: "ID",
       type: "string",
-      align: "left",
       width: 50,
     },
     {
       field: "User_ID",
       headerName: "User_ID",
       type: "string",
-      align: "center",
       width: 400,
     },
     {
       field: "Name",
       headerName: "Name",
       type: "string",
-      align: "left",
       width: 200,
     },
     {
       field: "Date",
       headerName: "Joined Date",
       type: "Date",
-      align: "left",
       width: 100,
     },
     {
@@ -84,28 +80,24 @@ const ViewAdmins: NextPage = (props) => {
       headerName: "Total NFTs",
       type: "Number",
       width: 100,
-      align: "center",
     },
     {
       field: "Created",
       headerName: "Created NFTs",
       type: "Number",
       width: 100,
-      align: "center",
     },
     {
       field: "Volume",
       headerName: "Total volume",
       type: "Number",
       width: 150,
-      align: "center",
     },
     {
       field: "actions",
       headerName: "Review",
       type: "actions",
       width: 200,
-      align: "center",
       getActions: (params: GridRowParams) => [
         <Button
           variant="outlined"

@@ -49,27 +49,29 @@ function CustomToolbar() {
 
 const ReportedUsers: NextPage = (props) => {
   const columns = [
-    { field: "id", headerName: "ID", type: "string", width: 50, align: "left" },
+    {
+      field: "id",
+      headerName: "ID",
+      type: "string",
+      width: 50,
+    },
     {
       field: "User_ID",
       headerName: "User_ID",
       type: "string",
       width: 270,
-      align: "center",
     },
     {
       field: "Name",
       headerName: "Name",
       type: "string",
       width: 150,
-      align: "left",
     },
     {
       field: "reportType",
       headerName: "Report Type",
       type: "string",
       width: 150,
-      align: "left",
     },
 
     {
@@ -77,14 +79,12 @@ const ReportedUsers: NextPage = (props) => {
       headerName: "Reported Date",
       type: "Date",
       width: 130,
-      align: "left",
     },
     {
       field: "reportedBy",
       headerName: "Reported By",
       type: "string",
       width: 270,
-      align: "center",
     },
     {
       field: "actions",

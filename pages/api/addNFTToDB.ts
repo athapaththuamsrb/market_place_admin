@@ -64,7 +64,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           name: body.name,
           listed: true,
           royality: body.royality,
-          sale_way: body.saleWay,
         },
       });
 

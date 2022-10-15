@@ -53,28 +53,24 @@ const ViewReportedCollections: NextPage = (props) => {
       field: "id",
       headerName: "ID",
       type: "String",
-      align: "left",
       width: 50,
     },
     {
       field: "collectionName",
       headerName: "Collection",
       type: "String",
-      align: "left",
       width: 130,
     },
     {
       field: "collectionID",
       headerName: "Collection ID",
       type: "String",
-      align: "left",
       width: 300,
     },
     {
       field: "reportedBy",
       headerName: "Reported By",
       type: "String",
-      align: "left",
       width: 300,
     },
     {
@@ -82,21 +78,18 @@ const ViewReportedCollections: NextPage = (props) => {
       headerName: "Reported Type",
       type: "String",
       width: 200,
-      align: "left",
     },
     {
       field: "reportedDate",
       headerName: "Reported Date",
       type: "String",
       width: 110,
-      align: "left",
     },
     {
       field: "actions",
       headerName: "Review",
       type: "actions",
       width: 240,
-      align: "center",
       getActions: (params: GridRowParams) => [
         <Button
           variant="outlined"
@@ -260,7 +253,6 @@ const ViewReportedCollections: NextPage = (props) => {
           sx={{
             m: 2,
             fontWeight: 400,
-            align: "center",
             backgroundColor: "#fcfcfc",
             borderRadius: "10px",
           }}

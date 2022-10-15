@@ -36,7 +36,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   name: oldNFT.name,
                   listed: true,
                   royality: oldNFT.royality,
-                  sale_way: sale_way,
                 },
               });
               await prisma.nFT.update({
@@ -88,7 +87,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 sold: true,
                 listed: false,
                 royality: oldNFT1.royality,
-                sale_way: oldNFT1.sale_way,
               },
             });
             await prisma.nFT.update({

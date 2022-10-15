@@ -25,63 +25,55 @@ import Link from "@mui/material/Link";
 import GroupIcon from "@mui/icons-material/Group";
 import axios from "axios";
 
-const AllUsers: NextPage = () => {
+const AllUsers: NextPage = (props) => {
   const column = [
     {
       field: "id",
       headerName: "ID",
       type: "string",
       width: 50,
-      align: "left",
     },
     {
       field: "User_ID",
       headerName: "User_ID",
       type: "string",
       width: 300,
-      align: "center",
     },
     {
       field: "Name",
       headerName: "Name",
       type: "string",
       width: 200,
-      align: "left",
     },
     {
       field: "Date",
       headerName: "Joined Date",
       type: "Date",
       width: 100,
-      align: "left",
     },
     {
       field: "Total",
       headerName: "Total NFTs",
       type: "Number",
       width: 100,
-      align: "center",
     },
     {
       field: "Created",
       headerName: "Created NFTs",
       type: "Number",
       width: 100,
-      align: "center",
     },
     {
       field: "Volume",
       headerName: "Total volume",
       type: "Number",
       width: 150,
-      align: "center",
     },
     {
       field: "Status",
       headerName: "Status",
       type: "string",
       width: 100,
-      align: "left",
     },
     {
       field: "actions",
