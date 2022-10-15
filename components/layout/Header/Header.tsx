@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,7 +13,14 @@ import Image from "next/image";
 import Button from "@mui/material/Button";
 import RenderMobileMenu from "./RenderMobileMenu";
 import { useConnect, useDisconnect, useAccount } from "wagmi";
-import { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ChangeEvent,
+  FC,
+  SyntheticEvent,
+} from "react";
 import { useIsMounted, useGetMyProfile } from "../../hooks";
 import { useRouter } from "next/router";
 import Avatar from "@mui/material/Avatar";
@@ -22,20 +28,20 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Logout from "@mui/icons-material/Logout";
 
-export default function Navbar() {
+const Navbar: FC = () => {
   const { connect, connectors, activeConnector } = useConnect();
   const { data: ethereumAccount } = useAccount();
 
   const { disconnect } = useDisconnect();
   const theme = useTheme();
   const router = useRouter();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
+    useState<null | HTMLElement>(null);
   const { profile, isPendingProfile, errorProfile } = useGetMyProfile(); //TODO JWT
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const [anchorE2, setAnchorE2] = React.useState<null | HTMLElement>(null);
+  const [anchorE2, setAnchorE2] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorE2);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorE2(event.currentTarget);
@@ -239,4 +245,5 @@ export default function Navbar() {
       /> */}
     </Box>
   );
-}
+};
+export default Navbar;

@@ -14,25 +14,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           isDelete: false,
         },
       });
-
+      console.log(lazyNfts);
       let nfts = [];
-      for await (const lazyNft of lazyNfts) {
-        const owner = await prisma.owner.findUnique({
-          where: {
-            id: lazyNft.ownerId,
-          },
-        });
-        if (owner) {
-          const nft: NFT_card = {
-            id: lazyNft.id,
-            price: lazyNft.price,
-            image: lazyNft.image,
-            name: lazyNft.name,
-            listed: lazyNft.listed,
-            category: lazyNft.category,
-            ownerWalletAddress: owner.walletAddress,
-          };
-          nfts.push(nft);
+      if (lazyNfts) {
+        for await (const lazyNft of lazyNfts) {
+          const owner = await prisma.owner.findUnique({
+            where: {
+              id: lazyNft.ownerId,
+            },
+          });
+          if (owner) {
+            const nft: NFT_card = {
+              id: lazyNft.id,
+              price: lazyNft.price,
+              image: lazyNft.image,
+              name: lazyNft.name,
+              listed: lazyNft.listed,
+              category: lazyNft.category,
+              ownerWalletAddress: owner.walletAddress,
+            };
+            nfts.push(nft);
+          }
         }
       }
       await prisma.$disconnect();
@@ -41,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ message: "Successfully get", success: true, data: nfts });
     } catch (err) {
       await prisma.$disconnect();
-      console.log(err);
+      //console.log(err);
       res
         .status(400)
         .json({ message: "Bad request", success: false, data: [] });

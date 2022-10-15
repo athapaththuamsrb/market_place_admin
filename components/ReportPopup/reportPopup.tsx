@@ -8,18 +8,23 @@ import { Typography, IconButton, Stack } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
 import axios, { Axios } from "axios";
-import { DatePicker, DesktopDateTimePicker, LocalizationProvider } from "@mui/lab";
-import dayjs, { Dayjs } from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import {
+  DatePicker,
+  DesktopDateTimePicker,
+  LocalizationProvider,
+} from "@mui/lab";
+import dayjs, { Dayjs } from "dayjs";
 
 type ReportPopupProps = {
   openReportPopup: boolean;
   setOpenReportPopup: (openPopup: boolean) => void;
 };
-const ReportPopup: FC<ReportPopupProps> = ({ openReportPopup, setOpenReportPopup }) => {
+const ReportPopup: FC<ReportPopupProps> = ({
+  openReportPopup,
+  setOpenReportPopup,
+}) => {
   const [value, setValue] = useState<Dayjs | null>(
-    dayjs('2014-08-18T21:11:54'),
+    dayjs("2014-08-18T21:11:54")
   );
 
   return (
@@ -28,10 +33,9 @@ const ReportPopup: FC<ReportPopupProps> = ({ openReportPopup, setOpenReportPopup
         sx={{
           backgroundColor: "#CA82FF",
           color: "white",
-          
         }}
       >
-        <div style={{ display: "flex"}}>
+        <div style={{ display: "flex" }}>
           <Typography
             variant="h5"
             component="div"
@@ -57,19 +61,18 @@ const ReportPopup: FC<ReportPopupProps> = ({ openReportPopup, setOpenReportPopup
             />
           </IconButton>
         </div>
-        
       </DialogTitle>
       <DialogContent
-      dividers
+        dividers
         sx={{
           fontWeight: 100,
-          width:"500px"
+          width: "500px",
         }}
       >
         <TextField
           //value={Offer_Amount}
           //onChange={(e) => setUser_ID(e.target.value)}
-          
+
           autoFocus
           margin="dense"
           id="Reason"
@@ -80,16 +83,15 @@ const ReportPopup: FC<ReportPopupProps> = ({ openReportPopup, setOpenReportPopup
           fullWidth
           variant="outlined"
           required
-          
+
           //error={Offer_AmountError}
         />
       </DialogContent>
 
       <DialogActions>
-      <Button
+        <Button
           //onClick={() => handleChange(value)}
           onClick={() => setOpenReportPopup(false)}
-          
           type="submit"
           size="small"
           color="secondary"

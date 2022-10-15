@@ -41,6 +41,7 @@ const CreatePage: NextPage = (props) => {
     name: "",
     description: "",
     image: "",
+    royality: 0,
   });
 
   return isMounted && activeConnector ? (

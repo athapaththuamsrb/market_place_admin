@@ -1,14 +1,27 @@
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
+import { MenuItem, Menu } from "@mui/material";
 import Link from "next/link";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-export default function renderMobileMenu({
+import React, {
+  ChangeEvent,
+  FC,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from "react";
+type RenderMobileMenuProps = {
+  isMobileMenuOpen: boolean;
+  mobileMenuId: string;
+  isConnect: boolean;
+  handleMobileMenuClose: () => void;
+  mobileMoreAnchorEl: null | HTMLElement;
+};
+const renderMobileMenu: FC<RenderMobileMenuProps> = ({
   isMobileMenuOpen,
   mobileMenuId,
   isConnect,
   handleMobileMenuClose,
   mobileMoreAnchorEl,
-}) {
+}) => {
   return (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -42,4 +55,5 @@ export default function renderMobileMenu({
       )}
     </Menu>
   );
-}
+};
+export default renderMobileMenu;

@@ -8,10 +8,12 @@ import { Typography, IconButton, Stack } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
 import axios, { Axios } from "axios";
-import { DatePicker, DesktopDateTimePicker, LocalizationProvider } from "@mui/lab";
-import dayjs, { Dayjs } from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import {
+  DatePicker,
+  DesktopDateTimePicker,
+  LocalizationProvider,
+} from "@mui/lab";
+import dayjs, { Dayjs } from "dayjs";
 
 type OfferPopupProps = {
   openPopup: boolean;
@@ -19,7 +21,7 @@ type OfferPopupProps = {
 };
 const OfferPopup: FC<OfferPopupProps> = ({ openPopup, setOpenPopup }) => {
   const [value, setValue] = useState<Dayjs | null>(
-    dayjs('2014-08-18T21:11:54'),
+    dayjs("2014-08-18T21:11:54")
   );
 
   return (
@@ -56,10 +58,9 @@ const OfferPopup: FC<OfferPopupProps> = ({ openPopup, setOpenPopup }) => {
             />
           </IconButton>
         </div>
-        
       </DialogTitle>
       <DialogContent
-      dividers
+        dividers
         sx={{
           fontWeight: 100,
         }}
@@ -89,15 +90,14 @@ const OfferPopup: FC<OfferPopupProps> = ({ openPopup, setOpenPopup }) => {
           required
           type="date"
           defaultValue={"01/01/2022"}
-         // error={ExpirationError}
+          // error={ExpirationError}
         />
       </DialogContent>
 
       <DialogActions>
-      <Button
+        <Button
           //onClick={() => handleChange(value)}
           onClick={() => setOpenPopup(false)}
-          
           type="submit"
           size="small"
           color="secondary"

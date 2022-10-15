@@ -29,9 +29,9 @@ const Input = styled("input")({
 const CreateForm: FC<CreateFormProps> = (props) => {
   const { data: account } = useAccount();
   const [image, setImage] = useState<{
-    logoImage: string | ArrayBuffer | null;
-    bannerImage: string | ArrayBuffer | null;
-    featuredImage: string | ArrayBuffer | null;
+    logoImage: string;
+    bannerImage: string;
+    featuredImage: string;
   }>({
     logoImage:
       "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg",
@@ -47,43 +47,64 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     featuredImage: null,
     bannerImage: null,
   });
-  function handleOnChange(
+  const handleOnChange = async (
     e: React.FormEvent<HTMLInputElement | HTMLInputElement>,
     key: string
-  ) {
+  ) => {
     const target = e.target as HTMLInputElement;
     const file: File = (target.files as FileList)[0];
     switch (key) {
       case "logoImage":
-        setImageSrc({ ...imageSrc, logoImage: file });
+        const formDataLogo = new FormData();
+        formDataLogo.append("file", file);
+        formDataLogo.append("upload_preset", "my-upload-collection");
+        const res1 = await axios.post(
+          "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
+          formDataLogo
+        );
+        setImage({ ...image, logoImage: res1.data.secure_url });
         break;
       case "bannerImage":
-        setImageSrc({ ...imageSrc, bannerImage: file });
+        const formDataBanner = new FormData();
+        formDataBanner.append("file", file);
+        formDataBanner.append("upload_preset", "my-upload-collection");
+        const res2 = await axios.post(
+          "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
+          formDataBanner
+        );
+        setImage({ ...image, bannerImage: res2.data.secure_url });
         break;
       case "featuredImage":
-        setImageSrc({ ...imageSrc, featuredImage: file });
+        const formDataFeatured = new FormData();
+        formDataFeatured.append("file", file);
+        formDataFeatured.append("upload_preset", "my-upload-collection");
+        const res3 = await axios.post(
+          "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
+          formDataFeatured
+        );
+        setImage({ ...image, featuredImage: res3.data.secure_url });
         break;
     }
-    previewFiles(file, key);
-  }
+    // previewFiles(file, key);
+  };
 
-  function previewFiles(file: File, key: string) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      switch (key) {
-        case "logoImage":
-          setImage({ ...image, logoImage: reader.result });
-          break;
-        case "bannerImage":
-          setImage({ ...image, bannerImage: reader.result });
-          break;
-        case "featuredImage":
-          setImage({ ...image, featuredImage: reader.result });
-          break;
-      }
-    };
-  }
+  // function previewFiles(file: File, key: string) {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onload = () => {
+  //     switch (key) {
+  //       case "logoImage":
+  //         setImage({ ...image, logoImage: reader.result });
+  //         break;
+  //       case "bannerImage":
+  //         setImage({ ...image, bannerImage: reader.result });
+  //         break;
+  //       case "featuredImage":
+  //         setImage({ ...image, featuredImage: reader.result });
+  //         break;
+  //     }
+  //   };
+  // }
 
   const formik = useFormik({
     initialValues: {
@@ -102,37 +123,18 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     onSubmit: async (values) => {
       try {
         if (
-          imageSrc["featuredImage"] !== null &&
-          imageSrc["logoImage"] !== null &&
-          imageSrc["bannerImage"] !== null
+          image["featuredImage"] !== "/db5dbf90c8c83d650e1022220b4d707e.jpg" &&
+          image["logoImage"] !==
+            "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg" &&
+          image["bannerImage"] !== "/db5dbf90c8c83d650e1022220b4d707e.jpg"
         ) {
-          const formDataLogo = new FormData();
-          formDataLogo.append("file", imageSrc["logoImage"]);
-          formDataLogo.append("upload_preset", "my-upload-collection");
-          const res1 = await axios.post(
-            "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
-            formDataLogo
-          );
-          const formDataBanner = new FormData();
-          formDataBanner.append("file", imageSrc["bannerImage"]);
-          formDataBanner.append("upload_preset", "my-upload-collection");
-          const res2 = await axios.post(
-            "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
-            formDataBanner
-          );
-          const formDataFeatured = new FormData();
-          formDataFeatured.append("file", imageSrc["featuredImage"]);
-          formDataFeatured.append("upload_preset", "my-upload-collection");
-          const res3 = await axios.post(
-            "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
-            formDataBanner
-          );
           const address = "swdebuec"; //TODO get collection address
           props.setMsg("processing.....");
           const res = await axios.post("/api/uploadFile", {
             data: {
-              profileImageURL: res1.data.secure_url,
-              bannerImageURL: res2.data.secure_url,
+              featuredImageURL: image["featuredImage"],
+              logoImageURL: image["logoImage"],
+              bannerImageURL: image["bannerImage"],
               userName: values.collectionName,
               collectionAddress: address,
               folder: "profile",

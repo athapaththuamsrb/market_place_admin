@@ -45,7 +45,7 @@ const client = createClient({
   webSocketProvider,
 });
 
-export default function MyApp(props) {
+export default function MyApp(props: { Component: any; emotionCache?: EmotionCache | undefined; pageProps: any; }) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
     <WagmiConfig client={client}>

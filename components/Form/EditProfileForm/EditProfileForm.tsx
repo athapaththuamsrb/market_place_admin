@@ -29,50 +29,57 @@ const Input = styled("input")({
 const CreateForm: FC<CreateFormProps> = (props) => {
   const { data: account } = useAccount();
   const [image, setImage] = useState<{
-    profileImage: string | ArrayBuffer | null;
-    bannerImage: string | ArrayBuffer | null;
+    profileImage: string;
+    bannerImage: string;
   }>({
     profileImage:
       "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg",
     bannerImage: "/db5dbf90c8c83d650e1022220b4d707e.jpg",
   });
-  const [imageSrc, setImageSrc] = useState<{
-    profileImage: File | null;
-    bannerImage: File | null;
-  }>({
-    profileImage: null,
-    bannerImage: null,
-  });
-  function handleOnChange(
+  const handleOnChange = async (
     e: React.FormEvent<HTMLInputElement | HTMLInputElement>,
     key: string
-  ) {
+  ) => {
     const target = e.target as HTMLInputElement;
     const file: File = (target.files as FileList)[0];
     switch (key) {
       case "profileImage":
-        setImageSrc({ ...imageSrc, profileImage: file });
+        const formDataProfile = new FormData();
+        formDataProfile.append("file", file);
+        formDataProfile.append("upload_preset", "my-upload-profile");
+        const res1 = await axios.post(
+          "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
+          formDataProfile
+        );
+        setImage({ ...image, profileImage: res1.data.secure_url });
         break;
       case "bannerImage":
-        setImageSrc({ ...imageSrc, bannerImage: file });
+        const formDataBanner = new FormData();
+        formDataBanner.append("file", file);
+        formDataBanner.append("upload_preset", "my-upload-profile");
+        const res2 = await axios.post(
+          "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
+          formDataBanner
+        );
+        setImage({ ...image, bannerImage: res2.data.secure_url });
         break;
     }
-    previewFiles(file, key);
-  }
-  function previewFiles(file: File, key: string) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      switch (key) {
-        case "profileImage":
-          setImage({ ...image, profileImage: reader.result });
-          break;
-        case "bannerImage":
-          setImage({ ...image, bannerImage: reader.result });
-          break;
-      }
-    };
-  }
+    //previewFiles(file, key);
+  };
+  // function previewFiles(file: File, key: string) {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onload = () => {
+  //     switch (key) {
+  //       case "profileImage":
+  //         setImage({ ...image, profileImage: reader.result });
+  //         break;
+  //       case "bannerImage":
+  //         setImage({ ...image, bannerImage: reader.result });
+  //         break;
+  //     }
+  //   };
+  // }
 
   const formik = useFormik({
     initialValues: {
@@ -90,35 +97,23 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     onSubmit: async (values) => {
       try {
         if (
-          imageSrc["profileImage"] !== null &&
-          imageSrc["bannerImage"] !== null
+          image["profileImage"] !==
+            "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg" &&
+          image["bannerImage"] !== "/db5dbf90c8c83d650e1022220b4d707e.jpg"
         ) {
-          const formDataProfile = new FormData();
-          formDataProfile.append("file", imageSrc["profileImage"]);
-          formDataProfile.append("upload_preset", "my-upload-profile");
-          const res1 = await axios.post(
-            "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
-            formDataProfile
-          );
-          const formDataBanner = new FormData();
-          formDataBanner.append("file", imageSrc["bannerImage"]);
-          formDataBanner.append("upload_preset", "my-upload-profile");
-          const res2 = await axios.post(
-            "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
-            formDataBanner
-          );
-
           props.setMsg("processing.....");
           const res = await axios.post("/api/uploadFile", {
             data: {
-              profileImageURL: res1.data.secure_url,
-              bannerImageURL: res2.data.secure_url,
+              profileImageURL: image["profileImage"],
+              bannerImageURL: image["bannerImage"],
               userName: values.userName,
               folder: "profile",
               userwalletAddress: account?.address,
             },
           });
-          props.setMsg(res.status === 201 ? "Successfully updated!!" : "Try again!!");
+          props.setMsg(
+            res.status === 201 ? "Successfully updated!!" : "Try again!!"
+          );
           props.setOpen(true);
         }
       } catch (error) {
@@ -255,7 +250,10 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           </Grid>
           <Grid item xs={2}></Grid>
         </Grid>
-        <Box textAlign={"center"} sx={{ marginTop: "40px", marginBottom:"40px" }}>
+        <Box
+          textAlign={"center"}
+          sx={{ marginTop: "40px", marginBottom: "40px" }}
+        >
           <Button
             type="submit"
             disabled={
@@ -271,7 +269,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             color="secondary"
             variant="contained"
           >
-            <Typography variant="h3" color="white" sx={{fontSize:30}}>
+            <Typography variant="h3" color="white" sx={{ fontSize: 30 }}>
               Update Profile
             </Typography>
           </Button>
