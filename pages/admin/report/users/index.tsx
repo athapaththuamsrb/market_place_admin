@@ -47,7 +47,7 @@ function CustomToolbar() {
   );
 }
 
-const reportedUsers: NextPage = () => {
+const ReportedUsers: NextPage = (props) => {
   const columns = [
     { field: "id", headerName: "ID", type: "string", width: 50, align: "left" },
     {
@@ -92,12 +92,17 @@ const reportedUsers: NextPage = () => {
       width: 200,
       headerName: "Review",
       getActions: (params: GridRowParams) => [
-        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          key={params.row.id}
+          sx={{ color: "black" }}
+        >
           <Link href={`users/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
         </Button>,
-        <Tooltip title="Block User">
+        <Tooltip title="Block User" key={params.row.id}>
           <GridActionsCellItem
             icon={<BlockIcon />}
             label="Delete"
@@ -105,7 +110,7 @@ const reportedUsers: NextPage = () => {
             onClick={() => handleClickOpenBlock(params.row.id)}
           />
         </Tooltip>,
-        <Tooltip title="Verify User">
+        <Tooltip title="Verify User" key={params.row.id}>
           <GridActionsCellItem
             icon={<VerifiedIcon />}
             label="Verify"
@@ -305,4 +310,4 @@ const reportedUsers: NextPage = () => {
   );
 };
 
-export default reportedUsers;
+export default ReportedUsers;

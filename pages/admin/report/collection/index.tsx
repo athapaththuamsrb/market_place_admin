@@ -47,7 +47,7 @@ function CustomToolbar() {
   );
 }
 
-const viewReportedCollections: NextPage = () => {
+const ViewReportedCollections: NextPage = (props) => {
   const columns = [
     {
       field: "id",
@@ -98,12 +98,20 @@ const viewReportedCollections: NextPage = () => {
       width: 240,
       align: "center",
       getActions: (params: GridRowParams) => [
-        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
-          <Link href={`../../account/collections/${params.row.id}`} underline="hover">
+        <Button
+          variant="outlined"
+          color="primary"
+          sx={{ color: "black" }}
+          key={params.row.id}
+        >
+          <Link
+            href={`../../account/collections/${params.row.id}`}
+            underline="hover"
+          >
             <a>View Collection</a>
           </Link>
         </Button>,
-        <Tooltip title="Block Collection">
+        <Tooltip title="Block Collection" key={params.row.id}>
           <GridActionsCellItem
             icon={<BlockIcon />}
             label="Delete"
@@ -111,7 +119,7 @@ const viewReportedCollections: NextPage = () => {
             onClick={() => handleClickOpenBlock(params.row.id)}
           />
         </Tooltip>,
-        <Tooltip title="Verify Collection">
+        <Tooltip title="Verify Collection" key={params.row.id}>
           <GridActionsCellItem
             icon={<VerifiedIcon />}
             label="Verify"
@@ -166,10 +174,7 @@ const viewReportedCollections: NextPage = () => {
       setTimeout(() => {
         collection;
         axios
-          .put(
-            `http://localhost:8000/collections/${collection.id}`,
-            collection
-          )
+          .put(`http://localhost:8000/collections/${collection.id}`, collection)
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -196,10 +201,7 @@ const viewReportedCollections: NextPage = () => {
       collection.status = "Active";
       setTimeout(() => {
         axios
-          .put(
-            `http://localhost:8000/collections/${collection.id}`,
-            collection
-          )
+          .put(`http://localhost:8000/collections/${collection.id}`, collection)
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -316,4 +318,4 @@ const viewReportedCollections: NextPage = () => {
   );
 };
 
-export default viewReportedCollections;
+export default ViewReportedCollections;

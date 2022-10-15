@@ -47,7 +47,7 @@ function CustomToolbar() {
   );
 }
 
-const viewReportedNFTs: NextPage = () => {
+const ViewReportedNFTs: NextPage = (props) => {
   const columns = [
     {
       field: "id",
@@ -98,12 +98,17 @@ const viewReportedNFTs: NextPage = () => {
       width: 200,
       align: "center",
       getActions: (params: GridRowParams) => [
-        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          key={params.row.id}
+          sx={{ color: "black" }}
+        >
           <Link href={`../../account/nfts/${params.row.id}`} underline="hover">
             <a>View NFT</a>
           </Link>
         </Button>,
-        <Tooltip title="Block NFT">
+        <Tooltip title="Block NFT" key={params.row.id}>
           <GridActionsCellItem
             icon={<BlockIcon />}
             label="Delete"
@@ -111,7 +116,7 @@ const viewReportedNFTs: NextPage = () => {
             onClick={() => handleClickOpenBlock(params.row.id)}
           />
         </Tooltip>,
-        <Tooltip title="Verify NFT">
+        <Tooltip title="Verify NFT" key={params.row.id}>
           <GridActionsCellItem
             icon={<VerifiedIcon />}
             label="Verify"
@@ -304,4 +309,4 @@ const viewReportedNFTs: NextPage = () => {
   );
 };
 
-export default viewReportedNFTs;
+export default ViewReportedNFTs;

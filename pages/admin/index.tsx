@@ -25,7 +25,7 @@ import Link from "@mui/material/Link";
 import GroupIcon from "@mui/icons-material/Group";
 import axios from "axios";
 
-const allUsers: NextPage = () => {
+const AllUsers: NextPage = () => {
   const column = [
     {
       field: "id",
@@ -89,7 +89,12 @@ const allUsers: NextPage = () => {
       width: 200,
       headerName: "View",
       getActions: (params: GridRowParams) => [
-        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          key={params.row.id}
+          sx={{ color: "black" }}
+        >
           <Link href={`/admin/users/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
@@ -202,4 +207,4 @@ const allUsers: NextPage = () => {
   );
 };
 
-export default allUsers;
+export default AllUsers;

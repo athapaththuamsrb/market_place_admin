@@ -49,7 +49,7 @@ function CustomToolbar() {
   );
 }
 
-const viewAdmins: NextPage = () => {
+const ViewAdmins: NextPage = (props) => {
   const columns = [
     {
       field: "id",
@@ -107,12 +107,17 @@ const viewAdmins: NextPage = () => {
       width: 200,
       align: "center",
       getActions: (params: GridRowParams) => [
-        <Button variant="outlined" color="primary" sx={{ color: "black" }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          key={params.row.id}
+          sx={{ color: "black" }}
+        >
           <Link href={`../users/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
         </Button>,
-        <Tooltip title="Delete admin">
+        <Tooltip title="Delete admin" key={params.row.id}>
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
@@ -287,4 +292,4 @@ const viewAdmins: NextPage = () => {
   );
 };
 
-export default viewAdmins;
+export default ViewAdmins;
