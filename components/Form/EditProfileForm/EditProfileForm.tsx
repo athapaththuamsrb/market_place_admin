@@ -260,7 +260,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               formik.errors.userName !== undefined ||
               image["profileImage"] ===
                 "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg" ||
-              image["bannerImage"] === "/db5dbf90c8c83d650e1022220b4d707e.jpg"
+              image["bannerImage"] ===
+                "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
+              props.msg === "processing....."
                 ? true
                 : false
             }

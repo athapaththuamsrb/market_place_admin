@@ -5,7 +5,7 @@ require("dotenv/config");
  */
 
 module.exports = {
-  solidity: "0.8.4",
+  solidity: "0.8.7",
   networks: {
     goerli: {
       url: process.env.GO_URL, //Infura url with projectId

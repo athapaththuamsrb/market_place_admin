@@ -275,6 +275,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         setStateNFT("listed", false, "0");
                         props.salesOrder.price = "0";
                       }}
+                      disabled={isPending}
                       size="small"
                       color="secondary"
                       variant="contained"
@@ -324,6 +325,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   >
                     <Button
                       onClick={mintAndBuy}
+                      disabled={isPending}
                       size="small"
                       color="secondary"
                       variant="contained"
@@ -337,7 +339,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     </Button>
 
                     <Button
-                      //onClick={() => setOpenPopup(true)}
                       onClick={() => setOpenPopup(true)}
                       size="small"
                       color="secondary"

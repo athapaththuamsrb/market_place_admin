@@ -345,11 +345,15 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               formik.errors.category ||
               formik.errors.description ||
               (isRoyality && formik.errors.royality) ||
-              props.ipfsImage === "/db5dbf90c8c83d650e1022220b4d707e.jpg"
+              props.ipfsImage === "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
+              props.msg === "processing....."
                 ? true
                 : false
             }
-            onClick={() => props.setOpenModal(true)}
+            onClick={() => {
+              props.setOpenModal(true);
+              props.setMsg("");
+            }}
             style={{ borderWidth: "3px" }}
             sx={{ marginTop: "50px" }}
             size="large"

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
@@ -71,20 +71,13 @@ contract Marketplace is ReentrancyGuard, EIP712 {
     function lazyMintNFT(
       SignedNFTData calldata nft, bytes calldata signature
     ) public payable returns (uint256) {
-        // console.log("tokenID",nft.tokenID);
-        // console.log("price",nft.price);
-        // console.log("uri",nft.uri);
-        // console.log("creator",nft.creator);
-        // console.log("category",nft.category);
-        // console.log("collection",nft.collection);
-        // console.log("royality",nft.royality);
-        // console.logBytes(signature);
         require(msg.value == nft.price, 'SimonDevNFT: Message value != price');
         address signer = _validateSignature(_hashLazyMint(nft), signature);
         console.log(signer == nft.creator);
         require(signer == nft.creator, 'invalid signature');
         NFT(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening
         Address.sendValue(payable(nft.creator), msg.value);//TODO pay for creator
+        feeAccount.transfer(msg.value*feePercent/100);//pay for marketplace
         return nft.tokenID;
     }
     function mintNFT(
@@ -96,7 +89,7 @@ contract Marketplace is ReentrancyGuard, EIP712 {
         NFT(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening        
         Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality)/100);//TODO pay for creator
         Address.sendValue(payable(nft.creator), msg.value*nft.royality/100);
-        
+        feeAccount.transfer(msg.value*feePercent/100);//pay for marketplace
         
         
         return nft.tokenID;

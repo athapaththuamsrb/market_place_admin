@@ -45,11 +45,13 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
   const { signTypedDataAsync } = useSignTypedData();
   const handleClose = () => {
     props.setOpenModal(false);
+    props.setMsg("");
   };
   //TODO  SIGNATURE IS VALIDATION AND UNIQCK VALUE TO THE NFT
 
   const addDB = async () => {
-    console.log(props.salesOrder);
+    //console.log(props.salesOrder);
+    props.setMsg("processing.....");
     const signature = await signTypedDataAsync({
       domain,
       types,
@@ -66,7 +68,7 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
     const newSalesOrder = { ...props.salesOrder, signature };
     props.setSalesOrder(newSalesOrder);
     //console.log(newSalesOrder);
-    props.setMsg("processing.....");
+
     props.setOpenModal(false); //TODO THIS IS OPEN WOLLET TO GET CONFORMATION IS THIS CORRECT
     try {
       const res1 = await axios.post("api/createNFT", {
@@ -131,6 +133,7 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
               onClick={addDB}
               sx={{ width: "40%", marginBottom: "50px" }}
               size="medium"
+              disabled={props.msg === "processing....."}
               color="secondary"
               variant="contained"
             >

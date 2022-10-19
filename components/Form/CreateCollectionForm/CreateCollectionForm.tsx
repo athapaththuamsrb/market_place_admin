@@ -12,8 +12,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import ModalPopUp from "../../Modal";
-import { useAccount } from "wagmi";
+import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import * as Yup from "yup";
+import FactoryAddress from "../../../contractsData/Factory-address.json";
+import FactoryAbi from "../../../contractsData/Factory.json";
 
 type CreateFormProps = {
   setMsg: (msg: string) => void;
@@ -27,6 +29,13 @@ const Input = styled("input")({
 });
 
 const CreateForm: FC<CreateFormProps> = (props) => {
+  const { data: signer, isError, isLoading } = useSigner(); //TODO data is useSigner attibute we assign that value to signer
+  const factory_ = useContract({
+    //TODO create connection with Factory
+    addressOrName: FactoryAddress.address,
+    contractInterface: FactoryAbi.abi,
+    signerOrProvider: signer,
+  });
   const { data: account } = useAccount();
   const [image, setImage] = useState<{
     logoImage: string;
@@ -85,26 +94,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         setImage({ ...image, featuredImage: res3.data.secure_url });
         break;
     }
-    // previewFiles(file, key);
   };
-
-  // function previewFiles(file: File, key: string) {
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   reader.onload = () => {
-  //     switch (key) {
-  //       case "logoImage":
-  //         setImage({ ...image, logoImage: reader.result });
-  //         break;
-  //       case "bannerImage":
-  //         setImage({ ...image, bannerImage: reader.result });
-  //         break;
-  //       case "featuredImage":
-  //         setImage({ ...image, featuredImage: reader.result });
-  //         break;
-  //     }
-  //   };
-  // }
 
   const formik = useFormik({
     initialValues: {
@@ -128,8 +118,16 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg" &&
           image["bannerImage"] !== "/db5dbf90c8c83d650e1022220b4d707e.jpg"
         ) {
-          const address = "swdebuec"; //TODO get collection address
           props.setMsg("processing.....");
+          //======================================================
+          const smartContract = await factory_.createNewCollection(
+            values.collectionName
+          );
+          const output = await smartContract.wait();
+          // console.log(output);
+          //console.log(output.logs[0].address);
+          //======================================================
+          const address = output.log[0].address;
           const res = await axios.post("/api/uploadFile", {
             data: {
               featuredImageURL: image["featuredImage"],
@@ -332,7 +330,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
               image["logoImage"] ===
                 "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg" ||
-              image["bannerImage"] === "/db5dbf90c8c83d650e1022220b4d707e.jpg"
+              image["bannerImage"] ===
+                "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
+              props.msg === "processing....."
                 ? true
                 : false
             }

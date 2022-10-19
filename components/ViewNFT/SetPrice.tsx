@@ -56,6 +56,8 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
     }),
     onSubmit: async (values: { price: string }) => {
       try {
+        setIsPending(true);
+        setMsg("processing.....");
         const signature = await signTypedDataAsync({
           domain,
           types,
@@ -69,9 +71,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
             price: ethers.utils.parseEther(values.price), //TODO PRICE
           },
         });
-
-        setIsPending(true);
-        setMsg("processing.....");
         if (props.salesOrder.id.length === 46) {
           const res1 = await api.post("/api/addNFTToDB", {
             data: {
@@ -254,6 +253,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                   <Button
                     type="submit"
                     size="small"
+                    disabled={isPending}
                     color="secondary"
                     variant="contained"
                     sx={{ marginTop: 2 }}
