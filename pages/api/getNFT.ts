@@ -1,3 +1,4 @@
+//TODO Done
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_load } from "../../src/interfaces";
@@ -16,13 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         );
         const uri = `https://exclusives.infura-ipfs.io/ipfs/${id}`;
         const ipfsData = await axios.get(uri);
-        // console.log("came-1");
         let isValide = false;
         let indexNo = 0;
         for (let index = 0; index < data.ownedNfts.length; index++) {
           const element = data.ownedNfts[index];
           if (element.tokenUri.raw === uri) {
-            console.log(element);
             isValide = true;
             indexNo = index;
           }
@@ -31,11 +30,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const nft_r = await await prisma.nFT.findFirst({
             where: {
               uri: uri,
-              sold: true,
-              isDelete: false,
+              isMinted: true,
             },
           });
-          // console.log(nft_r);
           if (nft_r) {
             const list: NFT_load[] = [
               {
@@ -45,14 +42,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 price: "0",
                 image: ipfsData.data.image,
                 listed: false,
-                tokenID: parseInt(data.ownedNfts[indexNo].id.tokenId, 16), //TODO??
+                tokenID: parseInt(data.ownedNfts[indexNo].id.tokenId, 16),
                 uri: uri,
                 signature: "not here",
                 sold: false,
                 description: ipfsData.data.description,
                 name: ipfsData.data.name,
-                royality: nft_r.royality,
-                walletAddress: ownerWalletAddress, //TODO??
+                royality: ipfsData.data.royalty,
+                walletAddress: ownerWalletAddress,
                 creatorWalletAddress: ipfsData.data.creator,
               },
             ];
@@ -80,7 +77,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const nft = await prisma.nFT.findFirst({
           where: {
             id: id,
-            isDelete: false,
+            isMinted: false,
           },
         });
         if (nft) {
@@ -89,37 +86,62 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               id: nft.ownerId,
             },
           });
-          const creator = await prisma.creator.findUnique({
-            where: {
-              id: nft.creatorId,
-            },
+          const activity = await prisma.activity.findFirst({
+            where: { nftId: nft.id, isExpired: false },
           });
           await prisma.$disconnect();
-          if (owner && creator) {
-            const finalNFT: NFT_load[] = [
-              {
-                id: nft.id,
-                category: nft.category,
-                collection: nft.collection,
-                price: nft.price,
-                image: nft.image,
-                listed: nft.listed,
-                tokenID: nft.tokenID,
-                uri: nft.uri,
-                signature: nft.signature,
-                sold: nft.sold,
-                description: nft.description,
-                name: nft.name,
-                royality: nft.royality,
-                walletAddress: owner.walletAddress,
-                creatorWalletAddress: creator.walletAddress,
-              },
-            ];
+          if (owner) {
+            const ipfsData = await axios.get(nft.uri);
+            let finalNFT: NFT_load[];
+            if (activity) {
+              finalNFT = [
+                {
+                  id: nft.id,
+                  category: ipfsData.data.category,
+                  collection: ipfsData.data.collection,
+                  price: activity.buyingprice,
+                  image: ipfsData.data.image,
+                  listed: true,
+                  tokenID: nft.tokenID,
+                  uri: nft.uri,
+                  signature: nft.signature,
+                  sold: false,
+                  description: ipfsData.data.description,
+                  name: ipfsData.data.name,
+                  royality: ipfsData.data.royalty,
+                  walletAddress: owner.walletAddress,
+                  creatorWalletAddress: ipfsData.data.creator,
+                },
+              ];
+            } else {
+              finalNFT = [
+                {
+                  id: nft.id,
+                  category: ipfsData.data.category,
+                  collection: ipfsData.data.collection,
+                  price: "0",
+                  image: ipfsData.data.image,
+                  listed: false,
+                  tokenID: nft.tokenID,
+                  uri: nft.uri,
+                  signature: nft.signature,
+                  sold: false,
+                  description: ipfsData.data.description,
+                  name: ipfsData.data.name,
+                  royality: ipfsData.data.royalty,
+                  walletAddress: owner.walletAddress,
+                  creatorWalletAddress: ipfsData.data.creator,
+                },
+              ];
+            }
+
             res.status(201).json({
               message: "Successfully get",
               success: true,
               data: finalNFT,
             });
+          } else {
+            throw new Error("owner is not exit");
           }
         } else {
           throw new Error("nft is not exit");

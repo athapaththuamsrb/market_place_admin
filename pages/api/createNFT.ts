@@ -1,3 +1,4 @@
+//TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
@@ -18,14 +19,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: userData,
         });
       }
-      let creator = await prisma.creator.findUnique({
-        where: userData,
-      });
-      if (!creator) {
-        creator = await prisma.creator.create({
-          data: { ...userData, userId: user.id },
-        });
-      }
       let owner = await prisma.owner.findUnique({
         where: userData,
       });
@@ -34,31 +27,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: { ...userData, userId: user.id },
         });
       }
-      try {
+      let collection = await prisma.collection.findUnique({
+        where: { collectionAddress: body.nftData.collection },
+      });
+      if (collection) {
         await prisma.nFT.create({
           data: {
-            category: body.nftData.category,
-            collection: body.nftData.collection,
-            creatorId: creator.id,
-            ownerId: owner.id,
-            price: "0",
+            collectionId: collection.id,
             tokenID: body.nftData.tokenID,
             uri: body.nftData.uri,
+            ownerId: owner.id,
             signature: body.signature,
-            description: body.description,
-            image: body.image,
-            name: body.name,
-            royality: Number(body.royality),
           },
         });
-        await prisma.$disconnect();
-        res.status(201).json({ message: "Successfully added", success: true });
-      } catch (error) {
-        await prisma.$disconnect();
-        res
-          .status(400)
-          .json({ message: "Bad request adding nft", success: false });
+      } else {
+        throw new Error("Collection address is not exit");
       }
+      await prisma.$disconnect();
+      res.status(201).json({ message: "Successfully added", success: true });
     } catch {
       await prisma.$disconnect();
       res.status(400).json({ message: "Bad request", success: false });

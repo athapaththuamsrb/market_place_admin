@@ -1,3 +1,4 @@
+//TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_card } from "./../../src/interfaces";
@@ -30,23 +31,41 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const nfts = await prisma.nFT.findMany({
         where: {
           ownerId: owner.id,
-          sold: false,
-          isDelete: false,
+          isMinted: false,
         },
       });
       const finslNFT: NFT_card[] = [];
       if (nfts.length !== 0) {
         for await (const nft of nfts) {
-          const list: NFT_card = {
-            id: nft.id,
-            price: nft.price,
-            image: nft.image,
-            name: nft.name,
-            listed: nft.listed,
-            category: nft.category,
-            ownerWalletAddress: userData.walletAddress,
-          };
-
+          const ipfsData = await axios.get(nft.uri);
+          const activity = await prisma.activity.findFirst({
+            where: {
+              nftId: nft.id,
+              isExpired: false,
+            },
+          });
+          let list: NFT_card;
+          if (activity) {
+            list = {
+              id: nft.id,
+              price: activity.sellingprice,
+              image: ipfsData.data.image,
+              name: ipfsData.data.name,
+              listed: true,
+              category: ipfsData.data.category,
+              ownerWalletAddress: userData.walletAddress,
+            };
+          } else {
+            list = {
+              id: nft.id,
+              price: "0",
+              image: ipfsData.data.image,
+              name: ipfsData.data.name,
+              listed: false,
+              category: ipfsData.data.category,
+              ownerWalletAddress: userData.walletAddress,
+            };
+          }
           finslNFT.push(list);
         }
       }
@@ -60,9 +79,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const lazyNfts = await prisma.nFT.findMany({
             where: {
               uri: nft.tokenUri.raw,
-              listed: true,
-              sold: false,
-              isDelete: false,
+              isMinted: false,
             },
           });
           if (lazyNfts.length !== 0) {
@@ -78,14 +95,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             category: ipfsData.data.category,
             ownerWalletAddress: owner.walletAddress,
           };
-          console.log(list);
+          //console.log(list);
           finslNFT.push(list);
         }
       }
 
-      res
-        .status(201)
-        .json({ message: "Successfully received", success: true, data: finslNFT });
+      res.status(201).json({
+        message: "Successfully received",
+        success: true,
+        data: finslNFT,
+      });
     } catch (error) {
       await prisma.$disconnect();
       res

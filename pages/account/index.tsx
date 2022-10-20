@@ -123,7 +123,7 @@ const MyNFTs: NextPage = (props) => {
               </Box>
             )}
 
-            <Box sx={{ marginBottom: "1%"}}>
+            <Box sx={{ marginBottom: "1%" }}>
               {data.length === 0 ? (
                 <Box>
                   <Divider sx={{ mt: 3 }} />

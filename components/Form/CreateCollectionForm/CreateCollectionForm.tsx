@@ -99,6 +99,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
   const formik = useFormik({
     initialValues: {
       collectionName: "",
+      collectionDescription: "",
       featuredImage: undefined,
       bannerImage: undefined,
       logoImage: undefined,
@@ -108,6 +109,11 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         .trim()
         .min(5, "Give more than 5")
         .max(20, "can't exit  more than 20")
+        .required("Required"),
+      collectionDescription: Yup.string()
+        .trim()
+        .min(5, "Give more than 5")
+        .max(500, "can't exit  more than 500")
         .required("Required"),
     }),
     onSubmit: async (values) => {
@@ -124,21 +130,24 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             values.collectionName
           );
           const output = await smartContract.wait();
-          // console.log(output);
-          //console.log(output.logs[0].address);
+          console.log(output);
+          console.log(output.logs[0].address);
           //======================================================
           const address = output.log[0].address;
+          console.log("res");
           const res = await axios.post("/api/uploadFile", {
             data: {
               featuredImageURL: image["featuredImage"],
               logoImageURL: image["logoImage"],
               bannerImageURL: image["bannerImage"],
               userName: values.collectionName,
+              collectionDescription: values.collectionDescription,
               collectionAddress: address,
-              folder: "profile",
+              folder: "collection",
               userwalletAddress: account?.address,
             },
           });
+          console.log(res);
           props.setMsg(res.status === 200 ? "Successful!" : "Try again!!");
           props.setOpen(true);
         }
@@ -307,6 +316,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   {formik.errors.collectionName}
                 </Typography>
               ) : null}
+            </Box>
+            <Box>
               <TextField
                 sx={{ marginBottom: "30px" }}
                 id="collectionDescription"
@@ -315,8 +326,18 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 variant="outlined"
                 multiline
                 fullWidth
+                required
+                value={formik.values.collectionDescription}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
                 rows={4}
               />
+              {formik.touched.collectionDescription &&
+              formik.errors.collectionDescription ? (
+                <Typography color="red" variant="body2">
+                  {formik.errors.collectionDescription}{" "}
+                </Typography>
+              ) : null}
             </Box>
           </Grid>
           <Grid item xs={2}></Grid>
@@ -326,6 +347,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             type="submit"
             disabled={
               formik.errors.collectionName !== undefined ||
+              formik.errors.collectionDescription !== undefined ||
               image["featuredImage"] ===
                 "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
               image["logoImage"] ===
