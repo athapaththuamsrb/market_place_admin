@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const body = req.body.data;
-    console.log(body);
+    //console.log(body);
     try {
       let ownerUser = await prisma.user.findUnique({
         where: { walletAddress: body.ownerWalletAddress },
@@ -27,7 +27,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         });
       }
-      ////
       let creatorUser = await prisma.user.findUnique({
         where: { walletAddress: body.creatorWalletAddress },
       });
@@ -36,34 +35,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: { walletAddress: body.creatorWalletAddress },
         });
       }
-      let creator = await prisma.creator.findUnique({
-        where: { walletAddress: body.creatorWalletAddress },
+      let collection = await prisma.collection.findUnique({
+        //TODO need to ask (when block chain nft put listed what is collection that we put)
+        where: { collectionAddress: body.nftData.collection },
       });
-      if (!creator) {
-        creator = await prisma.creator.create({
+      if (!collection) {
+        collection = await prisma.collection.create({
           data: {
-            walletAddress: body.creatorWalletAddress,
-            userId: creatorUser.id,
+            creatorId: ownerUser.id,
+            collectionName: "undefine",
+            collectionAddress: body.nftData.collection,
           },
         });
       }
-      /////
-
       await prisma.nFT.create({
         data: {
-          category: body.category,
-          collection: body.collection,
-          creatorId: creator.id,
-          ownerId: owner.id,
-          price: body.price,
+          collectionId: collection.id,
           tokenID: body.tokenID,
           uri: body.uri,
+          ownerId: owner.id,
           signature: body.signature,
-          description: body.description,
-          image: body.image,
-          name: body.name,
-          listed: true,
-          royality: body.royality,
         },
       });
 

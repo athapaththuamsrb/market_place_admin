@@ -1,3 +1,4 @@
+//TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_card } from "./../../src/interfaces";
@@ -7,34 +8,34 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
-      const lazyNfts = await prisma.nFT.findMany({
+      const nfts = await prisma.nFT.findMany({
         where: {
-          sold: false,
-          listed: true,
-          isDelete: false,
+          isMinted: false,
         },
       });
-      console.log(lazyNfts);
-      let nfts = [];
-      if (lazyNfts) {
-        for await (const lazyNft of lazyNfts) {
-          const owner = await prisma.owner.findUnique({
-            where: {
-              id: lazyNft.ownerId,
-            },
-          });
-          if (owner) {
-            const nft: NFT_card = {
-              id: lazyNft.id,
-              price: lazyNft.price,
-              image: lazyNft.image,
-              name: lazyNft.name,
-              listed: lazyNft.listed,
-              category: lazyNft.category,
-              ownerWalletAddress: owner.walletAddress,
-            };
-            nfts.push(nft);
-          }
+
+      let finalNfts = [];
+      for await (const nft of nfts) {
+        const owner = await prisma.owner.findUnique({
+          where: {
+            id: nft.ownerId,
+          },
+        });
+        const activity = await prisma.activity.findFirst({
+          where: { nftId: nft.id, isExpired: false },
+        });
+        if (owner && activity) {
+          const ipfsData = await axios.get(nft.uri);
+          const nft_card: NFT_card = {
+            id: nft.id,
+            price: activity.sellingprice,
+            image: ipfsData.data.image,
+            name: ipfsData.data.name,
+            listed: true,
+            category: ipfsData.data.category,
+            ownerWalletAddress: owner.walletAddress,
+          };
+          finalNfts.push(nft_card);
         }
       }
       await prisma.$disconnect();
@@ -43,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ message: "Successfully get", success: true, data: nfts });
     } catch (err) {
       await prisma.$disconnect();
-      //console.log(err);
+      console.log(err);
       res
         .status(400)
         .json({ message: "Bad request", success: false, data: [] });
