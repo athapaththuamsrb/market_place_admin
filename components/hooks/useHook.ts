@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { NFT_card, Profile } from "../../src/interfaces";
+import { NFT_card, Profile, Collection_Card } from "../../src/interfaces";
 import { useAccount } from "wagmi";
 export const useIsMounted = () => {
   const [mounted, setMounted] = useState(false);
@@ -17,19 +17,21 @@ export const useGetMyNFT = () => {
   const [error, setError] = useState(null);
   useEffect(() => {
     setTimeout(() => {
-      axios
-        .post("/api/getMyNFT", {
-          data: { address: account?.address },
-        })
-        .then((res) => {
-          setData(res.data.data);
-          setIsPending(false);
-          setError(null);
-        })
-        .catch((error) => {
-          setIsPending(false);
-          setError(error.message);
-        });
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getMyNFT", {
+            data: { address: account?.address },
+          })
+          .then((res) => {
+            setData(res.data.data);
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
+      }
     }, 3000);
   }, [account?.address]);
   return { data, isPending, error };
@@ -60,4 +62,31 @@ export const useGetMyProfile = () => {
     }, 3000);
   }, [account?.address]);
   return { profile, isPendingProfile, errorProfile };
+};
+
+export const useGetMyCollectionCard = () => {
+  const { data: account } = useAccount();
+  const [collectionCards, setCollectionCards] = useState<Collection_Card[]>([]);
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    setTimeout(() => {
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getMyCollection", {
+            data: { address: account?.address },
+          })
+          .then((res) => {
+            setCollectionCards(res.data.data);
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
+      }
+    }, 3000);
+  }, [account?.address]);
+  return { collectionCards, isPending, error };
 };

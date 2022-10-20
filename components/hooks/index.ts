@@ -1,1 +1,6 @@
-export { useIsMounted, useGetMyNFT, useGetMyProfile } from "./useHook";
+export {
+  useIsMounted,
+  useGetMyNFT,
+  useGetMyProfile,
+  useGetMyCollectionCard,
+} from "./useHook";

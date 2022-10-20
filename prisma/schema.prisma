@@ -51,7 +51,7 @@ model Collection {
   status                STATUS   @default(ACTIVE) //HAVE TO add
   creator               User     @relation(fields: [creatorId], references: [id])
   creatorId             String
-  collectionAddress     String
+  collectionAddress     String   @unique
   collectionDescription String
   collectionName        String   @default("randomCollection")
   floorPrice            String   @default("0")
@@ -68,11 +68,10 @@ model NFT {
   id           String     @id @default(uuid())
   collection   Collection @relation(fields: [collectionId], references: [id])
   collectionId String
-  status       STATUS
+  status       STATUS     @default(ACTIVE)
   tokenID      Int
   uri          String
   timestamp    DateTime   @default(now())
-  description  String
   owner        Owner      @relation(fields: [ownerId], references: [id])
   ownerId      String
   signature    String

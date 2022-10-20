@@ -25,6 +25,9 @@ import NFTCollection1Abi from "../../../contractsData/NFTCollection1.json";
 import ConfirmModal from "../../ui/ConfirmModal";
 import { NFT, SalesOrder } from "../../../src/interfaces";
 import * as Yup from "yup";
+import { useGetMyCollectionCard } from "../../../components/hooks";
+import LinearProgress from "@mui/material/LinearProgress";
+import { useRouter } from "next/router";
 const projectId = "2DI7xsXof3jkeXnqqBcZ4QmiLmW"; // <---------- your Infura Project ID
 
 const projectSecret = "13f77964b78b57d2159a682b364cf50d"; // <---------- your Infura Secret
@@ -61,8 +64,9 @@ const Input = styled("input")({
 const CreateForm: FC<CreateFormProps> = (props) => {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
-
+  const { collectionCards, isPending, error } = useGetMyCollectionCard();
   const { data: signer, isError, isLoading } = useSigner();
+  const router = useRouter();
   const nftCollection1_ = useContract({
     addressOrName: NFTCollection1Address.address,
     contractInterface: NFTCollection1Abi.abi,
@@ -164,8 +168,11 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     setIsRoyality(event.target.checked);
   };
   const [isRoyality, setIsRoyality] = useState(false);
+  if (isPending === false && collectionCards.length === 0) {
+    router.push(`${router.basePath}//account/collection/create`);
+  }
 
-  return (
+  return isPending ? (
     <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={0}>
@@ -288,9 +295,17 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                 >
-                  <MenuItem value={NFTCollection1Address.address}>
-                    Collection 1
-                  </MenuItem>
+                  {collectionCards &&
+                    collectionCards.map((collectionCard) => {
+                      return (
+                        <MenuItem
+                          value={collectionCard.collectionAddress}
+                          key={collectionCard.collectionAddress}
+                        >
+                          {collectionCard.collectionName}
+                        </MenuItem>
+                      );
+                    })}
                 </Select>
               </FormControl>
               {formik.touched.collection && formik.errors.collection ? (
@@ -377,6 +392,10 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         msg={props.msg}
         setOpen={props.setOpen}
       />
+    </Box>
+  ) : (
+    <Box sx={{ width: "100%" }}>
+      <LinearProgress />
     </Box>
   );
 };

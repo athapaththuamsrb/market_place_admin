@@ -130,11 +130,11 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             values.collectionName
           );
           const output = await smartContract.wait();
-          console.log(output);
-          console.log(output.logs[0].address);
+          // console.log(output);
+          // console.log(output.logs[0].address);
           //======================================================
-          const address = output.log[0].address;
-          console.log("res");
+          const address = output.logs[0].address;
+          // console.log("res");
           const res = await axios.post("/api/uploadFile", {
             data: {
               featuredImageURL: image["featuredImage"],
@@ -147,8 +147,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               userwalletAddress: account?.address,
             },
           });
-          console.log(res);
-          props.setMsg(res.status === 200 ? "Successful!" : "Try again!!");
+          // console.log(res);
+          props.setMsg(res.status === 201 ? "Successful!" : "Try again!!");
           props.setOpen(true);
         }
       } catch (error) {

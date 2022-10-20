@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const user = await prisma.user.findUnique({
           where: { walletAddress: body.userwalletAddress },
         });
-        console.log(body);
+        // console.log(body);
         if (user) {
           switch (body.folder) {
             case "profile":

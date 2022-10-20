@@ -101,6 +101,11 @@ export type Collection = {
   reportedBy: string;
   reportedDate: Date;
 };
+
+export type Collection_Card = {
+  collectionAddress: string;
+  collectionName: string;
+};
 export type NFT_Report = {
   id: string;
   name: string;
