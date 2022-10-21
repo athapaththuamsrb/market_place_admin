@@ -4,13 +4,13 @@ import type {
   NextPage,
   InferGetStaticPropsType,
 } from "next";
-import api from "../../../../lib/api";
-import { NFT_load } from "../../../../src/interfaces";
-import SetPrice from "../../../../components/ViewNFT/SetPrice";
+import api from "../../../../../lib/api";
+import { NFT_load } from "../../../../../src/interfaces";
+import SetPrice from "../../../../../components/ViewNFT/SetPrice";
 import { useAccount } from "wagmi";
 import { Typography } from "@mui/material/";
 import Link from "@mui/material/Link";
-import { useIsMounted } from "../../../../components/hooks";
+import { useIsMounted } from "../../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box } from "@mui/system";
 interface ViewProps {
@@ -48,7 +48,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   try {
     const { data } = await api.post("/getNFT", {
-      data: { id: params?.id, ownerWalletAddress: params?.owner },
+      data: { id: params?.nftId, ownerId: params?.ownerId },
     });
     if (data.data.length === 0) {
       return { notFound: true };

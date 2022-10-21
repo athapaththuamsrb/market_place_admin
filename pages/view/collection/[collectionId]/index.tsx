@@ -10,17 +10,17 @@ import {
   ImageListItem,
   Divider,
 } from "@mui/material";
-import NFTcard from "../../components/ui/NFT";
+import NFTcard from "../../../../components/ui/NFT";
 import { useAccount, useConnect, useBalance } from "wagmi";
 import {
   useGetMyNFT,
   useIsMounted,
   useGetMyProfile,
   useGetMyCollectionCard,
-} from "../../components/hooks";
-import Connect from "../../components/Login/Connect";
+} from "../../../../components/hooks";
+import Connect from "../../../../components/Login/Connect";
 import LinearProgress from "@mui/material/LinearProgress";
-import MyTabBar from "../../components/ui/MyTabBar";
+import MyTabBar from "../../../../components/ui/MyTabBar";
 import { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -40,6 +40,20 @@ const MyNFTs: NextPage = (props) => {
   } = useBalance({
     addressOrName: account?.address,
     chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
+  });
+  const nftEls = data.map((salesOrder) => {
+    return (
+      <Grid key={salesOrder.id} item xs={3}>
+        <NFTcard
+          id={salesOrder.id}
+          price={salesOrder.price}
+          name={salesOrder.name}
+          image={salesOrder.image}
+          listed={salesOrder.listed}
+          ownerWalletAddress={salesOrder.ownerWalletAddress}
+        ></NFTcard>
+      </Grid>
+    );
   });
   function srcset(
     image: string,

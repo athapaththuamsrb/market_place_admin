@@ -51,7 +51,7 @@ model Collection {
   status                STATUS   @default(ACTIVE) //HAVE TO add
   creator               User     @relation(fields: [creatorId], references: [id])
   creatorId             String
-  collectionAddress     String
+  collectionAddress     String   @unique
   collectionDescription String
   collectionName        String   @default("randomCollection")
   floorPrice            String   @default("0")

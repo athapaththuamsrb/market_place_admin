@@ -12,6 +12,7 @@ interface NFTProps {
   name: string;
   image: string;
   listed: boolean;
+  ownerId: string;
   ownerWalletAddress: string;
 }
 
@@ -19,7 +20,7 @@ const NFT: FC<NFTProps> = (props) => {
   const { data: account } = useAccount();
   return (
     <div>
-      <Link href={`/view/${props.ownerWalletAddress}/${props.id}`}>
+      <Link href={`/view/nft/${props.ownerId}/${props.id}`}>
         <Card sx={{ border: "2px solid", marginX: "auto" }}>
           <CardActionArea>
             <CardMedia
@@ -31,7 +32,12 @@ const NFT: FC<NFTProps> = (props) => {
               alt="green iguana"
             />
             <CardContent>
-              <Typography variant="h3" component="div" textAlign={"center"} sx={{fontSize:20}}>
+              <Typography
+                variant="h3"
+                component="div"
+                textAlign={"center"}
+                sx={{ fontSize: 20 }}
+              >
                 {props.name}
               </Typography>
               {props.price !== "0" && (
@@ -52,7 +58,8 @@ const NFT: FC<NFTProps> = (props) => {
                 size="small"
                 color="primary"
                 variant="contained"
-                sx={{ marginX: "32%" }} href={`/view/${props.ownerWalletAddress}/${props.id}`}
+                sx={{ marginX: "32%" }}
+                href={`/view/nft/${props.ownerId}/${props.id}`}
               >
                 BUY
               </Button>
@@ -63,7 +70,7 @@ const NFT: FC<NFTProps> = (props) => {
                 color="primary"
                 variant="contained"
                 sx={{ marginX: "32%" }}
-                href={`/view/${props.ownerWalletAddress}/${props.id}`}
+                href={`/view/nft/${props.ownerId}/${props.id}`}
               >
                 VIEW
               </Button>
@@ -74,7 +81,7 @@ const NFT: FC<NFTProps> = (props) => {
                 color="primary"
                 variant="contained"
                 sx={{ marginLeft: "32%" }}
-                href={`/view/${props.ownerWalletAddress}/${props.id}`}
+                href={`/view/nft/${props.ownerId}/${props.id}`}
               >
                 SELL
               </Button>

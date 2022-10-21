@@ -52,6 +52,7 @@ export type NFT_card = {
   name: string;
   listed: boolean;
   category: string;
+  ownerId: string;
   ownerWalletAddress: string;
 };
 export type CreateFormData = {

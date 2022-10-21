@@ -1,14 +1,14 @@
-import ViewNFT from "../../../../components/ViewNFT";
+import ViewNFT from "../../../../../components/ViewNFT";
 import type {
   GetStaticProps,
   NextPage,
   GetStaticPaths,
   InferGetStaticPropsType,
 } from "next";
-import api from "../../../../lib/api";
-import { NFT_load } from "../../../../src/interfaces";
+import api from "../../../../../lib/api";
+import { NFT_load } from "../../../../../src/interfaces";
 import { _TypedDataEncoder } from "ethers/lib/utils";
-import { useIsMounted } from "../../../../components/hooks";
+import { useIsMounted } from "../../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box } from "@mui/system";
 interface ViewProps {
@@ -40,7 +40,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   try {
     const { data } = await api.post("/getNFT", {
-      data: { id: params?.id, ownerWalletAddress: params?.owner },
+      data: { id: params?.nftId, ownerId: params?.ownerId },
     });
     if (data.data.length === 0) {
       return { notFound: true };

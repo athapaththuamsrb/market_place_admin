@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const body = req.body.data;
-    //console.log(body);
     try {
       let ownerUser = await prisma.user.findUnique({
         where: { walletAddress: body.ownerWalletAddress },

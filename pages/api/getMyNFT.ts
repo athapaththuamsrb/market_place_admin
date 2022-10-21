@@ -29,13 +29,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             data: { ...userData, userId: user.id },
           });
         }
-
         const nfts = await prisma.nFT.findMany({
           where: {
             ownerId: owner.id,
             isMinted: false,
           },
         });
+
         const finslNFT: NFT_card[] = [];
         if (nfts.length !== 0) {
           for await (const nft of nfts) {
@@ -55,6 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: ipfsData.data.name,
                 listed: true,
                 category: ipfsData.data.category,
+                ownerId: owner.id,
                 ownerWalletAddress: userData.walletAddress,
               };
             } else {
@@ -65,6 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: ipfsData.data.name,
                 listed: false,
                 category: ipfsData.data.category,
+                ownerId: owner.id,
                 ownerWalletAddress: userData.walletAddress,
               };
             }
@@ -88,6 +90,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               continue;
             }
             const ipfsData = await axios.get(nft.tokenUri.raw);
+            const { data: collectionMetaData } = await axios.get(
+              `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getContractMetadata?contractAddress=${ipfsData.data.collection}`
+            );
+            let nftCreater = await prisma.user.findUnique({
+              where: { walletAddress: ipfsData.data.creator },
+            });
+            if (!nftCreater) {
+              nftCreater = await prisma.user.create({
+                data: { walletAddress: ipfsData.data.creator },
+              });
+            }
+            let collection = await prisma.collection.findUnique({
+              where: {
+                collectionAddress: collectionMetaData.address,
+              },
+            });
+            if (!collection) {
+              collection = await prisma.collection.create({
+                data: {
+                  creatorId: nftCreater.id,
+                  collectionName: collectionMetaData.contractMetadata.name,
+                  collectionAddress: collectionMetaData.address,
+                  collectionDescription: "This is new to here",
+                },
+              });
+            }
             const list: NFT_card = {
               id: nft.tokenUri.raw.split("/")[4],
               price: "0",
@@ -95,12 +123,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               name: ipfsData.data.name,
               listed: false,
               category: ipfsData.data.category,
+              ownerId: owner.id,
               ownerWalletAddress: owner.walletAddress,
             };
             finslNFT.push(list);
           }
         }
-
         res.status(201).json({
           message: "Successfully received",
           success: true,

@@ -28,6 +28,7 @@ const MyTabBar: FC<CategoryNavProps> = (props) => {
             price={salesOrder.price}
             name={salesOrder.name}
             image={salesOrder.image}
+            ownerId={salesOrder.ownerId}
             ownerWalletAddress={salesOrder.ownerWalletAddress}
           ></NFT>
         </Grid>

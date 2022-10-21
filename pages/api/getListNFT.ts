@@ -33,6 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             name: ipfsData.data.name,
             listed: true,
             category: ipfsData.data.category,
+            ownerId: owner.id,
             ownerWalletAddress: owner.walletAddress,
           };
           finalNfts.push(nft_card);
