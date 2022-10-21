@@ -1,3 +1,4 @@
+//TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_card } from "./../../src/interfaces";
@@ -28,61 +29,105 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             data: { ...userData, userId: user.id },
           });
         }
-        const nfts = await prisma.nFT.findMany({
-          where: {
-            ownerId: owner.id,
-            isMinted: false,
-          },
-        });
-
-        const finslNFT: NFT_card[] = [];
+        const createdNFTCard: NFT_card[] = [];
+        const collectedNFTCard: NFT_card[] = [];
+        const nfts = await prisma.nFT.findMany();
         if (nfts.length !== 0) {
           for await (const nft of nfts) {
             const ipfsData = await axios.get(nft.uri);
-            const activity = await prisma.activity.findFirst({
-              where: {
-                nftId: nft.id,
-                isExpired: false,
-              },
-            });
-            let list: NFT_card;
-            if (activity) {
-              list = {
-                id: nft.id,
-                price: activity.sellingprice,
-                image: ipfsData.data.image,
-                name: ipfsData.data.name,
-                listed: true,
-                category: ipfsData.data.category,
-                ownerId: owner.id,
-                ownerWalletAddress: userData.walletAddress,
-              };
-            } else {
-              list = {
-                id: nft.id,
-                price: "0",
-                image: ipfsData.data.image,
-                name: ipfsData.data.name,
-                listed: false,
-                category: ipfsData.data.category,
-                ownerId: owner.id,
-                ownerWalletAddress: userData.walletAddress,
-              };
+
+            if (ipfsData.data.creator === userData.walletAddress) {
+              const creatorData = { walletAddress: ipfsData.data.creator };
+              let userCreator = await prisma.user.findUnique({
+                where: creatorData,
+              });
+              if (!userCreator) {
+                userCreator = await prisma.user.create({
+                  data: creatorData,
+                });
+              }
+              let ownerCreator = await prisma.owner.findUnique({
+                where: creatorData,
+              });
+              if (!ownerCreator) {
+                ownerCreator = await prisma.owner.create({
+                  data: { ...creatorData, userId: userCreator.id },
+                });
+              }
+              const activity = await prisma.activity.findFirst({
+                where: {
+                  nftId: nft.id,
+                  isExpired: false,
+                },
+              });
+              let list: NFT_card;
+              if (activity) {
+                list = {
+                  id: nft.id,
+                  price: activity.sellingprice,
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: true,
+                  category: ipfsData.data.category,
+                  ownerId: nft.ownerId,
+                  ownerWalletAddress: ownerCreator.walletAddress,
+                };
+              } else {
+                list = {
+                  id: nft.id,
+                  price: "0",
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: false,
+                  category: ipfsData.data.category,
+                  ownerId: nft.ownerId,
+                  ownerWalletAddress: ownerCreator.walletAddress,
+                };
+              }
+              createdNFTCard.push(list);
+            } else if (nft.ownerId === owner.id) {
+              const activity = await prisma.activity.findFirst({
+                where: {
+                  nftId: nft.id,
+                  isExpired: false,
+                },
+              });
+              let list: NFT_card;
+              if (activity) {
+                list = {
+                  id: nft.id,
+                  price: activity.sellingprice,
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: true,
+                  category: ipfsData.data.category,
+                  ownerId: owner.id,
+                  ownerWalletAddress: owner.walletAddress,
+                };
+              } else {
+                list = {
+                  id: nft.id,
+                  price: "0",
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: false,
+                  category: ipfsData.data.category,
+                  ownerId: owner.id,
+                  ownerWalletAddress: owner.walletAddress,
+                };
+              }
+              collectedNFTCard.push(list);
             }
-            finslNFT.push(list);
           }
         }
-
         const { data } = await axios.get(
           `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getNFTs?owner=${userData.walletAddress}`
         );
-        // console.log(data);
         if (data.ownedNfts.length !== 0) {
           for await (const nft of data.ownedNfts) {
             const lazyNfts = await prisma.nFT.findMany({
               where: {
                 uri: nft.tokenUri.raw,
-                isMinted: false,
               },
             });
             if (lazyNfts.length !== 0) {
@@ -126,13 +171,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               ownerId: owner.id,
               ownerWalletAddress: owner.walletAddress,
             };
-            finslNFT.push(list);
+            collectedNFTCard.push(list);
           }
         }
         res.status(201).json({
           message: "Successfully received",
           success: true,
-          data: finslNFT,
+          data: [collectedNFTCard, createdNFTCard],
         });
       } catch (error) {
         await prisma.$disconnect();
