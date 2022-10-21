@@ -7,6 +7,7 @@ import {
   Collection_Item,
 } from "../../src/interfaces";
 import { useAccount } from "wagmi";
+import { gridTopLevelRowCountSelector } from "@mui/x-data-grid";
 export const useIsMounted = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -48,8 +49,9 @@ export const useGetMyProfile = () => {
   const [isPendingProfile, setIsPendingProfile] = useState(true);
   const [errorProfile, setErrorProfile] = useState(null);
   useEffect(() => {
-    setTimeout(() => {
-      if (account?.address !== undefined) {
+    if (account?.address !== undefined) {
+      setIsPendingProfile(true);
+      setTimeout(() => {
         axios
           .post("/api/getMyProfile", {
             data: { address: account?.address },
@@ -63,8 +65,10 @@ export const useGetMyProfile = () => {
             setIsPendingProfile(false);
             setErrorProfile(error.message);
           });
-      }
-    }, 3000);
+      }, 3000);
+    } else {
+      setIsPendingProfile(false);
+    }
   }, [account?.address]);
   return { profile, isPendingProfile, errorProfile };
 };

@@ -26,7 +26,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 const MyNFTs: NextPage = (props) => {
   const isMounted = useIsMounted();
-  const { activeConnector } = useConnect();
+  const { activeConnector, connect, connectors } = useConnect();
   const { data: account } = useAccount();
   const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
   const { data, isPending, error } = useGetMyNFT();
@@ -70,10 +70,10 @@ const MyNFTs: NextPage = (props) => {
     };
   }
   useEffect(() => {
-    if (!activeConnector) {
+    if (!isPendingProfile && activeConnector === undefined) {
       router.push(`${router.basePath}/explore-collections`);
     }
-  }, [activeConnector, router]);
+  }, [activeConnector, isPendingProfile, router]);
 
   return isMounted && activeConnector && !isPendingProfile ? (
     <Box>
