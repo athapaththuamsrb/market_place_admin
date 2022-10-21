@@ -77,27 +77,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     initialValues: {
       name: "",
       description: "",
-      category: "",
       collection: "",
       royality: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().trim().required("Required"),
       description: Yup.string().trim().required("Required"),
-      category: Yup.mixed()
-        .oneOf([
-          "Nature",
-          "Photography",
-          "Art",
-          "Worlds",
-          "Virtual",
-          "Utility",
-          "Cards",
-          "Sports",
-          "Music",
-          "Collectibles",
-        ])
-        .required("Required"),
       collection: Yup.string().length(42, "exact size").required("Required"),
       royality: Yup.number()
         .required("required field")
@@ -107,8 +92,18 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         .min(0, "minimum value is 0%"),
     }),
     onSubmit: async (values) => {
-      const withIpfs = { ...values, image: props.ipfsImage };
-      //console.log("withIpfs", withIpfs);
+      const selectedCollection = collectionItem.map((collectionData) => {
+        if (values.collection === collectionData.collectionAddress) {
+          return collectionData.category;
+        }
+      });
+      console.log(selectedCollection);
+      const withIpfs = {
+        ...values,
+        image: props.ipfsImage,
+        category: selectedCollection[0],
+      };
+
       try {
         const result = await client.add(
           JSON.stringify({
@@ -125,6 +120,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         // let tokenId = await nftCollection1_._tokenIdCounter();
         // tokenId = tokenId.toNumber();
         const creator = await signer?.getAddress();
+        if (creator === undefined) {
+          throw new Error("Crator address is undefine");
+        }
+        if (withIpfs.category === undefined) {
+          throw new Error("Category is undefine");
+        }
         const nftData: NFT = {
           tokenID: 0,
           price: "0",
@@ -254,36 +255,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 </Typography>
               ) : null}
             </Box>
-            <Box>
-              <FormControl fullWidth sx={{ marginBottom: "30px" }}>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="category"
-                  name="category"
-                  value={formik.values.category}
-                  label="Category"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                >
-                  <MenuItem value={"Art"}>Art</MenuItem>
-                  <MenuItem value={"Collectibles"}>Collectibles</MenuItem>
-                  <MenuItem value={"Music"}>Music</MenuItem>
-                  <MenuItem value={"Photography"}>Photography</MenuItem>
-                  <MenuItem value={"Sports"}>Sports</MenuItem>
-                  <MenuItem value={"Cards"}>Cards</MenuItem>
-                  <MenuItem value={"Nature"}>Nature</MenuItem>
-                  <MenuItem value={"Utility"}>Utility</MenuItem>
-                  <MenuItem value={"Virtual"}>Virtual</MenuItem>
-                  <MenuItem value={"Worlds"}>Worlds</MenuItem>
-                </Select>
-              </FormControl>
-              {formik.touched.category && formik.errors.category ? (
-                <Typography color="red" variant="body2">
-                  {formik.errors.category}
-                </Typography>
-              ) : null}
-            </Box>
+
             <Box>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
@@ -360,7 +332,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             disabled={
               formik.errors.collection ||
               formik.errors.name ||
-              formik.errors.category ||
               formik.errors.description ||
               (isRoyality && formik.errors.royality) ||
               props.ipfsImage === "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||

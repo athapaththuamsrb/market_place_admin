@@ -50,6 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               await prisma.collection.create({
                 data: {
                   creatorId: user.id,
+                  collectionCategory: ipfsData.data.category,
                   collectionName: data.ownedNfts[indexNo].contractMetadata.name,
                   collectionAddress: ipfsData.data.collection,
                   collectionDescription: ipfsData.data.description,

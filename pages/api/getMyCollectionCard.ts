@@ -30,6 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               id: result.id,
               collectionName: result.collectionName,
               featuredImage: result.featuredImage,
+              category: result.collectionCategory,
             });
           }
         }

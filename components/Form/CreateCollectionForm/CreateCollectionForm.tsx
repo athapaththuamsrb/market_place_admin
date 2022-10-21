@@ -1,14 +1,18 @@
 import React, { FC, SyntheticEvent, useState } from "react";
 import { useFormik } from "formik";
-import { styled } from "@mui/material/styles";
 import {
-  Box,
-  Grid,
   Button,
+  styled,
   Typography,
   TextField,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Avatar,
   Stack,
+  Box,
+  Grid,
 } from "@mui/material";
 import axios from "axios";
 import ModalPopUp from "../../Modal";
@@ -100,6 +104,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     initialValues: {
       collectionName: "",
       collectionDescription: "",
+      collectionCategory: "",
       featuredImage: undefined,
       bannerImage: undefined,
       logoImage: undefined,
@@ -114,6 +119,20 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         .trim()
         .min(5, "Give more than 5")
         .max(500, "can't exit  more than 500")
+        .required("Required"),
+      collectionCategory: Yup.mixed()
+        .oneOf([
+          "Nature",
+          "Photography",
+          "Art",
+          "Worlds",
+          "Virtual",
+          "Utility",
+          "Cards",
+          "Sports",
+          "Music",
+          "Collectibles",
+        ])
         .required("Required"),
     }),
     onSubmit: async (values) => {
@@ -130,7 +149,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             values.collectionName
           );
           const output = await smartContract.wait();
-          // console.log(output);
+          console.log(output);
           // console.log(output.logs[0].address);
           //======================================================
           const address = output.logs[0].address;
@@ -143,6 +162,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               collectionName: values.collectionName,
               collectionDescription: values.collectionDescription,
               collectionAddress: address,
+              collectionCategory: values.collectionCategory,
               folder: "collection",
               userwalletAddress: account?.address,
             },
@@ -158,7 +178,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     },
   });
   //TODO THIS IS USE FOR SHOW NFT IMAGE IN CONFIRM MODAL
-
   return (
     <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
       <form onSubmit={formik.handleSubmit}>
@@ -339,6 +358,37 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 </Typography>
               ) : null}
             </Box>
+            <Box>
+              <FormControl fullWidth sx={{ marginBottom: "30px" }}>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="collectionCategory"
+                  name="collectionCategory"
+                  value={formik.values.collectionCategory}
+                  label="Category"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                >
+                  <MenuItem value={"Art"}>Art</MenuItem>
+                  <MenuItem value={"Collectibles"}>Collectibles</MenuItem>
+                  <MenuItem value={"Music"}>Music</MenuItem>
+                  <MenuItem value={"Photography"}>Photography</MenuItem>
+                  <MenuItem value={"Sports"}>Sports</MenuItem>
+                  <MenuItem value={"Cards"}>Cards</MenuItem>
+                  <MenuItem value={"Nature"}>Nature</MenuItem>
+                  <MenuItem value={"Utility"}>Utility</MenuItem>
+                  <MenuItem value={"Virtual"}>Virtual</MenuItem>
+                  <MenuItem value={"Worlds"}>Worlds</MenuItem>
+                </Select>
+              </FormControl>
+              {formik.touched.collectionCategory &&
+              formik.errors.collectionCategory ? (
+                <Typography color="red" variant="body2">
+                  {formik.errors.collectionCategory}
+                </Typography>
+              ) : null}
+            </Box>
           </Grid>
           <Grid item xs={2}></Grid>
         </Grid>
@@ -348,6 +398,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             disabled={
               formik.errors.collectionName !== undefined ||
               formik.errors.collectionDescription !== undefined ||
+              formik.errors.collectionCategory !== undefined ||
               image["featuredImage"] ===
                 "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
               image["logoImage"] ===

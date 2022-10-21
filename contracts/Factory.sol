@@ -9,7 +9,7 @@ contract Factory {
     constructor(address _marketplace) {
         marketplace=_marketplace;
     }
-    function createNewCollection(string memory _name) public returns ( NFTCollection){
+    function createNewCollection(string memory _name) public payable returns ( NFTCollection){
         NFTCollection collection = new NFTCollection(_name,marketplace);
         deployedCollection.push(collection);
         return collection;

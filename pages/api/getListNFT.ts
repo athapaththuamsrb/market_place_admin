@@ -1,4 +1,3 @@
-//TODO Done
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_card } from "./../../src/interfaces";

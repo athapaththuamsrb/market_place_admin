@@ -39,6 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   featuredImage: body.featuredImageURL,
                   logoImage: body.logoImageURL,
                   bannerImage: body.bannerImageURL,
+                  collectionCategory: body.collectionCategory,
                 },
               });
               break;

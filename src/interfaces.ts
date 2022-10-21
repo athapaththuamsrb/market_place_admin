@@ -107,10 +107,12 @@ export type Collection_Card = {
   id: string;
   collectionName: string;
   featuredImage: string;
+  category: string;
 };
 export type Collection_Item = {
   collectionAddress: string;
   collectionName: string;
+  category: string;
 };
 export type NFT_Report = {
   id: string;

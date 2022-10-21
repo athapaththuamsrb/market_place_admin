@@ -1,4 +1,3 @@
-//TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_card } from "./../../src/interfaces";
@@ -110,6 +109,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               collection = await prisma.collection.create({
                 data: {
                   creatorId: nftCreater.id,
+                  collectionCategory: ipfsData.data.category,
                   collectionName: collectionMetaData.contractMetadata.name,
                   collectionAddress: collectionMetaData.address,
                   collectionDescription: "This is new to here",
