@@ -64,7 +64,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } else {
       res
         .status(401)
-        .json({ message: "unauthorized", success: false, data: [] });
+        .json({ message: "Unauthorized", success: false, data: [] });
     }
   } else {
     res.status(405).json({ message: "Method not allowed", success: false });

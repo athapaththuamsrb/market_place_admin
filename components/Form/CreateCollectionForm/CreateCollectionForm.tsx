@@ -140,7 +140,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               featuredImageURL: image["featuredImage"],
               logoImageURL: image["logoImage"],
               bannerImageURL: image["bannerImage"],
-              userName: values.collectionName,
+              collectionName: values.collectionName,
               collectionDescription: values.collectionDescription,
               collectionAddress: address,
               folder: "collection",

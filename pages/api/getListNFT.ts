@@ -1,4 +1,4 @@
-//TODO DONE
+//TODO Done
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_card } from "./../../src/interfaces";
@@ -41,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await prisma.$disconnect();
       res
         .status(201)
-        .json({ message: "Successfully get", success: true, data: nfts });
+        .json({ message: "Successfully get", success: true, data: finalNfts });
     } catch (err) {
       await prisma.$disconnect();
       console.log(err);

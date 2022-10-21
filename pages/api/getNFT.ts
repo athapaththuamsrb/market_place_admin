@@ -27,44 +27,58 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         }
         if (isValide) {
-          const nft_r = await await prisma.nFT.findFirst({
+          let royalty = 0;
+          if (!ipfsData.data.royalty) {
+            royalty = ipfsData.data.royalty;
+          }
+          const collection = await prisma.collection.findMany({
             where: {
-              uri: uri,
-              isMinted: true,
+              collectionAddress: ipfsData.data.collection,
             },
           });
-          if (nft_r) {
-            const list: NFT_load[] = [
-              {
-                id: id,
-                category: ipfsData.data.category,
-                collection: ipfsData.data.collection,
-                price: "0",
-                image: ipfsData.data.image,
-                listed: false,
-                tokenID: parseInt(data.ownedNfts[indexNo].id.tokenId, 16),
-                uri: uri,
-                signature: "not here",
-                sold: false,
-                description: ipfsData.data.description,
-                name: ipfsData.data.name,
-                royality: ipfsData.data.royalty,
-                walletAddress: ownerWalletAddress,
-                creatorWalletAddress: ipfsData.data.creator,
-              },
-            ];
-            res.status(201).json({
-              message: "Successfully received",
-              success: true,
-              data: list,
+          if (collection.length === 0) {
+            let user = await prisma.user.findUnique({
+              where: { walletAddress: ipfsData.data.creator },
             });
-          } else {
-            res.status(201).json({
-              message: "No maching NFT",
-              success: true,
-              data: [],
+            if (!user) {
+              user = await prisma.user.create({
+                data: { walletAddress: ipfsData.data.creator },
+              });
+            }
+            await prisma.collection.create({
+              data: {
+                creatorId: user.id,
+                collectionName: data.ownedNfts[indexNo].contractMetadata.name,
+                collectionAddress: ipfsData.data.collection,
+                collectionDescription: ipfsData.data.description,
+              },
             });
           }
+          const list: NFT_load[] = [
+            {
+              id: id,
+              category: ipfsData.data.category,
+              collection: ipfsData.data.collection,
+              price: "0",
+              image: ipfsData.data.image,
+              listed: false,
+              tokenID: parseInt(data.ownedNfts[indexNo].id.tokenId, 16),
+              uri: uri,
+              signature: "----",
+              sold: false,
+              description: ipfsData.data.description,
+              name: ipfsData.data.name,
+              royality: royalty,
+              walletAddress: ownerWalletAddress,
+              creatorWalletAddress: ipfsData.data.creator,
+            },
+          ];
+          console.log(list);
+          res.status(201).json({
+            message: "Successfully received",
+            success: true,
+            data: list,
+          });
         } else {
           res.status(201).json({
             message: "No maching NFT",
@@ -80,8 +94,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             isMinted: false,
           },
         });
+        // console.log(nft);
         if (nft) {
-          const owner = await prisma.owner.findUnique({
+          let owner = await prisma.owner.findUnique({
             where: {
               id: nft.ownerId,
             },
@@ -89,7 +104,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const activity = await prisma.activity.findFirst({
             where: { nftId: nft.id, isExpired: false },
           });
-          await prisma.$disconnect();
+
           if (owner) {
             const ipfsData = await axios.get(nft.uri);
             let finalNFT: NFT_load[];
@@ -134,7 +149,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
               ];
             }
-
+            await prisma.$disconnect();
+            // console.log(finalNFT);
             res.status(201).json({
               message: "Successfully get",
               success: true,

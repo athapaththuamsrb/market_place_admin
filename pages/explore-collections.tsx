@@ -34,9 +34,6 @@ const Home: NextPage<ExploreProps> = (
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
     const { data } = await api.get("/getListNFT");
-    if (Object.keys(data).length === 0) {
-      return { notFound: true };
-    }
     return { props: { nftList: data.data }, revalidate: 60 };
   } catch (error) {
     console.log(error);

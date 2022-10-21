@@ -1,4 +1,4 @@
-import React, { FC, SyntheticEvent, useState } from "react";
+import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import {
   Button,
@@ -25,7 +25,7 @@ import NFTCollection1Abi from "../../../contractsData/NFTCollection1.json";
 import ConfirmModal from "../../ui/ConfirmModal";
 import { NFT, SalesOrder } from "../../../src/interfaces";
 import * as Yup from "yup";
-import { useGetMyCollectionCard } from "../../../components/hooks";
+import { useGetMyCollectionItem } from "../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
 const projectId = "2DI7xsXof3jkeXnqqBcZ4QmiLmW"; // <---------- your Infura Project ID
@@ -64,7 +64,8 @@ const Input = styled("input")({
 const CreateForm: FC<CreateFormProps> = (props) => {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
-  const { collectionCards, isPending, error } = useGetMyCollectionCard();
+  const { collectionItem, isPendingCollectionItem, errorCollectionItem } =
+    useGetMyCollectionItem();
   const { data: signer, isError, isLoading } = useSigner();
   const router = useRouter();
   const nftCollection1_ = useContract({
@@ -168,11 +169,13 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     setIsRoyality(event.target.checked);
   };
   const [isRoyality, setIsRoyality] = useState(false);
-  if (isPending === false && collectionCards.length === 0) {
-    router.push(`${router.basePath}//account/collection/create`);
-  }
+  useEffect(() => {
+    if (isPendingCollectionItem === false && collectionItem.length === 0) {
+      router.push(`${router.basePath}/account/collection/create`);
+    }
+  }, [collectionItem.length, isPendingCollectionItem, router]);
 
-  return isPending ? (
+  return !isPendingCollectionItem ? (
     <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={0}>
@@ -295,8 +298,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                 >
-                  {collectionCards &&
-                    collectionCards.map((collectionCard) => {
+                  {collectionItem &&
+                    collectionItem.map((collectionCard) => {
                       return (
                         <MenuItem
                           value={collectionCard.collectionAddress}

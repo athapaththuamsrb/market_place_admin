@@ -16,6 +16,7 @@ import {
   useGetMyNFT,
   useIsMounted,
   useGetMyProfile,
+  useGetMyCollectionCard,
 } from "../../components/hooks";
 import Connect from "../../components/Login/Connect";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -28,6 +29,8 @@ const MyNFTs: NextPage = (props) => {
   const { data: account } = useAccount();
   const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
   const { data, isPending, error } = useGetMyNFT();
+  const { collectionCards, isPendingCollectionCard, errorCollectionCard } =
+    useGetMyCollectionCard();
   const {
     data: balance,
     isError,

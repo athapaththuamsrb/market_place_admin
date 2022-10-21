@@ -103,6 +103,11 @@ export type Collection = {
 };
 
 export type Collection_Card = {
+  id: string;
+  collectionName: string;
+  featuredImage: string;
+};
+export type Collection_Item = {
   collectionAddress: string;
   collectionName: string;
 };

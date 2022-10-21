@@ -1,6 +1,7 @@
 //TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
+import { Collection_Item } from "../../src/interfaces";
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -20,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const results = await prisma.collection.findMany({
         where: { creatorId: user.id },
       });
-      let collections = [];
+      let collections: Collection_Item[] = [];
       if (results) {
         for (const result of results) {
           collections.push({
