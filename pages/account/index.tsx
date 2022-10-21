@@ -21,8 +21,9 @@ import {
 import Connect from "../../components/Login/Connect";
 import LinearProgress from "@mui/material/LinearProgress";
 import MyTabBar from "../../components/ui/MyTabBar";
-import * as React from "react";
+import { useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 const MyNFTs: NextPage = (props) => {
   const isMounted = useIsMounted();
   const { activeConnector } = useConnect();
@@ -31,6 +32,7 @@ const MyNFTs: NextPage = (props) => {
   const { data, isPending, error } = useGetMyNFT();
   const { collectionCards, isPendingCollectionCard, errorCollectionCard } =
     useGetMyCollectionCard();
+  const router = useRouter();
   const {
     data: balance,
     isError,
@@ -67,12 +69,18 @@ const MyNFTs: NextPage = (props) => {
       }&fit=crop&auto=format&dpr=2 2x`,
     };
   }
+  useEffect(() => {
+    if (!activeConnector) {
+      router.push(`${router.basePath}/explore-collections`);
+    }
+  }, [activeConnector, router]);
+
   return isMounted && activeConnector && !isPendingProfile ? (
     <Box>
       {profile?.bannerImage && (
         <ImageListItem>
           <img
-            {...srcset(profile?.bannerImage, 250, 200, 5, 12)}
+            {...srcset(profile?.bannerImage, 250, 200, 3, 9)}
             alt="banner"
             loading="lazy"
           />
@@ -81,7 +89,7 @@ const MyNFTs: NextPage = (props) => {
             <Avatar
               alt="Remy Sharp"
               src={profile?.profileImage}
-              sx={{ width: 200, height: 200, boxShadow: 3, mt: "-10%", ml: 20 }}
+              sx={{ width: 150, height: 150, boxShadow: 3, mt: "-7%", ml: 10 }}
             />
           </Stack>
         </ImageListItem>

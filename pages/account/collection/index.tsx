@@ -7,12 +7,14 @@ import { useGetMyNFT, useIsMounted } from "../../../components/hooks";
 import Connect from "../../../components/Login/Connect";
 import LinearProgress from "@mui/material/LinearProgress";
 import Title from "../../../components/ui/Title";
-
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 const Collection: NextPage = (props) => {
   const isMounted = useIsMounted();
   const { activeConnector } = useConnect();
   const { data: account } = useAccount();
   const { data, isPending, error } = useGetMyNFT();
+  const router = useRouter();
   const nftEls = data.map((salesOrder) => {
     return (
       <Grid key={salesOrder.id} item xs={3}>
@@ -27,6 +29,12 @@ const Collection: NextPage = (props) => {
       </Grid>
     );
   });
+  useEffect(() => {
+    if (!activeConnector) {
+      router.push(`${router.basePath}/explore-collections`);
+    }
+  }, [activeConnector, router]);
+
   return isMounted && activeConnector ? (
     <Box sx={{ pt: 5 }}>
       <Container>
@@ -61,13 +69,13 @@ const Collection: NextPage = (props) => {
         </Button> */}
         {isMounted && activeConnector ? (
           <Box>
-            <br/>
+            <br />
             {isPending && (
               <Box sx={{ width: "100%" }}>
                 <LinearProgress />
               </Box>
             )}
-            <br/>
+            <br />
             {data.length === 0 ? (
               <Typography color="black" align="center" variant="h2">
                 No NFT Exists

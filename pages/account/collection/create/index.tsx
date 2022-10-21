@@ -9,7 +9,7 @@ import Connect from "../../../../components/Login/Connect";
 import type { NextPage } from "next";
 import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
-
+import { useRouter } from "next/router";
 const CreatePage: NextPage = (props) => {
   const isMounted = useIsMounted();
   const {
@@ -20,6 +20,7 @@ const CreatePage: NextPage = (props) => {
     isConnecting,
     pendingConnector,
   } = useConnect();
+  const router = useRouter();
   const { disconnect } = useDisconnect();
   const [openModal, setOpenModal] = useState(false);
   const [ipfsImage, setIpfsImage] = useState<string>("");
@@ -41,6 +42,11 @@ const CreatePage: NextPage = (props) => {
     image: "",
     royality: 0,
   });
+  useEffect(() => {
+    if (!activeConnector) {
+      router.push(`${router.basePath}/explore-collections`);
+    }
+  }, [activeConnector, router]);
 
   return isMounted && activeConnector ? (
     <div>
