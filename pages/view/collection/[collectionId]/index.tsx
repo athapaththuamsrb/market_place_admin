@@ -10,7 +10,7 @@ import {
   ImageListItem,
   Divider,
 } from "@mui/material";
-import NFTcard from "../../../../components/ui/NFT";
+import NFTcard from "../../../../components/ui/NFT/NFTCard";
 import { useAccount, useConnect, useBalance } from "wagmi";
 import {
   useGetMyNFT,

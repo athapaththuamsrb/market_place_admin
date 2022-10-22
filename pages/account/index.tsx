@@ -9,17 +9,15 @@ import {
   Stack,
   ImageListItem,
   Divider,
+  LinearProgress,
 } from "@mui/material";
-import NFTcard from "../../components/ui/NFT";
 import { useAccount, useConnect, useBalance } from "wagmi";
 import {
   useGetMyNFT,
   useIsMounted,
   useGetMyProfile,
-  useGetMyCollectionCard,
 } from "../../components/hooks";
 import Connect from "../../components/Login/Connect";
-import LinearProgress from "@mui/material/LinearProgress";
 import MyTabBar from "../../components/ui/MyTabBar";
 import { useEffect } from "react";
 import Image from "next/image";
@@ -29,9 +27,7 @@ const MyNFTs: NextPage = (props) => {
   const { activeConnector, connect, connectors } = useConnect();
   const { data: account } = useAccount();
   const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
-  const { data, isPending, error } = useGetMyNFT();
-  const { collectionCards, isPendingCollectionCard, errorCollectionCard } =
-    useGetMyCollectionCard();
+  const { collectedNFTCard, createdNFTCard, isPending, error } = useGetMyNFT();
   const router = useRouter();
   const {
     data: balance,
@@ -121,7 +117,7 @@ const MyNFTs: NextPage = (props) => {
             )}
 
             <Box sx={{ marginBottom: "1%" }}>
-              {data.length === 0 ? (
+              {collectedNFTCard.length === 0 && createdNFTCard.length === 0 ? (
                 <Box>
                   <Divider sx={{ mt: 3 }} />
                   <Typography
@@ -134,7 +130,10 @@ const MyNFTs: NextPage = (props) => {
                   </Typography>
                 </Box>
               ) : (
-                <MyTabBar nfts={data} />
+                <MyTabBar
+                  collectedNFTCard={collectedNFTCard}
+                  createdNFTCard={createdNFTCard}
+                />
               )}
             </Box>
           </Box>

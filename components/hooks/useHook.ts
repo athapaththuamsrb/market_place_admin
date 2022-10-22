@@ -18,7 +18,8 @@ export const useIsMounted = () => {
 
 export const useGetMyNFT = () => {
   const { data: account } = useAccount();
-  const [data, setData] = useState<NFT_card[]>([]);
+  const [collectedNFTCard, setCollectedNFTCard] = useState<NFT_card[]>([]);
+  const [createdNFTCard, setCreatedNFTCard] = useState<NFT_card[]>([]);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -29,7 +30,8 @@ export const useGetMyNFT = () => {
             data: { address: account?.address },
           })
           .then((res) => {
-            setData(res.data.data);
+            setCollectedNFTCard(res.data.data[0]);
+            setCreatedNFTCard(res.data.data[1]);
             setIsPending(false);
             setError(null);
           })
@@ -40,7 +42,7 @@ export const useGetMyNFT = () => {
       }
     }, 3000);
   }, [account?.address]);
-  return { data, isPending, error };
+  return { collectedNFTCard, createdNFTCard, isPending, error };
 };
 
 export const useGetMyProfile = () => {
@@ -76,8 +78,9 @@ export const useGetMyProfile = () => {
 export const useGetMyCollectionCard = () => {
   const { data: account } = useAccount();
   const [collectionCards, setCollectionCards] = useState<Collection_Card[]>([]);
-  const [isPendingCollectionCard, setIsPendingCollectionCard] = useState(true);
-  const [errorCollectionCard, setErrorCollectionCard] = useState(null);
+  const [isPendingCollectionCards, setIsPendingCollectionCards] =
+    useState(true);
+  const [errorCollectionCards, setErrorCollectionCards] = useState(null);
   useEffect(() => {
     setTimeout(() => {
       if (account?.address !== undefined) {
@@ -87,17 +90,17 @@ export const useGetMyCollectionCard = () => {
           })
           .then((res) => {
             setCollectionCards(res.data.data);
-            setIsPendingCollectionCard(false);
-            setErrorCollectionCard(null);
+            setIsPendingCollectionCards(false);
+            setErrorCollectionCards(null);
           })
           .catch((error) => {
-            setIsPendingCollectionCard(false);
-            setErrorCollectionCard(error.message);
+            setIsPendingCollectionCards(false);
+            setErrorCollectionCards(error.message);
           });
       }
     }, 3000);
   }, [account?.address]);
-  return { collectionCards, isPendingCollectionCard, errorCollectionCard };
+  return { collectionCards, isPendingCollectionCards, errorCollectionCards };
 };
 
 export const useGetMyCollectionItem = () => {

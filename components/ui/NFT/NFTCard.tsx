@@ -16,7 +16,7 @@ interface NFTProps {
   ownerWalletAddress: string;
 }
 
-const NFT: FC<NFTProps> = (props) => {
+const NFTCard: FC<NFTProps> = (props) => {
   const { data: account } = useAccount();
   return (
     <div>
@@ -93,4 +93,4 @@ const NFT: FC<NFTProps> = (props) => {
   );
 };
 
-export default NFT;
+export default NFTCard;

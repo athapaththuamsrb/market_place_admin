@@ -107,6 +107,7 @@ export type Collection_Card = {
   id: string;
   collectionName: string;
   featuredImage: string;
+  logoImage: string;
   category: string;
 };
 export type Collection_Item = {

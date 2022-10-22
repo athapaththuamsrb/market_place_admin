@@ -20,8 +20,6 @@ import {
 import Image from "next/image";
 import { useSigner, useContract } from "wagmi";
 import { create as ipfsHttpClient } from "ipfs-http-client";
-import NFTCollection1Address from "../../../contractsData/NFTCollection1-address.json";
-import NFTCollection1Abi from "../../../contractsData/NFTCollection1.json";
 import ConfirmModal from "../../ui/ConfirmModal";
 import { NFT, SalesOrder } from "../../../src/interfaces";
 import * as Yup from "yup";
@@ -68,11 +66,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     useGetMyCollectionItem();
   const { data: signer, isError, isLoading } = useSigner();
   const router = useRouter();
-  const nftCollection1_ = useContract({
-    addressOrName: NFTCollection1Address.address,
-    contractInterface: NFTCollection1Abi.abi,
-    signerOrProvider: signer,
-  });
   const formik = useFormik({
     initialValues: {
       name: "",
