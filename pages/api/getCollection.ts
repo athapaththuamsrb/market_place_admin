@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { ethers } from "ethers";
-import { NFT_card } from "../../src/interfaces";
+import { Collection, Collection_Profile, NFT_Card } from "../../src/interfaces";
 import axios from "axios";
 const prisma = new PrismaClient();
 
@@ -12,10 +12,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const collection = await prisma.collection.findUnique({ where: { id } });
       if (collection) {
+        if (collection.status === "BLOCKED") {
+          throw new Error("This collection not accecpted");
+        }
+        const collectionData: Collection_Profile = {
+          id: collection.id,
+          collectionName: collection.collectionName,
+          category: collection.collectionCategory,
+          ownerId: collection.creatorId,
+          NFTcount: collection.nftCount,
+          floorPrice: collection.floorPrice,
+          totalVolume: collection.totalVolume,
+          bannerImage: collection.bannerImage,
+          logoImage: collection.logoImage,
+        };
         const nfts = await prisma.nFT.findMany({
           where: { collectionId: collection.id },
         });
-        const finslNFT: NFT_card[] = [];
+        const finslNFT: NFT_Card[] = [];
         if (nfts.length !== 0) {
           for await (const nft of nfts) {
             const ipfsData = await axios.get(nft.uri);
@@ -28,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const owner = await prisma.owner.findUnique({
               where: { id: nft.ownerId },
             });
-            let list: NFT_card;
+            let list: NFT_Card;
             if (owner) {
               if (activity) {
                 list = {
@@ -57,14 +71,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             } else {
               res
                 .status(401)
-                .json({ message: "Unauthorized", success: false, data: [] });
+                .json({ message: "Unauthorized", success: false, data: {} });
             }
           }
         }
         res.status(201).json({
           message: "Successfully get",
           success: true,
-          data: [collection, finslNFT],
+          data: { collectionData: collectionData, nftList: finslNFT },
         });
       } else {
         throw new Error("Collection is not exit");
@@ -73,12 +87,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await prisma.$disconnect();
       res
         .status(400)
-        .json({ message: "Collection is not exit", success: false, data: [] });
+        .json({ message: "Collection is not exit", success: false, data: {} });
     }
   } else {
     res
       .status(405)
-      .json({ message: "Method not alloed", success: false, data: [] });
+      .json({ message: "Method not alloed", success: false, data: {} });
   }
 };
 export default handler;

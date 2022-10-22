@@ -32,7 +32,7 @@ const View: NextPage<ViewProps> = (
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: true,
+    fallback: "blocking",
   };
 };
 
@@ -45,7 +45,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     if (data.data.length === 0) {
       return { notFound: true };
     }
-    return { props: { nft: data.data[0] }, revalidate: 60 };
+    return { props: { nft: data.data[0] }, revalidate: 1 };
   } catch (error) {
     console.log(error);
     return { notFound: true };

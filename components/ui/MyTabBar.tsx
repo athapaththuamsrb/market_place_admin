@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FC } from "react";
 import { Box, Tabs, Tab, LinearProgress } from "@mui/material";
-import { NFT_card } from "../../src/interfaces";
+import { NFT_Card } from "../../src/interfaces";
 import { Grid } from "@mui/material";
 import NFTCard from "./NFT/NFTCard";
 import NFTCardGrid from "./NFT/NFTCardGrid";
@@ -9,8 +9,8 @@ import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 type CategoryNavProps = {
-  collectedNFTCard: NFT_card[];
-  createdNFTCard: NFT_card[];
+  collectedNFTCard: NFT_Card[];
+  createdNFTCard: NFT_Card[];
 };
 const MyTabBar: FC<CategoryNavProps> = ({
   collectedNFTCard,
@@ -23,7 +23,7 @@ const MyTabBar: FC<CategoryNavProps> = ({
   const [isPendding, setIsPendding] = useState(false);
   const tabs = ["Collected", "Created"];
   const nftPanel = tabs.map((item) => {
-    let filternfts: NFT_card[] =
+    let filternfts: NFT_Card[] =
       item === "Collected" ? collectedNFTCard : createdNFTCard;
     const nftEls = filternfts.map((salesOrder) => {
       return (

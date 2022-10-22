@@ -21,7 +21,16 @@ const NFTCard: FC<NFTProps> = (props) => {
   return (
     <div>
       <Link href={`/view/nft/${props.ownerId}/${props.id}`}>
-        <Card sx={{ border: "2px solid", marginX: "auto" }}>
+        <Card
+          sx={{
+            border: "2px solid",
+            marginX: "auto",
+            "&:hover": {
+              opacity: [0.9, 0.8, 0.7],
+              transform: "scale(1.1)",
+            },
+          }}
+        >
           <CardActionArea>
             <CardMedia
               sx={{ padding: "10px" }}

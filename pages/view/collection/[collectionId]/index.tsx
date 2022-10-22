@@ -1,4 +1,9 @@
-import type { NextPage } from "next";
+import type {
+  GetStaticProps,
+  NextPage,
+  InferGetStaticPropsType,
+  GetStaticPaths,
+} from "next";
 import {
   Grid,
   Typography,
@@ -10,77 +15,61 @@ import {
   ImageListItem,
   Divider,
 } from "@mui/material";
-import NFTcard from "../../../../components/ui/NFT/NFTCard";
-import { useAccount, useConnect, useBalance } from "wagmi";
-import {
-  useGetMyNFT,
-  useIsMounted,
-  useGetMyProfile,
-  useGetMyCollectionCard,
-} from "../../../../components/hooks";
-import Connect from "../../../../components/Login/Connect";
+import NFTCardGrid from "../../../../components/ui/NFT/NFTCardGrid";
+import NFTCard from "../../../../components/ui/NFT/NFTCard";
+import { useIsMounted } from "../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
-import MyTabBar from "../../../../components/ui/MyTabBar";
-import { useEffect } from "react";
+import api from "../../../../lib/api";
+import { Collection_Profile, NFT_Card } from "../../../../src/interfaces";
 import Image from "next/image";
-import { useRouter } from "next/router";
-const MyNFTs: NextPage = (props) => {
+import Paper from "@mui/material/Paper";
+
+interface CollectionProps {
+  nftList: NFT_Card[];
+  collectionData: Collection_Profile;
+}
+const Collection: NextPage<CollectionProps> = ({
+  nftList,
+  collectionData,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
-  const { activeConnector, connect, connectors } = useConnect();
-  const { data: account } = useAccount();
-  const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
-  const { data, isPending, error } = useGetMyNFT();
-  const { collectionCards, isPendingCollectionCard, errorCollectionCard } =
-    useGetMyCollectionCard();
-  const router = useRouter();
-  const {
-    data: balance,
-    isError,
-    isLoading,
-  } = useBalance({
-    addressOrName: account?.address,
-    chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
-  });
-  const nftEls = data.map((salesOrder) => {
+
+  const nftEls = nftList.map((nft: NFT_Card) => {
     return (
-      <Grid key={salesOrder.id} item xs={3}>
-        <NFTcard
-          id={salesOrder.id}
-          price={salesOrder.price}
-          name={salesOrder.name}
-          image={salesOrder.image}
-          listed={salesOrder.listed}
-          ownerWalletAddress={salesOrder.ownerWalletAddress}
-        ></NFTcard>
+      <Grid key={nft.id} item xs={3}>
+        <NFTCard
+          id={nft.id}
+          price={nft.price}
+          name={nft.name}
+          image={nft.image}
+          listed={nft.listed}
+          ownerWalletAddress={nft.ownerWalletAddress}
+          ownerId={nft.ownerId}
+        />
       </Grid>
     );
   });
-  function srcset(
+
+  const srcset = (
     image: string,
     width: number,
     height: number,
     rows = 1,
     cols = 1
-  ) {
+  ) => {
     return {
       src: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format`,
       srcSet: `${image}?w=${width * cols}&h=${
         height * rows
       }&fit=crop&auto=format&dpr=2 2x`,
     };
-  }
-  useEffect(() => {
-    if (!isPendingProfile && activeConnector === undefined) {
-      router.push(`${router.basePath}/explore-collections`);
-    }
-  }, [activeConnector, isPendingProfile, router]);
-
-  return isMounted && activeConnector && !isPendingProfile ? (
+  };
+  return isMounted ? (
     <Box>
-      {profile?.bannerImage && (
+      {collectionData.bannerImage && (
         <ImageListItem>
           <img
-            {...srcset(profile?.bannerImage, 250, 200, 3, 9)}
+            {...srcset(collectionData.bannerImage, 250, 200, 3, 9)}
             alt="banner"
             loading="lazy"
           />
@@ -88,73 +77,85 @@ const MyNFTs: NextPage = (props) => {
           <Stack direction="row" spacing={2}>
             <Avatar
               alt="Remy Sharp"
-              src={profile?.profileImage}
+              src={collectionData?.logoImage}
               sx={{ width: 150, height: 150, boxShadow: 3, mt: "-7%", ml: 10 }}
+              variant="rounded"
             />
           </Stack>
         </ImageListItem>
       )}
       <Container sx={{ pt: 5 }}>
         <Typography variant="h2" sx={{ mt: -3 }} gutterBottom>
-          {profile?.userName}
+          {collectionData.collectionName}
         </Typography>
-        <Typography variant="h4" sx={{ mt: 0, fontWeight: 500 }} gutterBottom>
-          <Image
-            height={17}
-            width={17}
-            src={"/ethereum.png"}
-            alt={"logo"}
-            loading="lazy"
-          />
-          {account?.address}
-        </Typography>
-        <Typography
-          variant="h4"
-          sx={{ mt: 1, mb: 3, fontWeight: 500 }}
-          gutterBottom
-        >
-          Account balance: {balance?.formatted} {balance?.symbol}
-        </Typography>
-
-        <Button
-          variant="contained"
-          size="small"
-          color="secondary"
-          href="/account/edit"
-        >
-          <Typography color="white" variant="h6">
-            Edit profile
-          </Typography>
-        </Button>
-        {isMounted && activeConnector ? (
-          <Box>
-            {isPending && (
-              <Box sx={{ width: "100%", mt: 3 }}>
-                <LinearProgress />
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={1}>
+            <Grid item xs={2}>
+              <Paper elevation={0}>
+                <Image
+                  height={20}
+                  width={20}
+                  src={"/ethereum.png"}
+                  alt={"logo"}
+                  loading="lazy"
+                />{" "}
+                {collectionData.totalVolume}
+                {"K"}
+                <br />
+                {"total volume"}
+              </Paper>
+            </Grid>
+            <Grid item xs={2}>
+              <Paper elevation={0}>
+                <Image
+                  height={20}
+                  width={20}
+                  src={"/ethereum.png"}
+                  alt={"logo"}
+                  loading="lazy"
+                />{" "}
+                {collectionData.floorPrice}
+                <br />
+                {"floor price"}
+              </Paper>
+            </Grid>
+            <Grid item xs={2}>
+              <Paper elevation={0}>
+                <Image
+                  height={20}
+                  width={20}
+                  src={"/ethereum.png"}
+                  alt={"logo"}
+                  loading="lazy"
+                />{" "}
+                {collectionData.NFTcount}
+                <br />
+                {"number of NFT"}
+              </Paper>
+            </Grid>
+          </Grid>
+        </Box>
+        <br />
+        <br />
+        <Box>
+          <Box sx={{ marginBottom: "1%" }}>
+            {nftList.length === 0 ? (
+              <Box>
+                <Divider sx={{ mt: 3 }} />
+                <Typography
+                  color="black"
+                  align="center"
+                  variant="h2"
+                  sx={{ mt: 3 }}
+                >
+                  No NFTs Exists!
+                </Typography>
               </Box>
+            ) : (
+              <NFTCardGrid nftCardEls={nftEls} />
             )}
-
-            <Box sx={{ marginBottom: "1%" }}>
-              {data.length === 0 ? (
-                <Box>
-                  <Divider sx={{ mt: 3 }} />
-                  <Typography
-                    color="black"
-                    align="center"
-                    variant="h2"
-                    sx={{ mt: 3 }}
-                  >
-                    No NFTs Exists!
-                  </Typography>
-                </Box>
-              ) : (
-                <MyTabBar nfts={data} />
-              )}
-            </Box>
           </Box>
-        ) : (
-          <Connect />
-        )}
+        </Box>
       </Container>
     </Box>
   ) : (
@@ -163,5 +164,35 @@ const MyNFTs: NextPage = (props) => {
     </Box>
   );
 };
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+export const getStaticProps: GetStaticProps = async (context) => {
+  try {
+    const { params } = context;
+    const { data } = await api.post("/getCollection", {
+      data: { id: params?.collectionId },
+    });
 
-export default MyNFTs;
+    if (!data.success) {
+      return { notFound: true };
+    }
+    console.log({
+      nftList: data.data.nftList,
+      collectionData: data.data.collectionData,
+    });
+    return {
+      props: {
+        nftList: data.data.nftList,
+        collectionData: data.data.collectionData,
+      },
+      revalidate: 1,
+    };
+  } catch (error) {
+    return { notFound: true };
+  }
+};
+export default Collection;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  NFT_card,
+  NFT_Card,
   Profile,
   Collection_Card,
   Collection_Item,
@@ -18,8 +18,8 @@ export const useIsMounted = () => {
 
 export const useGetMyNFT = () => {
   const { data: account } = useAccount();
-  const [collectedNFTCard, setCollectedNFTCard] = useState<NFT_card[]>([]);
-  const [createdNFTCard, setCreatedNFTCard] = useState<NFT_card[]>([]);
+  const [collectedNFTCard, setCollectedNFTCard] = useState<NFT_Card[]>([]);
+  const [createdNFTCard, setCreatedNFTCard] = useState<NFT_Card[]>([]);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {

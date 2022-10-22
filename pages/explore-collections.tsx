@@ -1,28 +1,23 @@
 import * as React from "react";
 import Title from "../components/ui/Title";
 import CategoryNav from "../components/ui/CategoryNav";
-import { NFT_card } from "../src/interfaces";
+import { Collection_Card } from "../src/interfaces";
 import api from "./../lib/api";
 import { Box } from "@mui/system";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useIsMounted } from "../components/hooks";
-import type {
-  GetStaticProps,
-  NextPage,
-  GetStaticPaths,
-  InferGetStaticPropsType,
-} from "next";
+import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
 interface ExploreProps {
-  nftList: NFT_card[];
+  collectionList: Collection_Card[];
 }
-const Home: NextPage<ExploreProps> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) => {
+const Home: NextPage<ExploreProps> = ({
+  collectionList,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   return isMounted ? (
     <Box>
       <Title firstWord="Explore" secondWord="NFTs" />
-      <CategoryNav nfts={props.nftList} />
+      <CategoryNav collections={collectionList} />
     </Box>
   ) : (
     <Box sx={{ width: "100%" }}>
@@ -31,12 +26,11 @@ const Home: NextPage<ExploreProps> = (
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
   try {
     const { data } = await api.get("/getListCollection");
-    return { props: { nftList: data.data }, revalidate: 60 };
+    return { props: { collectionList: data.data }, revalidate: 60 };
   } catch (error) {
-    console.log(error);
     return { notFound: true };
   }
 };

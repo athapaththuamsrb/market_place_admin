@@ -5,21 +5,24 @@ import { Collection_Card } from "../../src/interfaces";
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     try {
       const results = await prisma.collection.findMany();
       let collections: Collection_Card[] = [];
       if (results) {
         for (const result of results) {
+          if (result.status === "BLOCKED") {
+            continue;
+          }
           collections.push({
             id: result.id,
             collectionName: result.collectionName,
             featuredImage: result.featuredImage,
             category: result.collectionCategory,
+            logoImage: result.logoImage,
           });
         }
       }
-
       res.status(201).json({
         message: "Successfully get",
         success: true,

@@ -1,7 +1,7 @@
 //TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { NFT_card } from "./../../src/interfaces";
+import { NFT_Card } from "./../../src/interfaces";
 import axios from "axios";
 import { ethers } from "ethers";
 const prisma = new PrismaClient();
@@ -29,8 +29,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             data: { ...userData, userId: user.id },
           });
         }
-        const createdNFTCard: NFT_card[] = [];
-        const collectedNFTCard: NFT_card[] = [];
+        const createdNFTCard: NFT_Card[] = [];
+        const collectedNFTCard: NFT_Card[] = [];
         const nfts = await prisma.nFT.findMany();
         if (nfts.length !== 0) {
           for await (const nft of nfts) {
@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   isExpired: false,
                 },
               });
-              let list: NFT_card;
+              let list: NFT_Card;
               if (activity) {
                 list = {
                   id: nft.id,
@@ -92,7 +92,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   isExpired: false,
                 },
               });
-              let list: NFT_card;
+              let list: NFT_Card;
               if (activity) {
                 list = {
                   id: nft.id,
@@ -161,7 +161,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
               });
             }
-            const list: NFT_card = {
+            const list: NFT_Card = {
               id: nft.tokenUri.raw.split("/")[4],
               price: "0",
               image: ipfsData.data.image,

@@ -45,7 +45,7 @@ export type NFT_load = {
   walletAddress: string;
   creatorWalletAddress: string;
 };
-export type NFT_card = {
+export type NFT_Card = {
   id: string;
   price: string;
   image: string;
@@ -88,19 +88,29 @@ export type User = {
 };
 
 export type Collection = {
-  id: string;
   collectionName: string;
   collectionID: string;
   category: string;
   ownerId: string;
   createdDate: Date;
   NFTcount: Number;
-  floorPrize: Number;
-  totalPrize: Number;
+  floorPrice: string;
+  totalVolume: string;
   status: string;
   reportType: string;
   reportedBy: string;
   reportedDate: Date;
+};
+export type Collection_Profile = {
+  id: string;
+  collectionName: string;
+  category: string;
+  ownerId: string;
+  NFTcount: Number;
+  floorPrice: string;
+  totalVolume: string;
+  bannerImage: string;
+  logoImage: string;
 };
 
 export type Collection_Card = {

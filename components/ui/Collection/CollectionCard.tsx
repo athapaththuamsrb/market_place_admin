@@ -28,7 +28,17 @@ const CollectionCard: FC<NFTProps> = ({
   return (
     <div>
       <Link href={`/view/collection/${id}`}>
-        <Card sx={{ border: "solid", width: 450, marginX: "auto" }}>
+        <Card
+          sx={{
+            border: "solid",
+            width: 450,
+            marginX: "auto",
+            "&:hover": {
+              opacity: [0.9, 0.8, 0.7],
+              transform: "scale(1.1)",
+            },
+          }}
+        >
           <CardActionArea>
             <CardMedia
               sx={{ padding: "10px" }}

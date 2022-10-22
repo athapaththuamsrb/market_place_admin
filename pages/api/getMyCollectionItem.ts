@@ -24,6 +24,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       let collections: Collection_Item[] = [];
       if (results) {
         for (const result of results) {
+          if (result.status === "BLOCKED") {
+            continue;
+          }
           collections.push({
             collectionAddress: result.collectionAddress,
             collectionName: result.collectionName,

@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { FC } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
-import { NFT_card } from "../../src/interfaces";
+import { Collection_Card } from "../../src/interfaces";
 import { Grid } from "@mui/material";
-import NFT from "./NFT/NFTCard";
-import NFTGrid from "./Collection/CollectionCardGrid";
+import CollectionCardGrid from "./Collection/CollectionCardGrid";
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
+import CollectionCard from "./Collection/CollectionCard";
 type CategoryNavProps = {
-  nfts: NFT_card[];
+  collections: Collection_Card[];
 };
-const CategoryNav: FC<CategoryNavProps> = (props) => {
+const CategoryNav: FC<CategoryNavProps> = ({ collections }) => {
   const [value, setValue] = useState("All");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -29,28 +29,26 @@ const CategoryNav: FC<CategoryNavProps> = (props) => {
     "Virtual",
     "Worlds",
   ];
-  const nftPanel = tabs.map((item) => {
-    let filternfts: NFT_card[] =
+  const collectionPanel = tabs.map((item) => {
+    let filtercollections: Collection_Card[] =
       item === "All"
-        ? props.nfts
-        : props.nfts.filter((nft) => item === nft.category);
-    const nftEls = filternfts.map((salesOrder) => {
+        ? collections
+        : collections.filter((collection) => item === collection.category);
+    const collectionEls = filtercollections.map((collection) => {
       return (
-        <Grid key={salesOrder.id} item xs={3}>
-          <NFT
-            id={salesOrder.id}
-            listed={salesOrder.listed}
-            price={salesOrder.price}
-            name={salesOrder.name}
-            image={salesOrder.image}
-            ownerWalletAddress={salesOrder.ownerWalletAddress}
-          ></NFT>
+        <Grid key={collection.id} item xs={3}>
+          <CollectionCard
+            id={collection.id}
+            collectionName={collection.collectionName}
+            logoImage={collection.logoImage}
+            featuredImage={collection.featuredImage}
+          />
         </Grid>
       );
     });
     return (
       <TabPanel value={item} key={item}>
-        <NFTGrid nftCardEls={nftEls} />
+        <CollectionCardGrid collectionCardEls={collectionEls} />
       </TabPanel>
     );
   });
@@ -82,7 +80,7 @@ const CategoryNav: FC<CategoryNavProps> = (props) => {
             </Tabs>
           </TabList>
         </Box>
-        {nftPanel}
+        {collectionPanel}
       </TabContext>
     </Box>
   );
