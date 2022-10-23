@@ -29,14 +29,12 @@ const MyNFTs: NextPage = (props) => {
   const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
   const { collectedNFTCard, createdNFTCard, isPending, error } = useGetMyNFT();
   const router = useRouter();
-  const {
-    data: balance,
-    isError,
-    isLoading,
-  } = useBalance({
+  const { data, isError, isLoading } = useBalance({
     addressOrName: account?.address,
     chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
   });
+  console.log(data);
+  console.log(account?.address);
   function srcset(
     image: string,
     width: number,
@@ -95,7 +93,7 @@ const MyNFTs: NextPage = (props) => {
           sx={{ mt: 1, mb: 3, fontWeight: 500 }}
           gutterBottom
         >
-          Account balance: {balance?.formatted} {balance?.symbol}
+          Account balance: {data?.formatted} {data?.symbol}
         </Typography>
 
         <Button

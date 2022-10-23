@@ -21,12 +21,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           if (oldNFT) {
             if (value) {
               const sale_way = req.body.data.saleWay;
+              if (sale_way !== "FIXED_PRICE" || sale_way !== "TIMED_AUCTION") {
+                throw new Error("sale way is not exist");
+              }
+
               await prisma.activity.create({
                 data: {
                   nftId: oldNFT.id,
                   listingtype: sale_way,
+                  // endDate: sale_way === "TIMED_AUCTION"?req.body.data.endDate:,
                   endDate: req.body.data.endDate,
                   sellingprice: price,
+                  signature: oldNFT.signature,
                 },
               });
             } else {

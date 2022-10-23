@@ -85,12 +85,13 @@ model Activity {
   nft              NFT         @relation(fields: [nftId], references: [id])
   nftId            String
   buyer            User        @relation(fields: [buyerId], references: [id])
-  buyerId          String
+  buyerId          String      @default("Null")
   listingtype      LISTINGTYPE
-  endDate          DateTime
+  endDate          DateTime    @default(dbgenerated("now() + interval '1 month'"))
   isExpired        Boolean     @default(false)
   sellingprice     String
-  buyingprice      String
+  buyingprice      String      @default("Pendding")
+  signature        String //HAVE TO add
   listingTimestamp DateTime    @default(now())
   buyingTimestamp  DateTime
   bidding          Bidding[]
