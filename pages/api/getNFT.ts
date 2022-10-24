@@ -29,9 +29,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
           }
           if (isValide) {
-            let royalty = 0;
-            if (!ipfsData.data.royalty) {
-              royalty = ipfsData.data.royalty;
+            let royality = 0;
+            if (ipfsData.data.royality) {
+              royality = ipfsData.data.royality;
             }
             const collection = await prisma.collection.findMany({
               where: {
@@ -71,7 +71,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 sold: false,
                 description: ipfsData.data.description,
                 name: ipfsData.data.name,
-                royality: royalty,
+                royality: royality,
                 walletAddress: ownerWalletAddress,
                 creatorWalletAddress: ipfsData.data.creator,
               },
@@ -104,6 +104,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             });
 
             const ipfsData = await axios.get(nft.uri);
+            if (!ipfsData) throw new Error("Ipfs is not exist");
+            let royality = 0;
+            if (ipfsData.data.royality) {
+              royality = ipfsData.data.royality;
+            }
             let finalNFT: NFT_load[];
             if (activity) {
               finalNFT = [
@@ -111,7 +116,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   id: nft.id,
                   category: ipfsData.data.category,
                   collection: ipfsData.data.collection,
-                  price: activity.buyingprice,
+                  price: activity.sellingprice,
                   image: ipfsData.data.image,
                   listed: true,
                   tokenID: nft.tokenID,
@@ -120,7 +125,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   sold: false,
                   description: ipfsData.data.description,
                   name: ipfsData.data.name,
-                  royality: ipfsData.data.royalty,
+                  royality: royality,
                   walletAddress: owner.walletAddress,
                   creatorWalletAddress: ipfsData.data.creator,
                 },
@@ -140,14 +145,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   sold: false,
                   description: ipfsData.data.description,
                   name: ipfsData.data.name,
-                  royality: ipfsData.data.royalty,
+                  royality: royality,
                   walletAddress: owner.walletAddress,
                   creatorWalletAddress: ipfsData.data.creator,
                 },
               ];
             }
             await prisma.$disconnect();
-            // console.log(finalNFT);
             res.status(201).json({
               message: "Successfully get",
               success: true,

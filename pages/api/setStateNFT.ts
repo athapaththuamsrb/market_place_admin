@@ -5,31 +5,26 @@ const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const { filed, value, id, price } = req.body.data;
+    const { action, value, id } = req.body.data;
     let msg: string;
-    //console.log(req.body.data);
     try {
-      switch (filed) {
+      switch (action) {
         case "listed":
           const oldNFT = await prisma.nFT.findFirst({
             where: {
               id: id,
-              isMinted: false,
             },
           });
-          //console.log(oldNFT);
           if (oldNFT) {
             if (value) {
-              const sale_way = req.body.data.saleWay;
-              if (sale_way !== "FIXED_PRICE" || sale_way !== "TIMED_AUCTION") {
-                throw new Error("sale way is not exist");
-              }
-
+              const saleWay = req.body.data.saleWay;
+              if (saleWay !== "FIXED_PRICE" && saleWay !== "TIMED_AUCTION")
+                throw new Error("Sale way is not exist");
+              const price = req.body.data.price;
               await prisma.activity.create({
                 data: {
                   nftId: oldNFT.id,
-                  listingtype: sale_way,
-                  // endDate: sale_way === "TIMED_AUCTION"?req.body.data.endDate:,
+                  listingtype: saleWay,
                   endDate: req.body.data.endDate,
                   sellingprice: price,
                   signature: oldNFT.signature,
@@ -53,61 +48,61 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
           msg = "update as listed";
           break;
-        case "sold":
-          const userData = { walletAddress: req.body.data.buyer };
-          let user = await prisma.user.findUnique({
-            where: userData,
-          });
-          if (!user) {
-            user = await prisma.user.create({
-              data: userData,
-            });
-          }
-          let owner = await prisma.owner.findUnique({
-            where: userData,
-          });
-          if (!owner) {
-            owner = await prisma.owner.create({
-              data: { ...userData, userId: user.id },
-            });
-          }
-          const oldNFT1 = await prisma.nFT.findFirst({
-            where: {
-              id: id,
-              isMinted: false,
-            },
-          });
-          if (oldNFT1 && value) {
-            const activity = await prisma.activity.findFirst({
-              where: { nftId: oldNFT1.id, isExpired: false },
-            });
-            if (activity) {
-              if (activity.listingtype === "FIXED_PRICE") {
-                //Fixed price selling noraml
-                await prisma.activity.update({
-                  where: {
-                    id: oldNFT1.id,
-                  },
-                  data: {
-                    isExpired: true,
-                    buyerId: owner.id,
-                    buyingprice: price,
-                    buyingTimestamp: new Date(),
-                  },
-                });
-              } else if (activity.listingtype == "TIMED_AUCTION") {
-                //Biding selling noraml
-              } else {
-                throw new Error("the listing type is not exist");
-              }
-            } else {
-              throw new Error("activity is not exist");
-            }
-          } else {
-            throw new Error("nft id is not exist");
-          }
-          msg = "update sold";
-          break;
+        // case "sold":
+        //   const userData = { walletAddress: req.body.data.buyer };
+        //   let user = await prisma.user.findUnique({
+        //     where: userData,
+        //   });
+        //   if (!user) {
+        //     user = await prisma.user.create({
+        //       data: userData,
+        //     });
+        //   }
+        //   let owner = await prisma.owner.findUnique({
+        //     where: userData,
+        //   });
+        //   if (!owner) {
+        //     owner = await prisma.owner.create({
+        //       data: { ...userData, userId: user.id },
+        //     });
+        //   }
+        //   const oldNFT1 = await prisma.nFT.findFirst({
+        //     where: {
+        //       id: id,
+        //       isMinted: false,
+        //     },
+        //   });
+        //   if (oldNFT1 && value) {
+        //     const activity = await prisma.activity.findFirst({
+        //       where: { nftId: oldNFT1.id, isExpired: false },
+        //     });
+        //     if (activity) {
+        //       if (activity.listingtype === "FIXED_PRICE") {
+        //         //Fixed price selling noraml
+        //         await prisma.activity.update({
+        //           where: {
+        //             id: oldNFT1.id,
+        //           },
+        //           data: {
+        //             isExpired: true,
+        //             buyerId: owner.id,
+        //             buyingprice: price,
+        //             buyingTimestamp: new Date(),
+        //           },
+        //         });
+        //       } else if (activity.listingtype == "TIMED_AUCTION") {
+        //         //Biding selling noraml
+        //       } else {
+        //         throw new Error("the listing type is not exist");
+        //       }
+        //     } else {
+        //       throw new Error("activity is not exist");
+        //     }
+        //   } else {
+        //     throw new Error("nft id is not exist");
+        //   }
+        //   msg = "update sold";
+        //   break;
         default:
           msg = "feild is wrong";
       }

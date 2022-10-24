@@ -28,21 +28,25 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ListingHistoryTable from "../ui/ItemActivity";
+import { useIsMounted } from "../hooks";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
 const SetPrice: FC<ViewNFTProps> = (props) => {
+  console.log(props.salesOrder);
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const { data: account } = useAccount();
-  const [alignment, setAlignment] = useState("FIX");
+  const [alignment, setAlignment] = useState("FIXED_PRICE");
   const [toggle, setToggle] = useState<string>("FIX");
+  const isMounted = useIsMounted();
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: string
   ) => {
-    setAlignment(newAlignment);
+    if (newAlignment === "FIX") setAlignment("FIXED_PRICE");
+    else if (newAlignment === "BID") setAlignment("TIMED_AUCTION");
   };
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -50,14 +54,19 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const formik = useFormik({
     initialValues: {
       price: "",
+      expireDate: "",
     },
     validationSchema: yup.object({
       price: yup.string().required("required field"),
+      expireDate: yup.string().length(16).required("required field"),
     }),
-    onSubmit: async (values: { price: string }) => {
+    onSubmit: async (values: { price: string; expireDate: string }) => {
       try {
         setIsPending(true);
         setMsg("processing.....");
+        const date = new Date(values.expireDate);
+        //  timestamp in milliseconds(Unix timestamp)
+        const timestampInMs = date.getTime();
         const signature = await signTypedDataAsync({
           domain,
           types,
@@ -74,31 +83,28 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         if (props.salesOrder.id.length === 46) {
           const res1 = await api.post("/api/addNFTToDB", {
             data: {
-              category: props.salesOrder.category,
               collection: props.salesOrder.collection,
+              ownerWalletAddress: props.salesOrder.walletAddress,
               creatorWalletAddress: props.salesOrder.creatorWalletAddress,
-              ownerWalletAddress: props.salesOrder.walletAddress, //TODO?
-              price: formik.values.price,
-              tokenID: props.salesOrder.tokenID, //TODO??
+              price: values.price,
+              tokenID: props.salesOrder.tokenID,
               uri: props.salesOrder.uri,
+              endDate: timestampInMs,
               signature: signature,
-              description: props.salesOrder.description,
-              image: props.salesOrder.image,
-              name: props.salesOrder.name,
-              royality: props.salesOrder.royality,
               saleWay: alignment,
             },
           });
-          setMsg(res1.status === 201 ? "Successful!" : "Try again!!");
+          setMsg(res1.status === 204 ? "Successful!" : "Try again!!");
         } else {
           const res1 = await api.post("/api/setStateNFT", {
             data: {
-              filed: "listed",
+              action: "listed",
               value: true,
               id: props.salesOrder.id,
               price: values.price,
               signature: signature,
               saleWay: alignment,
+              endDate: timestampInMs,
             },
           });
           setMsg(res1.status === 201 ? "Successful!" : "Try again!!");
@@ -170,7 +176,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
               <form onSubmit={formik.handleSubmit}>
                 <ToggleButtonGroup
                   color="secondary"
-                  value={alignment}
+                  value={toggle}
                   exclusive
                   onChange={handleChange}
                   aria-label="Platform"
@@ -216,39 +222,49 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 >
                   {props.salesOrder?.description}
                 </Typography>
-
-                <TextField
-                  sx={{ marginBottom: "5px" }}
-                  id="price"
-                  label="Price"
-                  variant="outlined"
-                  fullWidth
-                  name="price"
-                  value={formik.values.price}
-                  onChange={formik.handleChange}
-                />
-                {toggle === "BID" && (
+                <Box>
                   <TextField
-                    //value={Expiration}
-                    //onChange={(e) => setName(e.target.value)}
-                    onChange={(e) => console.log("Set date")}
+                    key={"price"}
+                    sx={{ marginBottom: "5px" }}
                     autoFocus
-                    margin="dense"
-                    id="Expiration"
-                    fullWidth
+                    id="price"
+                    label="Price"
                     variant="outlined"
-                    required
-                    type="date"
-                    defaultValue={"01/01/2022"}
+                    fullWidth
+                    name="price"
+                    value={formik.values.price}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.touched.price && formik.errors.price ? (
+                    <Typography sx={{ color: "error.main" }}>
+                      {formik.errors.price}
+                    </Typography>
+                  ) : null}
+                </Box>
+                <Box>
+                  <TextField
+                    key={"expireDate"}
+                    id="expireDate"
+                    variant="outlined"
+                    fullWidth
+                    type="datetime-local"
+                    value={formik.values.expireDate}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    inputProps={{
+                      min: new Date(Date.now() + 24 * 60 * 60 * 1000)
+                        .toISOString()
+                        .slice(0, 16),
+                    }}
                     // error={ExpirationError}
                   />
-                )}
-
-                {formik.touched.price && formik.errors.price ? (
-                  <Typography sx={{ color: "error.main" }}>
-                    {formik.errors.price}
-                  </Typography>
-                ) : null}
+                  {formik.touched.expireDate && formik.errors.expireDate ? (
+                    <Typography sx={{ color: "error.main" }}>
+                      {formik.errors.expireDate}
+                    </Typography>
+                  ) : null}
+                </Box>
                 <Box textAlign={"right"}>
                   <Button
                     type="submit"

@@ -90,7 +90,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           return collectionData.category;
         }
       });
-      console.log(selectedCollection);
+      // console.log(selectedCollection);
       const withIpfs = {
         ...values,
         image: props.ipfsImage,
@@ -106,7 +106,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             collection: withIpfs.collection,
             image: withIpfs.image,
             creator: await signer?.getAddress(),
-            royalty: withIpfs.royality,
+            royality: withIpfs.royality,
           })
         );
         const uri = `https://exclusives.infura-ipfs.io/ipfs/${result.path}`;
@@ -137,7 +137,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           royality: isRoyality ? values.royality : 0,
         });
       } catch (error) {
-        console.log("ipfs uri upload error: ", error);
+        // console.log("ipfs uri upload error: ", error);
       }
     },
   });
@@ -148,14 +148,14 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     if (typeof file !== "undefined") {
       try {
         const result = await client.add(file);
-        console.log(
-          "result" + `https://exclusives.infura-ipfs.io/ipfs/${result.path}`
-        );
+        // // console.log(
+        //   "result" + `https://exclusives.infura-ipfs.io/ipfs/${result.path}`
+        // );
         props.setIpfsImage(
           `https://exclusives.infura-ipfs.io/ipfs/${result.path}`
         );
       } catch (error) {
-        console.table(["ipfs image upload error: ", error]);
+        // console.table(["ipfs image upload error: ", error]);
       }
     }
   };

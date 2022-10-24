@@ -74,7 +74,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         case "listed":
           await api.post("/api/setStateNFT", {
             data: {
-              filed: key,
+              action: key,
               value,
               id: props.salesOrder.id,
               price: price,
@@ -85,7 +85,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
 
         case "sold":
           await api.post("/api/setStateNFT", {
-            data: { filed: key, value, id: props.salesOrder.id, price: price },
+            data: { action: key, value, id: props.salesOrder.id, price: price },
           });
           props.salesOrder.sold = value;
           break;
