@@ -33,8 +33,8 @@ const MyNFTs: NextPage = (props) => {
     addressOrName: account?.address,
     chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
   });
-  console.log(data);
-  console.log(account?.address);
+  // console.log(data);
+  // console.log(account?.address);
   function srcset(
     image: string,
     width: number,

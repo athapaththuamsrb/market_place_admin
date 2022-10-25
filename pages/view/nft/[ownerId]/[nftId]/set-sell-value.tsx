@@ -55,7 +55,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
     return { props: { nft: data.data[0] }, revalidate: 1 };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return { notFound: true };
   }
 };

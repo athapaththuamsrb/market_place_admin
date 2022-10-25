@@ -162,7 +162,7 @@ const ViewReportedCollections: NextPage = (props) => {
       const collection: Collection = collections.find(
         (collection) => collection.id === id
       )!;
-      console.log(collection);
+      // console.log(collection);
       collection.status = "Blocked";
       setTimeout(() => {
         collection;

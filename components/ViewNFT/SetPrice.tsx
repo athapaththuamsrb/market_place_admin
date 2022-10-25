@@ -35,7 +35,6 @@ interface ViewNFTProps {
   salesOrder: NFT_load;
 }
 const SetPrice: FC<ViewNFTProps> = (props) => {
-  console.log(props.salesOrder);
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const { data: account } = useAccount();
@@ -115,7 +114,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         formik.values.price = "";
         router.push("/explore-collections");
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setMsg("Try again!!");
       }
     },

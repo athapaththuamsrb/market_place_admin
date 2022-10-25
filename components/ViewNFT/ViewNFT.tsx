@@ -26,6 +26,8 @@ import { useIsMounted } from "../hooks";
 import OfferPopup from "../OfferPopup";
 import ReportPopup from "../ReportPopup";
 import React from "react";
+import { getJsonWalletAddress } from "ethers/lib/utils";
+import { timeStamp } from "console";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -83,19 +85,27 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           break;
 
         case "sold":
+          const date = new Date();
+          const timestampInMs = date.getTime();
           await api.post("/api/setStateNFT", {
-            data: { action: key, value, id: props.salesOrder.id },
+            data: {
+              action: key,
+              value,
+              id: props.salesOrder.id,
+              buyerWalletAddress: account?.address,
+              time: timestampInMs,
+            },
           });
           props.salesOrder.sold = value;
           break;
 
         default:
-          console.log("undefined");
+          // console.log("undefined");
       }
 
       setIsPending(false);
     } catch (error) {
-      console.log("update error");
+      // console.log("update error");
       setIsPending(false);
     }
   };
@@ -126,6 +136,19 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       setOpen(true);
       setStateNFT("sold", true, "0");
     } else {
+      console.log(
+        {
+          tokenID: props.salesOrder.tokenID,
+          uri: props.salesOrder.uri,
+          creator: props.salesOrder.creatorWalletAddress,
+          category: props.salesOrder.category,
+          collection: props.salesOrder.collection,
+          royality: props.salesOrder.royality,
+          price: ethers.utils.parseEther(props.salesOrder.price),
+        },
+        props.salesOrder.signature,
+        { value: ethers.utils.parseEther(props.salesOrder.price) }
+      );
       const tokenID = await marketplace_.mintNFT(
         //TODO add blockchain
         {

@@ -42,13 +42,11 @@ const OfferPopup: FC<OfferPopupProps> = ({
     }),
     onSubmit: async (values: { price: string; expireDate: string }) => {
       try {
-        console.log("ddjdjd");
         setIsPending(true);
         setMsg("processing.....");
         const date = new Date(values.expireDate);
         //  timestamp in milliseconds(Unix timestamp)
         const timestampInMs = date.getTime();
-        console.log(values);
         const res1 = await axios.post("/api/addBiding", {
           data: {
             nftId: nftId,
@@ -59,13 +57,11 @@ const OfferPopup: FC<OfferPopupProps> = ({
           },
         });
         setMsg(res1.status === 201 ? "Successful!" : "Try again!!");
-        console.log(res1);
         setIsPending(false);
         formik.values.price = "";
         formik.values.expireDate = "";
         setOpenPopup(false);
       } catch (error) {
-        console.log(error);
         setMsg("Try again!!");
       }
     },

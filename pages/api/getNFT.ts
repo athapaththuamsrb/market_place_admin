@@ -78,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 creatorWalletAddress: ipfsData.data.creator,
               },
             ];
-            console.log(list);
+            // console.log(list);
             res.status(201).json({
               message: "Successfully received",
               success: true,

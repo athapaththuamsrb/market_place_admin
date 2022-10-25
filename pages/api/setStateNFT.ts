@@ -48,61 +48,71 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
           msg = "update as listed";
           break;
-        // case "sold":
-        //   const userData = { walletAddress: req.body.data.buyer };
-        //   let user = await prisma.user.findUnique({
-        //     where: userData,
-        //   });
-        //   if (!user) {
-        //     user = await prisma.user.create({
-        //       data: userData,
-        //     });
-        //   }
-        //   let owner = await prisma.owner.findUnique({
-        //     where: userData,
-        //   });
-        //   if (!owner) {
-        //     owner = await prisma.owner.create({
-        //       data: { ...userData, userId: user.id },
-        //     });
-        //   }
-        //   const oldNFT1 = await prisma.nFT.findFirst({
-        //     where: {
-        //       id: id,
-        //       isMinted: false,
-        //     },
-        //   });
-        //   if (oldNFT1 && value) {
-        //     const activity = await prisma.activity.findFirst({
-        //       where: { nftId: oldNFT1.id, isExpired: false },
-        //     });
-        //     if (activity) {
-        //       if (activity.listingtype === "FIXED_PRICE") {
-        //         //Fixed price selling noraml
-        //         await prisma.activity.update({
-        //           where: {
-        //             id: oldNFT1.id,
-        //           },
-        //           data: {
-        //             isExpired: true,
-        //             buyerId: owner.id,
-        //             buyingprice: price,
-        //             buyingTimestamp: new Date(),
-        //           },
-        //         });
-        //       } else if (activity.listingtype == "TIMED_AUCTION") {
-        //         //Biding selling noraml
-        //       } else {
-        //         throw new Error("the listing type is not exist");
-        //       }
-        //     } else {
-        //       throw new Error("activity is not exist");
-        //     }
-        //   } else {
-        //     throw new Error("nft id is not exist");
-        //   }
-        //   msg = "update sold";
-        //   break;
+        case "sold":
+          const userData = { walletAddress: req.body.data.buyerWalletAddress };
+          let user = await prisma.user.findUnique({
+            where: userData,
+          });
+          if (!user) {
+            user = await prisma.user.create({
+              data: userData,
+            });
+          }
+          let owner = await prisma.owner.findUnique({
+            where: userData,
+          });
+          if (!owner) {
+            owner = await prisma.owner.create({
+              data: { ...userData, userId: user.id },
+            });
+          }
+          const oldNFT1 = await prisma.nFT.findFirst({
+            where: {
+              id: id,
+              isMinted: false,
+            },
+          });
+          if (oldNFT1 && value) {
+            const activity = await prisma.activity.findFirst({
+              where: { nftId: oldNFT1.id, isExpired: false },
+            });
+            if (activity) {
+              if (activity.listingtype === "FIXED_PRICE") {
+                const price = req.body.data.price;
+                const time = req.body.data.time;
+                await prisma.activity.update({
+                  where: {
+                    id: oldNFT1.id,
+                  },
+                  data: {
+                    isExpired: true,
+                    buyerId: owner.id,
+                    buyingprice: price,
+                    buyingTimestamp: time,
+                  },
+                });
+                await prisma.nFT.update({
+                  where: {
+                    id: oldNFT1.id,
+                  },
+                  data: {
+                    isMinted: true,
+                    ownerId: owner.id,
+                  },
+                });
+              } else if (activity.listingtype == "TIMED_AUCTION") {
+                //Biding selling noraml
+              } else {
+                throw new Error("the listing type is not exist");
+              }
+            } else {
+              throw new Error("activity is not exist");
+            }
+          } else {
+            throw new Error("nft id is not exist");
+          }
+          msg = "update sold";
+          break;
         default:
           msg = "feild is wrong";
       }

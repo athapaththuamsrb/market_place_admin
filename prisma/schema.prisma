@@ -13,11 +13,12 @@ datasource db {
 }
 
 model Owner {
-  id            String @id @default(uuid())
-  walletAddress String @unique
-  user          User   @relation(fields: [userId], references: [id])
-  userId        String @unique
+  id            String     @id @default(uuid())
+  walletAddress String     @unique
+  user          User       @relation(fields: [userId], references: [id])
+  userId        String     @unique
   nftData       NFT[]
+  Activity      Activity[]
 }
 
 model User {
@@ -30,9 +31,9 @@ model User {
   profileImage  String       @default("https://res.cloudinary.com/dtrrkeb4a/image/upload/v1663911221/Exclusive/Profile/303-3034192_default-banner-banner-jpg_vgzocd.jpg")
   owner         Owner?
   reporter      Report[]
-  buyer         Activity[]
   Collection    Collection[]
   bidding       Bidding[]
+  Activity      Activity[]
 }
 
 model Report {
@@ -84,7 +85,7 @@ model Activity {
   id               String      @id @default(uuid())
   nft              NFT         @relation(fields: [nftId], references: [id])
   nftId            String
-  buyer            User?       @relation(fields: [buyerId], references: [id])
+  buyer            Owner?      @relation(fields: [buyerId], references: [id])
   buyerId          String?
   listingtype      LISTINGTYPE
   endDate          BigInt
@@ -93,8 +94,10 @@ model Activity {
   buyingprice      String?
   signature        String //HAVE TO add
   listingTimestamp DateTime    @default(now())
-  buyingTimestamp  BigInt      @default(0)
+  buyingTimestamp  BigInt?
   bidding          Bidding[]
+  User             User?       @relation(fields: [userId], references: [id])
+  userId           String?
 }
 
 model Bidding {
