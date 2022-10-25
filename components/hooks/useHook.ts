@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { NFT_card, Profile, Collection_Card } from "../../src/interfaces";
+import {
+  NFT_Card,
+  Profile,
+  Collection_Card,
+  Collection_Item,
+} from "../../src/interfaces";
 import { useAccount } from "wagmi";
+import { gridTopLevelRowCountSelector } from "@mui/x-data-grid";
 export const useIsMounted = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -12,7 +18,8 @@ export const useIsMounted = () => {
 
 export const useGetMyNFT = () => {
   const { data: account } = useAccount();
-  const [data, setData] = useState<NFT_card[]>([]);
+  const [collectedNFTCard, setCollectedNFTCard] = useState<NFT_Card[]>([]);
+  const [createdNFTCard, setCreatedNFTCard] = useState<NFT_Card[]>([]);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -23,7 +30,8 @@ export const useGetMyNFT = () => {
             data: { address: account?.address },
           })
           .then((res) => {
-            setData(res.data.data);
+            setCollectedNFTCard(res.data.data[0]);
+            setCreatedNFTCard(res.data.data[1]);
             setIsPending(false);
             setError(null);
           })
@@ -34,7 +42,7 @@ export const useGetMyNFT = () => {
       }
     }, 3000);
   }, [account?.address]);
-  return { data, isPending, error };
+  return { collectedNFTCard, createdNFTCard, isPending, error };
 };
 
 export const useGetMyProfile = () => {
@@ -43,8 +51,9 @@ export const useGetMyProfile = () => {
   const [isPendingProfile, setIsPendingProfile] = useState(true);
   const [errorProfile, setErrorProfile] = useState(null);
   useEffect(() => {
-    setTimeout(() => {
-      if (account?.address !== undefined) {
+    if (account?.address !== undefined) {
+      setIsPendingProfile(true);
+      setTimeout(() => {
         axios
           .post("/api/getMyProfile", {
             data: { address: account?.address },
@@ -58,8 +67,10 @@ export const useGetMyProfile = () => {
             setIsPendingProfile(false);
             setErrorProfile(error.message);
           });
-      }
-    }, 3000);
+      }, 3000);
+    } else {
+      setIsPendingProfile(false);
+    }
   }, [account?.address]);
   return { profile, isPendingProfile, errorProfile };
 };
@@ -67,26 +78,54 @@ export const useGetMyProfile = () => {
 export const useGetMyCollectionCard = () => {
   const { data: account } = useAccount();
   const [collectionCards, setCollectionCards] = useState<Collection_Card[]>([]);
-  const [isPending, setIsPending] = useState(true);
-  const [error, setError] = useState(null);
+  const [isPendingCollectionCards, setIsPendingCollectionCards] =
+    useState(true);
+  const [errorCollectionCards, setErrorCollectionCards] = useState(null);
   useEffect(() => {
     setTimeout(() => {
       if (account?.address !== undefined) {
         axios
-          .post("/api/getMyCollection", {
+          .post("/api/getMyCollectionCard", {
             data: { address: account?.address },
           })
           .then((res) => {
             setCollectionCards(res.data.data);
-            setIsPending(false);
-            setError(null);
+            setIsPendingCollectionCards(false);
+            setErrorCollectionCards(null);
           })
           .catch((error) => {
-            setIsPending(false);
-            setError(error.message);
+            setIsPendingCollectionCards(false);
+            setErrorCollectionCards(error.message);
           });
       }
     }, 3000);
   }, [account?.address]);
-  return { collectionCards, isPending, error };
+  return { collectionCards, isPendingCollectionCards, errorCollectionCards };
+};
+
+export const useGetMyCollectionItem = () => {
+  const { data: account } = useAccount();
+  const [collectionItem, setCollectionItem] = useState<Collection_Item[]>([]);
+  const [isPendingCollectionItem, setIsPendingCollectionItem] = useState(true);
+  const [errorCollectionItem, setErrorCollectionItem] = useState(null);
+  useEffect(() => {
+    setTimeout(() => {
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getMyCollectionItem", {
+            data: { address: account?.address },
+          })
+          .then((res) => {
+            setCollectionItem(res.data.data);
+            setIsPendingCollectionItem(false);
+            setErrorCollectionItem(null);
+          })
+          .catch((error) => {
+            setIsPendingCollectionItem(false);
+            setErrorCollectionItem(error.message);
+          });
+      }
+    }, 3000);
+  }, [account?.address]);
+  return { collectionItem, isPendingCollectionItem, errorCollectionItem };
 };

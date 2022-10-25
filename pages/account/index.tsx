@@ -9,8 +9,8 @@ import {
   Stack,
   ImageListItem,
   Divider,
+  LinearProgress,
 } from "@mui/material";
-import NFTcard from "../../components/ui/NFT";
 import { useAccount, useConnect, useBalance } from "wagmi";
 import {
   useGetMyNFT,
@@ -18,38 +18,23 @@ import {
   useGetMyProfile,
 } from "../../components/hooks";
 import Connect from "../../components/Login/Connect";
-import LinearProgress from "@mui/material/LinearProgress";
 import MyTabBar from "../../components/ui/MyTabBar";
-import * as React from "react";
+import { useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 const MyNFTs: NextPage = (props) => {
   const isMounted = useIsMounted();
-  const { activeConnector } = useConnect();
+  const { activeConnector, connect, connectors } = useConnect();
   const { data: account } = useAccount();
   const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
-  const { data, isPending, error } = useGetMyNFT();
-  const {
-    data: balance,
-    isError,
-    isLoading,
-  } = useBalance({
+  const { collectedNFTCard, createdNFTCard, isPending, error } = useGetMyNFT();
+  const router = useRouter();
+  const { data, isError, isLoading } = useBalance({
     addressOrName: account?.address,
     chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
   });
-  const nftEls = data.map((salesOrder) => {
-    return (
-      <Grid key={salesOrder.id} item xs={3}>
-        <NFTcard
-          id={salesOrder.id}
-          price={salesOrder.price}
-          name={salesOrder.name}
-          image={salesOrder.image}
-          listed={salesOrder.listed}
-          ownerWalletAddress={salesOrder.ownerWalletAddress}
-        ></NFTcard>
-      </Grid>
-    );
-  });
+  console.log(data);
+  console.log(account?.address);
   function srcset(
     image: string,
     width: number,
@@ -64,12 +49,18 @@ const MyNFTs: NextPage = (props) => {
       }&fit=crop&auto=format&dpr=2 2x`,
     };
   }
+  useEffect(() => {
+    if (!isPendingProfile && activeConnector === undefined) {
+      router.push(`${router.basePath}/explore-collections`);
+    }
+  }, [activeConnector, isPendingProfile, router]);
+
   return isMounted && activeConnector && !isPendingProfile ? (
     <Box>
       {profile?.bannerImage && (
         <ImageListItem>
           <img
-            {...srcset(profile?.bannerImage, 250, 200, 5, 12)}
+            {...srcset(profile?.bannerImage, 250, 200, 3, 9)}
             alt="banner"
             loading="lazy"
           />
@@ -78,7 +69,7 @@ const MyNFTs: NextPage = (props) => {
             <Avatar
               alt="Remy Sharp"
               src={profile?.profileImage}
-              sx={{ width: 200, height: 200, boxShadow: 3, mt: "-10%", ml: 20 }}
+              sx={{ width: 150, height: 150, boxShadow: 3, mt: "-7%", ml: 10 }}
             />
           </Stack>
         </ImageListItem>
@@ -102,7 +93,7 @@ const MyNFTs: NextPage = (props) => {
           sx={{ mt: 1, mb: 3, fontWeight: 500 }}
           gutterBottom
         >
-          Account balance: {balance?.formatted} {balance?.symbol}
+          Account balance: {data?.formatted} {data?.symbol}
         </Typography>
 
         <Button
@@ -124,7 +115,7 @@ const MyNFTs: NextPage = (props) => {
             )}
 
             <Box sx={{ marginBottom: "1%" }}>
-              {data.length === 0 ? (
+              {collectedNFTCard.length === 0 && createdNFTCard.length === 0 ? (
                 <Box>
                   <Divider sx={{ mt: 3 }} />
                   <Typography
@@ -137,7 +128,10 @@ const MyNFTs: NextPage = (props) => {
                   </Typography>
                 </Box>
               ) : (
-                <MyTabBar nfts={data} />
+                <MyTabBar
+                  collectedNFTCard={collectedNFTCard}
+                  createdNFTCard={createdNFTCard}
+                />
               )}
             </Box>
           </Box>

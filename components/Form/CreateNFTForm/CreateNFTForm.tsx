@@ -1,4 +1,4 @@
-import React, { FC, SyntheticEvent, useState } from "react";
+import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import {
   Button,
@@ -20,12 +20,10 @@ import {
 import Image from "next/image";
 import { useSigner, useContract } from "wagmi";
 import { create as ipfsHttpClient } from "ipfs-http-client";
-import NFTCollection1Address from "../../../contractsData/NFTCollection1-address.json";
-import NFTCollection1Abi from "../../../contractsData/NFTCollection1.json";
 import ConfirmModal from "../../ui/ConfirmModal";
 import { NFT, SalesOrder } from "../../../src/interfaces";
 import * as Yup from "yup";
-import { useGetMyCollectionCard } from "../../../components/hooks";
+import { useGetMyCollectionItem } from "../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
 const projectId = "2DI7xsXof3jkeXnqqBcZ4QmiLmW"; // <---------- your Infura Project ID
@@ -64,39 +62,20 @@ const Input = styled("input")({
 const CreateForm: FC<CreateFormProps> = (props) => {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
-  const { collectionCards, isPending, error } = useGetMyCollectionCard();
+  const { collectionItem, isPendingCollectionItem, errorCollectionItem } =
+    useGetMyCollectionItem();
   const { data: signer, isError, isLoading } = useSigner();
   const router = useRouter();
-  const nftCollection1_ = useContract({
-    addressOrName: NFTCollection1Address.address,
-    contractInterface: NFTCollection1Abi.abi,
-    signerOrProvider: signer,
-  });
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
-      category: "",
       collection: "",
       royality: 0,
     },
     validationSchema: Yup.object({
       name: Yup.string().trim().required("Required"),
       description: Yup.string().trim().required("Required"),
-      category: Yup.mixed()
-        .oneOf([
-          "Nature",
-          "Photography",
-          "Art",
-          "Worlds",
-          "Virtual",
-          "Utility",
-          "Cards",
-          "Sports",
-          "Music",
-          "Collectibles",
-        ])
-        .required("Required"),
       collection: Yup.string().length(42, "exact size").required("Required"),
       royality: Yup.number()
         .required("required field")
@@ -106,8 +85,18 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         .min(0, "minimum value is 0%"),
     }),
     onSubmit: async (values) => {
-      const withIpfs = { ...values, image: props.ipfsImage };
-      //console.log("withIpfs", withIpfs);
+      const selectedCollection = collectionItem.map((collectionData) => {
+        if (values.collection === collectionData.collectionAddress) {
+          return collectionData.category;
+        }
+      });
+      // console.log(selectedCollection);
+      const withIpfs = {
+        ...values,
+        image: props.ipfsImage,
+        category: selectedCollection[0],
+      };
+
       try {
         const result = await client.add(
           JSON.stringify({
@@ -117,13 +106,19 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             collection: withIpfs.collection,
             image: withIpfs.image,
             creator: await signer?.getAddress(),
-            royalty: withIpfs.royality,
+            royality: withIpfs.royality,
           })
         );
         const uri = `https://exclusives.infura-ipfs.io/ipfs/${result.path}`;
         // let tokenId = await nftCollection1_._tokenIdCounter();
         // tokenId = tokenId.toNumber();
         const creator = await signer?.getAddress();
+        if (creator === undefined) {
+          throw new Error("Crator address is undefine");
+        }
+        if (withIpfs.category === undefined) {
+          throw new Error("Category is undefine");
+        }
         const nftData: NFT = {
           tokenID: 0,
           price: "0",
@@ -142,7 +137,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           royality: isRoyality ? values.royality : 0,
         });
       } catch (error) {
-        console.log("ipfs uri upload error: ", error);
+        // console.log("ipfs uri upload error: ", error);
       }
     },
   });
@@ -153,14 +148,14 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     if (typeof file !== "undefined") {
       try {
         const result = await client.add(file);
-        console.log(
-          "result" + `https://exclusives.infura-ipfs.io/ipfs/${result.path}`
-        );
+        // // console.log(
+        //   "result" + `https://exclusives.infura-ipfs.io/ipfs/${result.path}`
+        // );
         props.setIpfsImage(
           `https://exclusives.infura-ipfs.io/ipfs/${result.path}`
         );
       } catch (error) {
-        console.table(["ipfs image upload error: ", error]);
+        // console.table(["ipfs image upload error: ", error]);
       }
     }
   };
@@ -168,11 +163,13 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     setIsRoyality(event.target.checked);
   };
   const [isRoyality, setIsRoyality] = useState(false);
-  if (isPending === false && collectionCards.length === 0) {
-    router.push(`${router.basePath}//account/collection/create`);
-  }
+  useEffect(() => {
+    if (isPendingCollectionItem === false && collectionItem.length === 0) {
+      router.push(`${router.basePath}/account/collection/create`);
+    }
+  }, [collectionItem.length, isPendingCollectionItem, router]);
 
-  return isPending ? (
+  return !isPendingCollectionItem ? (
     <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={0}>
@@ -251,36 +248,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 </Typography>
               ) : null}
             </Box>
-            <Box>
-              <FormControl fullWidth sx={{ marginBottom: "30px" }}>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="category"
-                  name="category"
-                  value={formik.values.category}
-                  label="Category"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                >
-                  <MenuItem value={"Art"}>Art</MenuItem>
-                  <MenuItem value={"Collectibles"}>Collectibles</MenuItem>
-                  <MenuItem value={"Music"}>Music</MenuItem>
-                  <MenuItem value={"Photography"}>Photography</MenuItem>
-                  <MenuItem value={"Sports"}>Sports</MenuItem>
-                  <MenuItem value={"Cards"}>Cards</MenuItem>
-                  <MenuItem value={"Nature"}>Nature</MenuItem>
-                  <MenuItem value={"Utility"}>Utility</MenuItem>
-                  <MenuItem value={"Virtual"}>Virtual</MenuItem>
-                  <MenuItem value={"Worlds"}>Worlds</MenuItem>
-                </Select>
-              </FormControl>
-              {formik.touched.category && formik.errors.category ? (
-                <Typography color="red" variant="body2">
-                  {formik.errors.category}
-                </Typography>
-              ) : null}
-            </Box>
+
             <Box>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
@@ -295,8 +263,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                 >
-                  {collectionCards &&
-                    collectionCards.map((collectionCard) => {
+                  {collectionItem &&
+                    collectionItem.map((collectionCard) => {
                       return (
                         <MenuItem
                           value={collectionCard.collectionAddress}
@@ -357,7 +325,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             disabled={
               formik.errors.collection ||
               formik.errors.name ||
-              formik.errors.category ||
               formik.errors.description ||
               (isRoyality && formik.errors.royality) ||
               props.ipfsImage === "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||

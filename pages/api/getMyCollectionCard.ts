@@ -1,8 +1,8 @@
 //TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ethers } from "ethers";
 import { PrismaClient } from "@prisma/client";
-import { Profile } from "./../../src/interfaces";
+import { ethers } from "ethers";
+import { Collection_Card } from "../../src/interfaces";
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -20,30 +20,35 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             data: userData,
           });
         }
-        if (user.status == "ACTIVE" || user.status == "REPORTED") {
-          const profile: Profile = {
-            bannerImage: user.bannerImage,
-            profileImage: user.profileImage,
-            type: user.type,
-            userName: user.userName,
-            walletAddress: user.walletAddress,
-          };
-          res.status(201).json({
-            message: "Successfully get",
-            success: true,
-            data: profile,
-          });
-        } else {
-          await prisma.$disconnect();
-          res
-            .status(401)
-            .json({ message: "unauthorized", success: false, data: [] });
+        const results = await prisma.collection.findMany({
+          where: { creatorId: user.id },
+        });
+        let collections: Collection_Card[] = [];
+        if (results) {
+          for (const result of results) {
+            if (result.status === "BLOCKED") {
+              continue;
+            }
+            collections.push({
+              id: result.id,
+              collectionName: result.collectionName,
+              featuredImage: result.featuredImage,
+              logoImage: result.logoImage,
+              category: result.collectionCategory,
+            });
+          }
         }
+
+        res.status(201).json({
+          message: "Successfully get",
+          success: true,
+          data: collections,
+        });
       } catch (error) {
         await prisma.$disconnect();
         res
-          .status(401)
-          .json({ message: "Unauthorized", success: false, data: [] });
+          .status(400)
+          .json({ message: "User is not exit", success: false, data: [] });
       }
     } else {
       res
@@ -51,7 +56,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ message: "Unauthorized", success: false, data: [] });
     }
   } else {
-    await prisma.$disconnect();
     res
       .status(405)
       .json({ message: "Method not alloed", success: false, data: [] });

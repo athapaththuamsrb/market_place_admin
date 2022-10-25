@@ -9,7 +9,6 @@ import Connect from "../../../../components/Login/Connect";
 import type { NextPage } from "next";
 import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
-
 const CreatePage: NextPage = (props) => {
   const isMounted = useIsMounted();
   const {

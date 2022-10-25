@@ -27,8 +27,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: { ...userData, userId: user.id },
         });
       }
-      let collection = await prisma.collection.findUnique({
-        where: { collectionAddress: body.nftData.collection },
+      let collection = await prisma.collection.findFirst({
+        where: {
+          collectionAddress: body.nftData.collection,
+          creatorId: user.id,
+        },
       });
       if (collection) {
         await prisma.nFT.create({
