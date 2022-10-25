@@ -41,6 +41,8 @@ export type NFT_load = {
   image: string;
   name: string;
   listed: boolean;
+  listingtype: string;
+  endDate: string;
   royality: number;
   walletAddress: string;
   creatorWalletAddress: string;

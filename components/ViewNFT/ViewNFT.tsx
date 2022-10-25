@@ -77,7 +77,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               action: key,
               value,
               id: props.salesOrder.id,
-              price: price,
             },
           });
           props.salesOrder.listed = value;
@@ -85,7 +84,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
 
         case "sold":
           await api.post("/api/setStateNFT", {
-            data: { action: key, value, id: props.salesOrder.id, price: price },
+            data: { action: key, value, id: props.salesOrder.id },
           });
           props.salesOrder.sold = value;
           break;
@@ -314,7 +313,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   </Box>
                 )}
 
-              {/* Buy , make offer*/}
+              {/* Buy , make offer, bid*/}
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
@@ -323,39 +322,51 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     display="flex"
                     justifyContent="space-evenly"
                   >
-                    <Button
-                      onClick={mintAndBuy}
-                      disabled={isPending}
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                    >
-                      <Typography
-                        color="white"
-                        sx={{ fontWeight: 600, fontSize: 20 }}
+                    {props.salesOrder?.listingtype === "FIXED_PRICE" && (
+                      <Button
+                        onClick={mintAndBuy}
+                        disabled={isPending}
+                        size="small"
+                        color="secondary"
+                        variant="contained"
                       >
-                        BUY NFT
-                      </Typography>
-                    </Button>
+                        <Typography
+                          color="white"
+                          sx={{ fontWeight: 600, fontSize: 20 }}
+                        >
+                          BUY NFT
+                        </Typography>
+                      </Button>
+                    )}
 
-                    <Button
-                      onClick={() => setOpenPopup(true)}
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                    >
-                      <Typography
-                        color="white"
-                        sx={{ fontWeight: 600, fontSize: 20 }}
+                    {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
+                      props.salesOrder?.listingtype === "TIMED_AUCTION") && (
+                      <Button
+                        onClick={() => setOpenPopup(true)}
+                        size="small"
+                        color="secondary"
+                        variant="contained"
                       >
-                        MAKE OFFER
-                      </Typography>
-                    </Button>
-
-                    <OfferPopup
-                      openPopup={openPopup}
-                      setOpenPopup={setOpenPopup}
-                    ></OfferPopup>
+                        <Typography
+                          color="white"
+                          sx={{ fontWeight: 600, fontSize: 20 }}
+                        >
+                          {props.salesOrder?.listingtype === "FIXED_PRICE"
+                            ? "MAKE OFFER"
+                            : "BID"}
+                        </Typography>
+                      </Button>
+                    )}
+                    {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
+                      props.salesOrder?.listingtype === "TIMED_AUCTION") && (
+                      <OfferPopup
+                        openPopup={openPopup}
+                        setOpenPopup={setOpenPopup}
+                        nftId={props.salesOrder.id}
+                        activity={props.salesOrder.listingtype}
+                        endDate={props.salesOrder.endDate}
+                      />
+                    )}
                   </Box>
                 )}
             </Box>

@@ -98,18 +98,21 @@ model Activity {
 }
 
 model Bidding {
-  id         String   @id @default(uuid())
-  activity   Activity @relation(fields: [activityId], references: [id])
-  activityId String
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  price      String
-  timestamp  DateTime @default(now())
+  id          String      @id @default(uuid())
+  activity    Activity    @relation(fields: [activityId], references: [id])
+  activityId  String
+  user        User        @relation(fields: [userId], references: [id])
+  userId      String
+  listingtype LISTINGTYPE //new field
+  price       String
+  endDate     BigInt //new field
+  timestamp   DateTime    @default(now())
 }
 
 enum LISTINGTYPE {
   FIXED_PRICE
   TIMED_AUCTION
+  OFFER
 }
 
 enum TYPE {
