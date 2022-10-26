@@ -21,7 +21,6 @@ export type NFT = {
 
 export type SalesOrder = {
   nftData: NFT;
-  signature: string | undefined;
   sold: boolean;
   name: string;
   description: string;

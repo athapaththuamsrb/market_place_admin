@@ -129,7 +129,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         };
         await props.setSalesOrder({
           nftData: nftData,
-          signature: "",
           sold: false,
           name: withIpfs.name,
           description: withIpfs.description,

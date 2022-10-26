@@ -76,7 +76,6 @@ model NFT {
   timestamp    DateTime   @default(now())
   owner        Owner      @relation(fields: [ownerId], references: [id])
   ownerId      String
-  signature    String
   isMinted     Boolean    @default(false)
   activity     Activity[]
 }
