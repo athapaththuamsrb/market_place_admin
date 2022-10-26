@@ -109,6 +109,7 @@ model Bidding {
   price       String
   endDate     BigInt //new field
   timestamp   DateTime    @default(now())
+  isExpired   Boolean     @default(false)
 }
 
 enum LISTINGTYPE {

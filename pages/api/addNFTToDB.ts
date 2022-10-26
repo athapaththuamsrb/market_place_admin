@@ -79,7 +79,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             tokenID: tokenID,
             uri: uri,
             ownerId: owner.id,
-            signature: signature,
           },
         });
       } else {
@@ -89,7 +88,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           },
           data: {
             isMinted: false,
-            signature: signature,
             ownerId: owner.id,
           },
         });
