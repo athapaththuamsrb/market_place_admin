@@ -149,8 +149,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             values.collectionName
           );
           const output = await smartContract.wait();
-          // console.log(output);
-          // console.log(output.logs[0].address);
+          console.log(output);
+          console.log(output.logs[0].address);
           //======================================================
           const address = output.logs[0].address;
           // console.log("res");

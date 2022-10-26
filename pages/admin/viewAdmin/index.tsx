@@ -124,7 +124,7 @@ const ViewAdmins: NextPage = (props) => {
     const selectedRowsData = ids.map((id: any) =>
       users.find((row: { id: string }) => row.id === id)
     );
-    console.log(selectedRowsData);
+    // console.log(selectedRowsData);
   };
   const [admins, setAdmins] = useState<User[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -160,7 +160,7 @@ const ViewAdmins: NextPage = (props) => {
     setOpen(false);
     if (result == "Yes") {
       const user: User = admins.find((user) => user.id === id)!;
-      console.log(user);
+      // console.log(user);
       user.Type = "User";
       setTimeout(() => {
         axios

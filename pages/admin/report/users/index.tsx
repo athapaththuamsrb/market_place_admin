@@ -155,7 +155,7 @@ const ReportedUsers: NextPage = (props) => {
     setOpenBlock(false);
     if (result == "Yes") {
       const user: User = rows.find((user) => user.id === id)!;
-      console.log(user);
+      // console.log(user);
       user.Status = "Blocked";
       setTimeout(() => {
         axios
@@ -201,7 +201,7 @@ const ReportedUsers: NextPage = (props) => {
     const selectedRowsData = ids.map((id: any) =>
       rows.find((row: { id: string }) => row.id === id)
     );
-    console.log(selectedRowsData);
+    // console.log(selectedRowsData);
   };
 
   return (

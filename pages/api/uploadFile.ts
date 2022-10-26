@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               });
               break;
             case "collection":
-              console.log(body);
+              // console.log(body);
               await prisma.collection.create({
                 data: {
                   creatorId: user.id,
@@ -58,7 +58,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             .json({ message: "unauthorized", success: false, data: [] });
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         await prisma.$disconnect();
         res.status(401).json({ message: "unauthorized", success: false });
       }

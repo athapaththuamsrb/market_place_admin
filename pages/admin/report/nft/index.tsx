@@ -155,7 +155,7 @@ const ViewReportedNFTs: NextPage = (props) => {
     setOpenBlock(false);
     if (result == "Yes") {
       const nft: NFT_Report = nfts.find((nft) => nft.id === id)!;
-      console.log(nft);
+      // console.log(nft);
       nft.status = "Blocked";
       setTimeout(() => {
         nft;

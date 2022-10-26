@@ -28,11 +28,11 @@ interface UserProfileProps {
   userProfile: Profile;
 }
 const UserProfile: NextPage<UserProfileProps> = ({
-  collectedNFTCards,
-  createdNFTCards,
-  collectionCards,
-  userProfile,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      collectedNFTCards,
+      createdNFTCards,
+      collectionCards,
+      userProfile,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const {
     data: balance,
@@ -42,7 +42,7 @@ const UserProfile: NextPage<UserProfileProps> = ({
     addressOrName: userProfile.walletAddress,
     chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
   });
-  console.log(balance);
+  // console.log(balance);
   function srcset(
     image: string,
     width: number,
@@ -162,7 +162,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       revalidate: 1,
     };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return { notFound: true };
   }
 };

@@ -32,13 +32,28 @@ interface ViewNFTProps {
 }
 
 const ViewNFT: FC<ViewNFTProps> = (props) => {
-  const { data: signer, isError, isLoading } = useSigner(); //TODO data is useSigner attibute we assign that value to signer
+  const { data: signer, isError, isLoading } = useSigner();
+  // console.log(signer); //TODO data is useSigner attibute we assign that value to signer
   const marketplace_ = useContract({
     //TODO create connection with marketplace
     addressOrName: MarketplaceAddress.address,
     contractInterface: MarketplaceAbi.abi,
     signerOrProvider: signer,
   });
+  console.log({
+    tokenID: props.salesOrder.tokenID,
+    uri: props.salesOrder.uri,
+    creator: props.salesOrder.creatorWalletAddress,
+    category: props.salesOrder.category,
+    collection: props.salesOrder.collection,
+    royality: props.salesOrder.royality,
+    price: ethers.utils.parseEther(props.salesOrder.price),
+    signature: props.salesOrder.signature,
+    price1: props.salesOrder.price,
+  });
+  console.log(
+    props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
+  );
   const isMounted = useIsMounted();
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -77,26 +92,33 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               action: key,
               value,
               id: props.salesOrder.id,
-              price: price,
             },
           });
           props.salesOrder.listed = value;
           break;
 
         case "sold":
+          const date = new Date();
+          const timestampInMs = date.getTime();
           await api.post("/api/setStateNFT", {
-            data: { action: key, value, id: props.salesOrder.id, price: price },
+            data: {
+              action: key,
+              value,
+              id: props.salesOrder.id,
+              buyerWalletAddress: account?.address,
+              time: timestampInMs,
+            },
           });
           props.salesOrder.sold = value;
           break;
 
         default:
-          console.log("undefined");
+        // console.log("undefined");
       }
 
       setIsPending(false);
     } catch (error) {
-      console.log("update error");
+      // console.log("update error");
       setIsPending(false);
     }
   };
@@ -109,6 +131,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
     ) {
       setMsg("processing.....");
+
       const tokenID = await marketplace_.lazyMintNFT(
         //TODO add blockchain
         {
@@ -121,12 +144,27 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           price: ethers.utils.parseEther(props.salesOrder.price),
         },
         props.salesOrder.signature,
-        { value: ethers.utils.parseEther(props.salesOrder.price) }
+        {
+          value: ethers.utils.parseEther(props.salesOrder.price),
+          gasLimit: 100000,
+        }
       );
-      setMsg("Successful!");
-      setOpen(true);
-      setStateNFT("sold", true, "0");
+      const output = await tokenID.wait();
+      console.log(output);
+      // setMsg("Successful!");
+      // setOpen(true);
+      // setStateNFT("sold", true, "0");
     } else {
+      console.log({
+        tokenID: props.salesOrder.tokenID,
+        uri: props.salesOrder.uri,
+        creator: props.salesOrder.creatorWalletAddress,
+        category: props.salesOrder.category,
+        collection: props.salesOrder.collection,
+        royality: props.salesOrder.royality,
+        price: ethers.utils.parseEther(props.salesOrder.price),
+        signature: props.salesOrder.signature,
+      });
       const tokenID = await marketplace_.mintNFT(
         //TODO add blockchain
         {
@@ -314,7 +352,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   </Box>
                 )}
 
-              {/* Buy , make offer*/}
+              {/* Buy , make offer, bid*/}
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
                 props.salesOrder?.listed && (
@@ -323,39 +361,51 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     display="flex"
                     justifyContent="space-evenly"
                   >
-                    <Button
-                      onClick={mintAndBuy}
-                      disabled={isPending}
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                    >
-                      <Typography
-                        color="white"
-                        sx={{ fontWeight: 600, fontSize: 20 }}
+                    {props.salesOrder?.listingtype === "FIXED_PRICE" && (
+                      <Button
+                        onClick={mintAndBuy}
+                        disabled={isPending}
+                        size="small"
+                        color="secondary"
+                        variant="contained"
                       >
-                        BUY NFT
-                      </Typography>
-                    </Button>
+                        <Typography
+                          color="white"
+                          sx={{ fontWeight: 600, fontSize: 20 }}
+                        >
+                          BUY NFT
+                        </Typography>
+                      </Button>
+                    )}
 
-                    <Button
-                      onClick={() => setOpenPopup(true)}
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                    >
-                      <Typography
-                        color="white"
-                        sx={{ fontWeight: 600, fontSize: 20 }}
+                    {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
+                      props.salesOrder?.listingtype === "TIMED_AUCTION") && (
+                      <Button
+                        onClick={() => setOpenPopup(true)}
+                        size="small"
+                        color="secondary"
+                        variant="contained"
                       >
-                        MAKE OFFER
-                      </Typography>
-                    </Button>
-
-                    <OfferPopup
-                      openPopup={openPopup}
-                      setOpenPopup={setOpenPopup}
-                    ></OfferPopup>
+                        <Typography
+                          color="white"
+                          sx={{ fontWeight: 600, fontSize: 20 }}
+                        >
+                          {props.salesOrder?.listingtype === "FIXED_PRICE"
+                            ? "MAKE OFFER"
+                            : "BID"}
+                        </Typography>
+                      </Button>
+                    )}
+                    {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
+                      props.salesOrder?.listingtype === "TIMED_AUCTION") && (
+                      <OfferPopup
+                        openPopup={openPopup}
+                        setOpenPopup={setOpenPopup}
+                        nftId={props.salesOrder.id}
+                        activity={props.salesOrder.listingtype}
+                        endDate={props.salesOrder.endDate}
+                      />
+                    )}
                   </Box>
                 )}
             </Box>

@@ -3,7 +3,6 @@ import { useDisconnect, useConnect } from "wagmi";
 import { Typography } from "@mui/material";
 import CreateCollectionForm from "../../../../components/Form/CreateCollectionForm";
 import { useEffect, useState } from "react";
-import { SalesOrder } from "../../../../src/interfaces";
 import { useIsMounted } from "../../../../components/hooks";
 import Connect from "../../../../components/Login/Connect";
 import type { NextPage } from "next";
@@ -24,23 +23,6 @@ const CreatePage: NextPage = (props) => {
   const [ipfsImage, setIpfsImage] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
-  const [salesOrder, setSalesOrder] = useState<SalesOrder>({
-    nftData: {
-      tokenID: 0,
-      price: "0",
-      creator: "",
-      uri: "",
-      category: "",
-      collection: "",
-    },
-    signature: "",
-    sold: false,
-    name: "",
-    description: "",
-    image: "",
-    royality: 0,
-  });
-
   return isMounted && activeConnector ? (
     <div>
       <Title firstWord="Create" secondWord="Collection" />

@@ -29,13 +29,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         data: collections,
       });
     } catch (error) {
+      console.log(error);
       await prisma.$disconnect();
       res
         .status(400)
         .json({ message: "User is not exit", success: false, data: [] });
     }
   } else {
-    res.status(401).json({ message: "Unauthorized", success: false, data: [] });
+    res
+      .status(405)
+      .json({ message: "Method not alloed", success: false, data: [] });
   }
 };
 export default handler;

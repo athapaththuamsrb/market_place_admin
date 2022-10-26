@@ -36,7 +36,6 @@ const CreatePage: NextPage = (props) => {
       category: "",
       collection: "",
     },
-    signature: "",
     sold: false,
     name: "",
     description: "",

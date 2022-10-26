@@ -29,9 +29,9 @@ interface CollectionProps {
   collectionData: Collection_Profile;
 }
 const Collection: NextPage<CollectionProps> = ({
-  nftList,
-  collectionData,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      nftList,
+      collectionData,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
 
   const nftEls = nftList.map((nft: NFT_Card) => {
@@ -180,10 +180,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
     if (!data.success) {
       return { notFound: true };
     }
-    console.log({
-      nftList: data.data.nftList,
-      collectionData: data.data.collectionData,
-    });
+    // console.log({
+    //   nftList: data.data.nftList,
+    //   collectionData: data.data.collectionData,
+    // });
     return {
       props: {
         nftList: data.data.nftList,
