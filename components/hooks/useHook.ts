@@ -7,12 +7,15 @@ import {
   Collection_Item,
 } from "../../src/interfaces";
 import { useAccount } from "wagmi";
-import { gridTopLevelRowCountSelector } from "@mui/x-data-grid";
+import jwt_decode from "jwt-decode";
+import { Session } from "./../../src/interfaces";
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+import authService from "../../services/auth.service";
+
 export const useIsMounted = () => {
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => setMounted(true), []);
-
   return mounted;
 };
 
@@ -50,6 +53,8 @@ export const useGetMyProfile = () => {
   const [profile, setProfile] = useState<Profile>();
   const [isPendingProfile, setIsPendingProfile] = useState(true);
   const [errorProfile, setErrorProfile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
     if (account?.address !== undefined) {
       setIsPendingProfile(true);
@@ -62,6 +67,16 @@ export const useGetMyProfile = () => {
             setProfile(res.data.data);
             setIsPendingProfile(false);
             setErrorProfile(null);
+            //local storage to stay logged in between page refreshes
+            localStorage.setItem("user", res.data.token);
+            let decoded: Session = jwt_decode(res.data.token);
+            switch (decoded.type) {
+              case "Admin":
+                setIsAdmin(true);
+                break;
+              default:
+                break;
+            }
           })
           .catch((error) => {
             setIsPendingProfile(false);
@@ -72,7 +87,7 @@ export const useGetMyProfile = () => {
       setIsPendingProfile(false);
     }
   }, [account?.address]);
-  return { profile, isPendingProfile, errorProfile };
+  return { profile, isPendingProfile, errorProfile, isAdmin };
 };
 
 export const useGetMyCollectionCard = () => {
@@ -113,7 +128,10 @@ export const useGetMyCollectionItem = () => {
       if (account?.address !== undefined) {
         axios
           .post("/api/getMyCollectionItem", {
-            data: { address: account?.address },
+            data: {
+              address: account?.address,
+              authTokens: authService.getUserToken(),
+            },
           })
           .then((res) => {
             setCollectionItem(res.data.data);

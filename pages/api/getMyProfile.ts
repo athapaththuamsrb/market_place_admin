@@ -1,8 +1,10 @@
 //TODO DONE
+const jwt = require("jsonwebtoken");
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ethers } from "ethers";
 import { PrismaClient } from "@prisma/client";
 import { Profile } from "./../../src/interfaces";
+import getConfig from "next/config";
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -24,14 +26,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const profile: Profile = {
             bannerImage: user.bannerImage,
             profileImage: user.profileImage,
-            type: user.type,
+            
             userName: user.userName,
             walletAddress: user.walletAddress,
           };
+
+          // create a jwt token that is valid for 2 days
+          const token : String = jwt.sign(
+            { walletAddress: user.walletAddress, type: user.type },
+            process.env.ACCESS_TOKEN_SECRET,
+            {
+              expiresIn: "2d",
+            }
+          );
+
           res.status(201).json({
             message: "Successfully get",
             success: true,
             data: profile,
+            token: token,
           });
         } else {
           await prisma.$disconnect();

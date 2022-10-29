@@ -66,7 +66,6 @@ export type CreateFormData = {
 
 export type Profile = {
   walletAddress: string;
-  type: string;
   userName: string;
   bannerImage: string;
   profileImage: string;
@@ -139,4 +138,9 @@ export type NFT_Report = {
   reportType: string;
   reportedBy: string;
   reportedDate: Date;
+};
+
+export type Session = {
+  walletAddress: string;
+  type: string;
 };

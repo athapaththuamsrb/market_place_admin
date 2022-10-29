@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (user) {
         const userProfile: Profile = {
           walletAddress: user.walletAddress,
-          type: user.type,
+          
           userName: user.userName,
           bannerImage: user.bannerImage,
           profileImage: user.profileImage,
