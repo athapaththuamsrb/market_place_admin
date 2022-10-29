@@ -20,6 +20,7 @@ import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import * as Yup from "yup";
 import FactoryAddress from "../../../contractsData/Factory-address.json";
 import FactoryAbi from "../../../contractsData/Factory.json";
+import authService from "../../services/auth.service";
 
 type CreateFormProps = {
   setMsg: (msg: string) => void;
@@ -164,7 +165,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               collectionAddress: address,
               collectionCategory: values.collectionCategory,
               folder: "collection",
-              userwalletAddress: account?.address,
+              token: authService.getUserToken(),
             },
           });
           // console.log(res);

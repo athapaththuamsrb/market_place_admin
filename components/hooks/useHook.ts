@@ -10,7 +10,6 @@ import { useAccount } from "wagmi";
 import jwt_decode from "jwt-decode";
 import { Session } from "./../../src/interfaces";
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 import authService from "../../services/auth.service";
 
 export const useIsMounted = () => {
@@ -30,7 +29,7 @@ export const useGetMyNFT = () => {
       if (account?.address !== undefined) {
         axios
           .post("/api/getMyNFT", {
-            data: { address: account?.address },
+            data: { token: authService.getUserToken() },
           })
           .then((res) => {
             setCollectedNFTCard(res.data.data[0]);
@@ -61,14 +60,17 @@ export const useGetMyProfile = () => {
       setTimeout(() => {
         axios
           .post("/api/getMyProfile", {
-            data: { address: account?.address },
+            data: {
+              address: account?.address,
+              token: authService.getUserToken(),
+            },
           })
           .then((res) => {
             setProfile(res.data.data);
             setIsPendingProfile(false);
             setErrorProfile(null);
             //local storage to stay logged in between page refreshes
-            localStorage.setItem("user", res.data.token);
+            localStorage.setItem("token", res.data.token);
             let decoded: Session = jwt_decode(res.data.token);
             switch (decoded.type) {
               case "Admin":
@@ -101,7 +103,7 @@ export const useGetMyCollectionCard = () => {
       if (account?.address !== undefined) {
         axios
           .post("/api/getMyCollectionCard", {
-            data: { address: account?.address },
+            data: { token: authService.getUserToken() },
           })
           .then((res) => {
             setCollectionCards(res.data.data);
@@ -129,8 +131,8 @@ export const useGetMyCollectionItem = () => {
         axios
           .post("/api/getMyCollectionItem", {
             data: {
-              address: account?.address,
-              authTokens: authService.getUserToken(),
+              // address: account?.address,
+              token: authService.getUserToken(),
             },
           })
           .then((res) => {

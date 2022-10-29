@@ -14,6 +14,7 @@ import ModalPopUp from "../../Modal";
 import axios from "axios";
 import { useAccount } from "wagmi";
 import * as Yup from "yup";
+import authService from "../../services/auth.service";
 
 type CreateFormProps = {
   setMsg: (msg: string) => void;
@@ -108,7 +109,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               bannerImageURL: image["bannerImage"],
               userName: values.userName,
               folder: "profile",
-              userwalletAddress: account?.address,
+              token: authService.getUserToken()
             },
           });
           props.setMsg(

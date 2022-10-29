@@ -1,47 +1,28 @@
 const jwt = require("jsonwebtoken");
-require('dotenv').config();
+import jwt_decode from "jwt-decode";
+import { Session } from "../src/interfaces";
 
-const userAuthToken = async (props: { token: String; }) => {
-    // If token not found, send error message
-    if (!props.token) {
-      console.log("Token Not Found!");
-      return false;
-    } else {
-      // Authenticate token
-      try {
-        const user = await jwt.verify(props.token, process.env.ACCESS_TOKEN_SECRET);
-        if (user.type !== "User") {
-          return false;
-        }
-      } catch (error) {
-        return false;
-      }
-      return true;
+const userAuthToken = async (token: string) => {
+  // If token not found, send error message
+  if (!token) {
+    console.log("Token Not Found!");
+    return null;
+  } else {
+    // Authenticate token and return walletAddress
+    try {
+      const user = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      let decoded: Session = jwt_decode(token);
+      return decoded.walletAddress;
+    } catch (error) {
+      console.log("Invalid Token!!");
+      return null;
     }
-  };
+  }
+};
 
-  const adminAuthToken = async (props: { token: String; }) => {
-    // If token not found, send error message
-    if (!props.token) {
-      console.log("Token Not Found!");
-      return false;
-    } else {
-      // Authenticate token
-      try {
-        const user = await jwt.verify(props.token, process.env.ACCESS_TOKEN_SECRET);
-        if (user.type !== "Admin") {
-          return false;
-        }
-      } catch (error) {
-        return false;
-      }
-      return true;
-    }
-  };
 
-  const authToken = {
-    userAuthToken,
-    adminAuthToken
-  };
+const authToken = {
+  userAuthToken,
+};
 
-  export default authToken;
+export default authToken;
