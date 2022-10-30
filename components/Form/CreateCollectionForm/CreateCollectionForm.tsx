@@ -20,7 +20,7 @@ import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import * as Yup from "yup";
 import FactoryAddress from "../../../contractsData/Factory-address.json";
 import FactoryAbi from "../../../contractsData/Factory.json";
-import authService from "../../services/auth.service";
+import authService from "../../../services/auth.service";
 
 type CreateFormProps = {
   setMsg: (msg: string) => void;

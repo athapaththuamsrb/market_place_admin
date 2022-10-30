@@ -54,7 +54,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   } else {
     await prisma.$disconnect();
-    res.status(405).json({ message: "Method not alloed", success: false });
+    res.status(405).json({ message: "Method not allowed", success: false });
   }
 };
 export default handler;

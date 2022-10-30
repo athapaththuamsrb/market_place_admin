@@ -25,8 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (user.status == "ACTIVE" || user.status == "REPORTED") {
           const profile: Profile = {
             bannerImage: user.bannerImage,
-            profileImage: user.profileImage,
-            
+            profileImage: user.profileImage,  
             userName: user.userName,
             walletAddress: user.walletAddress,
           };
@@ -67,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await prisma.$disconnect();
     res
       .status(405)
-      .json({ message: "Method not alloed", success: false, data: [] });
+      .json({ message: "Method not allowed", success: false, data: [] });
   }
 };
 export default handler;

@@ -62,7 +62,7 @@ export const useGetMyProfile = () => {
           .post("/api/getMyProfile", {
             data: {
               address: account?.address,
-              token: authService.getUserToken(),
+              // token: authService.getUserToken(),
             },
           })
           .then((res) => {

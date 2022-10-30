@@ -14,7 +14,7 @@ import ModalPopUp from "../../Modal";
 import axios from "axios";
 import { useAccount } from "wagmi";
 import * as Yup from "yup";
-import authService from "../../services/auth.service";
+import authService from "../../../services/auth.service";
 
 type CreateFormProps = {
   setMsg: (msg: string) => void;
