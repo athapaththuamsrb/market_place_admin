@@ -19,7 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
-import { NFT_Report } from "../../../../src/interfaces";
+import { NFT_Report, Report } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../../components/ui/Title";
@@ -56,34 +56,34 @@ const ViewReportedNFTs: NextPage = (props) => {
       width: 50,
     },
     {
-      field: "name",
-      headerName: "NFT",
+      field: "reportedId",
+      headerName: "NFT ID",
       type: "String",
       width: 130,
     },
     {
-      field: "nftID",
-      headerName: "NFT ID",
-      type: "String",
-      width: 320,
-    },
-    {
-      field: "reportedBy",
+      field: "reporterId",
       headerName: "Reported By",
       type: "String",
-      width: 320,
+      width: 220,
     },
     {
-      field: "reportType",
-      headerName: "Reported Type",
+      field: "reporter",
+      headerName: "Reporter Name",
+      type: "String",
+      width: 220,
+    },
+    {
+      field: "reason",
+      headerName: "Reason",
       type: "String",
       width: 200,
     },
     {
-      field: "reportedDate",
+      field: "DateTime",
       headerName: "Reported Date",
       type: "String",
-      width: 110,
+      width: 210,
     },
     {
       field: "actions",
@@ -91,6 +91,7 @@ const ViewReportedNFTs: NextPage = (props) => {
       type: "actions",
       width: 200,
       getActions: (params: GridRowParams) => [
+        //TODO link view NFT
         <Button
           variant="outlined"
           color="primary"
@@ -131,10 +132,12 @@ const ViewReportedNFTs: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("http://localhost:8000/nfts")
+        .get("../../../api/getReports")
         .then((res) => {
           setNFTs(
-            res.data.filter((nft: NFT_Report) => nft.status === "Reported")
+            res.data.data.filter(
+              (report: Report) => report.reportType === "NFT"
+            )
           );
           setIsPending(false);
           setError(null);

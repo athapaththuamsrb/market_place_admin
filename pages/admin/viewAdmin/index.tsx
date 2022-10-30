@@ -105,7 +105,7 @@ const ViewAdmins: NextPage = (props) => {
           key={params.row.id}
           sx={{ color: "black" }}
         >
-          <Link href={`../users/${params.row.id}`} underline="hover">
+          <Link href={`../view/user/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
         </Button>,
@@ -137,10 +137,12 @@ const ViewAdmins: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("http://localhost:8000/users")
+        .get("../api/getUsers")
         .then((res) => {
-          setUsers(res.data);
-          setAdmins(res.data.filter((user: User) => user.Type === "Admin"));
+          setUsers(res.data.data);
+          setAdmins(
+            res.data.data.filter((user: User) => user.Type === "ADMIN")
+          );
           setIsPending(false);
           setError(null);
         })

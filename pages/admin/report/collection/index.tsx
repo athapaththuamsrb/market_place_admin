@@ -19,7 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
-import { Collection, User } from "../../../../src/interfaces";
+import { Collection, User, Report } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../../components/ui/Title";
@@ -56,34 +56,34 @@ const ViewReportedCollections: NextPage = (props) => {
       width: 50,
     },
     {
-      field: "collectionName",
-      headerName: "Collection",
+      field: "reportedId",
+      headerName: "Collection ID",
       type: "String",
       width: 130,
     },
     {
-      field: "collectionID",
-      headerName: "Collection ID",
-      type: "String",
-      width: 300,
-    },
-    {
-      field: "reportedBy",
+      field: "reporterId",
       headerName: "Reported By",
       type: "String",
-      width: 300,
+      width: 220,
     },
     {
-      field: "reportType",
-      headerName: "Reported Type",
+      field: "reporter",
+      headerName: "Reporter Name",
+      type: "String",
+      width: 220,
+    },
+    {
+      field: "reason",
+      headerName: "Reason",
       type: "String",
       width: 200,
     },
     {
-      field: "reportedDate",
+      field: "DateTime",
       headerName: "Reported Date",
       type: "String",
-      width: 110,
+      width: 210,
     },
     {
       field: "actions",
@@ -134,11 +134,11 @@ const ViewReportedCollections: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("http://localhost:8000/collections")
+        .get("../../../api/getReports")
         .then((res) => {
           setCollections(
-            res.data.filter(
-              (collection: Collection) => collection.status === "Reported"
+            res.data.data.filter(
+              (report: Report) => report.reportType === "Collection"
             )
           );
           setIsPending(false);
