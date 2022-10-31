@@ -19,7 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
-import { Collection, User, Report } from "../../../../src/interfaces";
+import { Report } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../../components/ui/Title";
@@ -91,6 +91,7 @@ const ViewReportedCollections: NextPage = (props) => {
       type: "actions",
       width: 240,
       getActions: (params: GridRowParams) => [
+        //TODO link view Collection
         <Button
           variant="outlined"
           color="primary"
@@ -124,7 +125,7 @@ const ViewReportedCollections: NextPage = (props) => {
     },
   ];
 
-  const [collections, setCollections] = useState<Collection[]>([]);
+  const [collections, setCollections] = useState<Report[]>([]);
   const [openBlock, setOpenBlock] = useState(false);
   const [openVerify, setOpenVerify] = useState(false);
   const [id, setId] = useState("");
@@ -159,15 +160,18 @@ const ViewReportedCollections: NextPage = (props) => {
   const handleCloseBlock = (result: string, id: string) => () => {
     setOpenBlock(false);
     if (result == "Yes") {
-      const collection: Collection = collections.find(
+      const collection: Report = collections.find(
         (collection) => collection.id === id
       )!;
-      // console.log(collection);
-      collection.status = "Blocked";
       setTimeout(() => {
         collection;
         axios
-          .put(`http://localhost:8000/collections/${collection.id}`, collection)
+          .post("../../api/setBlock", {
+            data: {
+              id: collection.reportedId,
+            },
+            action: "block",
+          })
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -188,13 +192,17 @@ const ViewReportedCollections: NextPage = (props) => {
   const handleCloseVerify = (result: string, id: string) => () => {
     setOpenVerify(false);
     if (result == "Yes") {
-      const collection: Collection = collections.find(
+      const collection: Report = collections.find(
         (collection) => collection.id === id
       )!;
-      collection.status = "Active";
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/collections/${collection.id}`, collection)
+          .post("../../api/setBlock", {
+            data: {
+              id: collection.reportedId,
+            },
+            action: "verify",
+          })
           .then(() => {
             setIsPending(false);
             setError(null);

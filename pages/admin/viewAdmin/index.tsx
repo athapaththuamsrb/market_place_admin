@@ -157,7 +157,6 @@ const ViewAdmins: NextPage = (props) => {
     setOpen(true);
     setId(id);
   };
-
   const handleClose = (result: string, id: string) => () => {
     setOpen(false);
     if (result == "Yes") {
@@ -166,7 +165,12 @@ const ViewAdmins: NextPage = (props) => {
       user.Type = "User";
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, user)
+          // .put(`http://localhost:8000/users/${user.id}`, user)
+          .post("../../api/deleteAdmin", {
+            data: {
+              id: user.id,
+            },
+          })
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -178,6 +182,7 @@ const ViewAdmins: NextPage = (props) => {
       });
     }
   };
+
   return (
     <div>
       {isPending && (

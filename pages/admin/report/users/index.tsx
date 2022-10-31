@@ -22,7 +22,7 @@ import BlockIcon from "@mui/icons-material/Block";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
-import { Report, User } from "../../../../src/interfaces";
+import { Report } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Title from "../../../../components/ui/Title";
 import axios from "axios";
@@ -121,11 +121,10 @@ const ReportedUsers: NextPage = (props) => {
     },
   ];
 
-  const [rows, setRows] = useState<User[]>([]);
+  const [rows, setRows] = useState<Report[]>([]);
   const [openBlock, setOpenBlock] = useState(false);
   const [openVerify, setOpenVerify] = useState(false);
   const [id, setId] = useState("");
-  const [status, setStatus] = useState("");
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
 
@@ -157,12 +156,15 @@ const ReportedUsers: NextPage = (props) => {
   const handleCloseBlock = (result: string, id: string) => () => {
     setOpenBlock(false);
     if (result == "Yes") {
-      const user: User = rows.find((user) => user.id === id)!;
-      // console.log(user);
-      user.Status = "Blocked";
+      const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, user)
+          .post("../../api/setBlock", {
+            data: {
+              id: user.reportedId,
+            },
+            action: "block",
+          })
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -183,11 +185,15 @@ const ReportedUsers: NextPage = (props) => {
   const handleCloseVerify = (result: string, id: string) => () => {
     setOpenVerify(false);
     if (result == "Yes") {
-      const user: User = rows.find((user) => user.id === id)!;
-      user.Status = "Active";
+      const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, user)
+          .post("../../api/setBlock", {
+            data: {
+              id: user.reportedId,
+            },
+            action: "verify",
+          })
           .then(() => {
             setIsPending(false);
             setError(null);

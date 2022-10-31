@@ -19,7 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
-import { NFT_Report, Report } from "../../../../src/interfaces";
+import { Report } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../../components/ui/Title";
@@ -122,7 +122,7 @@ const ViewReportedNFTs: NextPage = (props) => {
     },
   ];
 
-  const [nfts, setNFTs] = useState<NFT_Report[]>([]);
+  const [nfts, setNFTs] = useState<Report[]>([]);
   const [openBlock, setOpenBlock] = useState(false);
   const [openVerify, setOpenVerify] = useState(false);
   const [id, setId] = useState("");
@@ -157,13 +157,15 @@ const ViewReportedNFTs: NextPage = (props) => {
   const handleCloseBlock = (result: string, id: string) => () => {
     setOpenBlock(false);
     if (result == "Yes") {
-      const nft: NFT_Report = nfts.find((nft) => nft.id === id)!;
-      // console.log(nft);
-      nft.status = "Blocked";
+      const nft: Report = nfts.find((nft) => nft.id === id)!;
       setTimeout(() => {
-        nft;
         axios
-          .put(`http://localhost:8000/nfts/${nft.id}`, nft)
+          .post("../../api/setBlock", {
+            data: {
+              id: nft.reportedId,
+            },
+            action: "block",
+          })
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -184,11 +186,15 @@ const ViewReportedNFTs: NextPage = (props) => {
   const handleCloseVerify = (result: string, id: string) => () => {
     setOpenVerify(false);
     if (result == "Yes") {
-      const nft: NFT_Report = nfts.find((nft) => nft.id === id)!;
-      nft.status = "Active";
+      const nft: Report = nfts.find((nft) => nft.id === id)!;
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/nfts/${nft.id}`, nft)
+          .post("../../api/setBlock", {
+            data: {
+              id: nft.reportedId,
+            },
+            action: "verify",
+          })
           .then(() => {
             setIsPending(false);
             setError(null);

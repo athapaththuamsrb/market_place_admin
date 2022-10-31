@@ -8,7 +8,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Process a POST request
     // const { address, name } = req.body.data;
     try {
-      const reports = await prisma.report.findMany({});
+      const reports = await prisma.report.findMany({
+        where: {
+          STATUS: "REPORTED",
+        },
+      });
       let results: Report[] = [];
       for (const report_data of reports) {
         const reporter_name = await prisma.user.findUnique({
