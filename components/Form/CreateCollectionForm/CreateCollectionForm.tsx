@@ -99,16 +99,83 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         break;
     }
   };
+  const validate = (values: {
+    collectionName: string;
+    collectionDescription: string;
+    collectionCategory: string;
+    featuredImage: string;
+    logoImage: string;
+    bannerImage: string;
+  }) => {
+    let errors: {
+      collectionName: string;
+      collectionDescription: string;
+      collectionCategory: string;
+      featuredImage: string;
+      logoImage: string;
+      bannerImage: string;
+    } = {
+      collectionName: "",
+      collectionDescription: "",
+      collectionCategory: "",
+      featuredImage: "",
+      bannerImage: "",
+      logoImage: "",
+    };
+    const categoryList: string[] = [
+      "Nature",
+      "Photography",
+      "Art",
+      "Worlds",
+      "Virtual",
+      "Utility",
+      "Cards",
+      "Sports",
+      "Music",
+      "Collectibles",
+    ];
 
+    if (!values.collectionName.trim()) {
+      errors.collectionName = "Required";
+    } else if (
+      values.collectionName.length <= 5 ||
+      values.collectionName.length >= 100
+    ) {
+      console.log(values.collectionName.length);
+      errors.collectionName = "Must be collection Name between 5 and 100";
+    }
+
+    if (!values.collectionDescription.trim()) {
+      errors.collectionDescription = "Required";
+    }
+
+    if (!values.collectionCategory.trim()) {
+      errors.collectionCategory = "Required";
+    } else if (!categoryList.includes(values.collectionCategory.trim())) {
+      errors.collectionCategory = "Invalid collection category";
+    }
+    if ((values.logoImage = "")) {
+      errors.logoImage = "Required";
+    }
+    if ((values.bannerImage = "")) {
+      errors.bannerImage = "Required";
+    }
+    if ((values.featuredImage = "")) {
+      errors.featuredImage = "Required";
+    }
+    console.log(errors);
+    return errors;
+  };
   const formik = useFormik({
     initialValues: {
       collectionName: "",
       collectionDescription: "",
       collectionCategory: "",
-      featuredImage: undefined,
-      bannerImage: undefined,
-      logoImage: undefined,
+      featuredImage: "",
+      bannerImage: "",
+      logoImage: "",
     },
+    //validate,
     validationSchema: Yup.object({
       collectionName: Yup.string()
         .trim()
@@ -396,9 +463,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           <Button
             type="submit"
             disabled={
-              formik.errors.collectionName !== undefined ||
-              formik.errors.collectionDescription !== undefined ||
-              formik.errors.collectionCategory !== undefined ||
+              formik.errors.collectionName !== "" ||
+              formik.errors.collectionDescription !== "" ||
+              formik.errors.collectionCategory !== "" ||
               image["featuredImage"] ===
                 "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
               image["logoImage"] ===

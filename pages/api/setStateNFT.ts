@@ -15,9 +15,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               id: id,
             },
           });
+
           if (oldNFT) {
+            const owner = await prisma.owner.findUnique({
+              where: { id: oldNFT.ownerId },
+            });
+            if (!owner) throw new Error("owner is not exist");
+            const user = await prisma.user.findUnique({
+              where: { walletAddress: owner.walletAddress },
+            });
+            if (!user) throw new Error("user is not exist");
             if (value) {
               const saleWay = req.body.data.saleWay;
+
               if (saleWay !== "FIXED_PRICE" && saleWay !== "TIMED_AUCTION")
                 throw new Error("Sale way is not exist");
               const price = req.body.data.price;
@@ -29,6 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   endDate: req.body.data.endDate,
                   sellingprice: price,
                   signature: signature,
+                  userId: user.id,
                 },
               });
             } else {

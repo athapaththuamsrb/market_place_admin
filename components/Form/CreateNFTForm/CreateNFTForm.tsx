@@ -66,6 +66,41 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     useGetMyCollectionItem();
   const { data: signer, isError, isLoading } = useSigner();
   const router = useRouter();
+  //validate function
+  const validate = (values: {
+    name: string;
+    description: string;
+    collection: string;
+    royality: number;
+  }) => {
+    let errors: {
+      name: string;
+      description: string;
+      collection: string;
+      royality: string;
+    } = { name: "", description: "", collection: "", royality: "" };
+    if (!values.name.trim()) {
+      errors.name = "Required";
+    }
+
+    if (!values.description.trim()) {
+      errors.description = "Required";
+    }
+
+    if (!values.collection.trim()) {
+      errors.collection = "Required";
+    } else if (values.collection.trim().length !== 42) {
+      errors.collection = "Invalid collection";
+    }
+    if (!values.royality) {
+      errors.royality = "Required";
+    } else if (values.royality <= 0 || values.royality >= 100) {
+      errors.royality = "Must be between 0 and 100";
+    } else if (Number.isInteger(values.royality)) {
+      errors.royality = "Invalid royality";
+    }
+    return errors;
+  };
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -84,6 +119,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         .max(100, "maximum value is 100%")
         .min(0, "minimum value is 0%"),
     }),
+    //validate,
     onSubmit: async (values) => {
       const selectedCollection = collectionItem.map((collectionData) => {
         if (values.collection === collectionData.collectionAddress) {

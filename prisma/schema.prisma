@@ -95,8 +95,8 @@ model Activity {
   listingTimestamp DateTime    @default(now())
   buyingTimestamp  BigInt?
   bidding          Bidding[]
-  User             User?       @relation(fields: [userId], references: [id])
-  userId           String?
+  User             User        @relation(fields: [userId], references: [id])
+  userId           String
 }
 
 model Bidding {

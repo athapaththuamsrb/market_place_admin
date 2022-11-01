@@ -5,7 +5,7 @@ import "./Collection.sol";
 
 contract NFTCollection is Collection {
 
-    constructor(string memory _name,address _marketplace) NFT(_name, "Collection", _marketplace){
+    constructor(string memory _name,address _marketplace) Collection(_name, "Collection", _marketplace){
         
     }
 }
