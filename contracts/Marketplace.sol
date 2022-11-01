@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
 
 import "hardhat/console.sol";
 
-import "./NFT.sol";
+import "./Collection.sol";
 
 contract Marketplace is ReentrancyGuard, EIP712 {
 
@@ -79,7 +79,7 @@ contract Marketplace is ReentrancyGuard, EIP712 {
         console.log(signer == nft.creator);
         require(signer == nft.creator, 'invalid signature');
         console.log("came4");
-        NFT(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening
+        Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening
         console.log("came5");
         Address.sendValue(payable(nft.creator), msg.value);//TODO pay for creator
         console.log("came6");
@@ -93,7 +93,7 @@ contract Marketplace is ReentrancyGuard, EIP712 {
         require(msg.value == nft.price, 'SimonDevNFT: Message value != price');
         address signer = _validateSignature(_hashMint(nft), signature);//TODO current owner 
         require(signer == nft.owner, 'invalid signature');//TODO  check the current owner and walletaddress are equal
-        NFT(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening        
+        Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening        
         Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality)/100);//TODO pay for creator
         Address.sendValue(payable(nft.creator), msg.value*nft.royality/100);
         feeAccount.transfer(msg.value*feePercent/100);//pay for marketplace
