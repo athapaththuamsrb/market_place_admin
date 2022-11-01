@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { NFT_load } from "../../src/interfaces";
+import { FC, useEffect, useState } from "react";
+import { Activity, NFT_load } from "../../src/interfaces";
 import { Typography, Button, Grid, Avatar, Stack } from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
@@ -20,12 +20,15 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ListingHistoryTable from "../ui/ItemActivity";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { useIsMounted } from "../hooks";
-
 import OfferPopup from "../OfferPopup";
 import ReportPopup from "../ReportPopup";
 import React from "react";
+import axios from "axios";
+import Offers from "../ui/Offers";
+import ItemActivity from "../ui/ItemActivity";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -64,6 +67,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const { data: account } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open1 = Boolean(anchorEl);
+  const [activity, setActivity] = useState<Activity[]>([]);
   const {
     activeConnector,
     connect,
@@ -122,6 +126,27 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       setIsPending(false);
     }
   };
+
+  const getSetActivity = async () => {
+    try {
+      setIsPending(true);
+      await axios
+        .post("/api/getNFTActivity", {
+          data: { id: props.salesOrder.id },
+        })
+        .then((res) => {
+          setActivity(res.data.data);
+          //console.log("wdbneh");
+        });
+      //console.log(activity);
+      setIsPending(false);
+      //console.log("hdbche");
+    } catch (error) {
+      console.log("Item activity error!");
+      setIsPending(false);
+    }
+  };
+
   const mintAndBuy = async () => {
     //TODO adding data to blockchain
     setIsPending(true);
@@ -186,6 +211,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     }
     setIsPending(false);
   };
+
+  useEffect(() => {
+    getSetActivity();
+  }, []);
+
   return isMounted ? (
     <Box>
       {isPending && (
@@ -204,8 +234,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       />
       <Box sx={{ width: "70%", marginX: "auto" }}>
         <Grid container>
-          <Grid alignSelf={"center"} item xs={6}>
-            <Stack alignItems="center">
+          <Grid alignSelf={"center"} item xs={5}>
+            <Stack alignItems="left">
               <Avatar
                 alt="avatar"
                 src={props.salesOrder?.image}
@@ -219,7 +249,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               />
             </Stack>
           </Grid>
-          <Grid item xs={6} sx={{ boxShadow: 1, borderRadius: 1 }}>
+          <Grid item xs={7} sx={{ boxShadow: 1, borderRadius: 1 }}>
             <Box sx={{ width: "90%", marginX: "auto" }}>
               {/* Report option */}
               {activeConnector &&
@@ -415,7 +445,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       <br />
       <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
         <Grid container columnSpacing={2}>
-          <Grid alignSelf={"center"} item xs={6}>
+          <Grid alignSelf={"left"} item xs={5}>
             <FurtherDetails
               creator={props.salesOrder?.creatorWalletAddress}
               tokenID={props.salesOrder?.tokenID}
@@ -423,17 +453,46 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               uri={props.salesOrder?.uri}
             />
           </Grid>
-          <Grid alignSelf={"center"} item xs={6}>
+          <Grid alignSelf={"left"} item xs={7}>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
+                <FormatListBulletedIcon
+                  sx={{
+                    marginRight: "10px",
+                  }}
+                ></FormatListBulletedIcon>
                 <Typography>Item Activity</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <ListingHistoryTable />
+                <ItemActivity />
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
+        <Grid container columnSpacing={2}>
+          <Grid alignSelf={"center"} item xs={12}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <LocalOfferIcon
+                  sx={{
+                    marginRight: "10px",
+                  }}
+                ></LocalOfferIcon>
+                <Typography>Offers</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* <ListingHistoryTable activity={activity} /> */}
+                <Offers />
               </AccordionDetails>
             </Accordion>
           </Grid>

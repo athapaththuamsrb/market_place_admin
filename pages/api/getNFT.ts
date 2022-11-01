@@ -86,7 +86,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             });
           } else {
             res.status(201).json({
-              message: "No maching NFT",
+              message: "No matching NFT",
               success: true,
               data: [],
             });
@@ -183,7 +183,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await prisma.$disconnect();
     res
       .status(405)
-      .json({ message: "Method not alloed", success: false, data: [] });
+      .json({ message: "Method not allowed", success: false, data: [] });
   }
 };
 export default handler;
