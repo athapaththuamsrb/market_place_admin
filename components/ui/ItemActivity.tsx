@@ -231,7 +231,7 @@ const ItemActivity: NextPage = (props) => {
         sx={{
           flexGrow: 1,
           width: "100%",
-          height: 400,
+          height: 300,
         }}
       >
         <DataGrid
@@ -242,7 +242,7 @@ const ItemActivity: NextPage = (props) => {
           }}
           rows={rows}
           columns={columns}
-          pageSize={12}
+          pageSize={5}
           rowsPerPageOptions={[5]}
         />
       </Box>
