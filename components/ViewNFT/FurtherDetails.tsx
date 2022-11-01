@@ -4,6 +4,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoIcon from "@mui/icons-material/Info";
+
 import { FC, useState } from "react";
 
 interface FurtherDetailsProps {
@@ -22,6 +24,11 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
+          <InfoIcon
+            sx={{
+              marginRight: "10px",
+            }}
+          ></InfoIcon>
           <Typography>Further Details</Typography>
         </AccordionSummary>
         <AccordionDetails>

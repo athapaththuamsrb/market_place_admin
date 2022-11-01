@@ -84,7 +84,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             });
           } else {
             res.status(201).json({
-              message: "No maching NFT",
+              message: "No matching NFT",
               success: true,
               data: [],
             });
