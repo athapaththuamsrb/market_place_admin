@@ -24,6 +24,7 @@ import AdminMenu from "../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import GroupIcon from "@mui/icons-material/Group";
 import axios from "axios";
+import { User } from "../../src/interfaces";
 
 const AllUsers: NextPage = (props) => {
   const column = [
@@ -31,11 +32,11 @@ const AllUsers: NextPage = (props) => {
       field: "id",
       headerName: "ID",
       type: "string",
-      width: 50,
+      width: 100,
     },
     {
       field: "User_ID",
-      headerName: "User_ID",
+      headerName: "Wallet Address",
       type: "string",
       width: 300,
     },
@@ -45,12 +46,12 @@ const AllUsers: NextPage = (props) => {
       type: "string",
       width: 200,
     },
-    {
+    /*{
       field: "Date",
       headerName: "Joined Date",
       type: "Date",
       width: 100,
-    },
+    },*/
     {
       field: "Total",
       headerName: "Total NFTs",
@@ -87,7 +88,7 @@ const AllUsers: NextPage = (props) => {
           key={params.row.id}
           sx={{ color: "black" }}
         >
-          <Link href={`/admin/users/${params.row.id}`} underline="hover">
+          <Link href={`view/user/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
         </Button>,
@@ -103,9 +104,10 @@ const AllUsers: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("http://localhost:8000/users")
+        .get("api/getUsers")
         .then((res) => {
-          setRows(res.data);
+          console.log(res.data.data);
+          setRows(res.data.data.filter((data: User) => data.Type === "USER"));
           setIsPending(false);
           setError(null);
         })
@@ -170,18 +172,18 @@ const AllUsers: NextPage = (props) => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "90%",
+          width: "70%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",
-          height: 750,
+          height: 600,
           backgroundColor: "white",
           borderRadius: "10px",
         }}
       >
         <DataGrid
           sx={{
-            m: 2,
+            m: 0,
             fontWeight: 400,
             align: "center",
             backgroundColor: "#fcfcfc",
