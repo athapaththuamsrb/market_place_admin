@@ -67,7 +67,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 listed: false,
                 tokenID: parseInt(data.ownedNfts[indexNo].id.tokenId, 16),
                 uri: uri,
-                signature: "----",
+                endDate: "None",
+                listingtype: "None",
+                signature: "None",
                 sold: false,
                 description: ipfsData.data.description,
                 name: ipfsData.data.name,
@@ -76,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 creatorWalletAddress: ipfsData.data.creator,
               },
             ];
-            console.log(list);
+            // console.log(list);
             res.status(201).json({
               message: "Successfully received",
               success: true,
@@ -121,7 +123,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   listed: true,
                   tokenID: nft.tokenID,
                   uri: nft.uri,
-                  signature: nft.signature,
+                  listingtype: activity.listingtype,
+                  endDate: activity.endDate.toString(),
+                  signature: activity.signature,
                   sold: false,
                   description: ipfsData.data.description,
                   name: ipfsData.data.name,
@@ -141,7 +145,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   listed: false,
                   tokenID: nft.tokenID,
                   uri: nft.uri,
-                  signature: nft.signature,
+                  endDate: "None",
+                  listingtype: "None",
+                  signature: "None",
                   sold: false,
                   description: ipfsData.data.description,
                   name: ipfsData.data.name,

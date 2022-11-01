@@ -52,27 +52,27 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
   const addDB = async () => {
     //console.log(props.salesOrder);
     props.setMsg("processing.....");
-    const signature = await signTypedDataAsync({
-      domain,
-      types,
-      value: {
-        tokenID: props.salesOrder.nftData.tokenID,
-        uri: props.salesOrder.nftData.uri,
-        creator: props.salesOrder.nftData.creator,
-        category: props.salesOrder.nftData.category,
-        collection: props.salesOrder.nftData.collection,
-        royality: props.salesOrder.royality,
-        price: ethers.utils.parseEther("0"), //TODO PRICE
-      },
-    });
-    const newSalesOrder = { ...props.salesOrder, signature };
-    props.setSalesOrder(newSalesOrder);
+    // const signature = await signTypedDataAsync({
+    //   domain,
+    //   types,
+    //   value: {
+    //     tokenID: props.salesOrder.nftData.tokenID,
+    //     uri: props.salesOrder.nftData.uri,
+    //     creator: props.salesOrder.nftData.creator,
+    //     category: props.salesOrder.nftData.category,
+    //     collection: props.salesOrder.nftData.collection,
+    //     royality: props.salesOrder.royality,
+    //     price: ethers.utils.parseEther("0"), //TODO PRICE
+    //   },
+    // });
+    // const newSalesOrder = { ...props.salesOrder, signature };
+    // props.setSalesOrder(newSalesOrder);
     //console.log(newSalesOrder);
 
     props.setOpenModal(false); //TODO THIS IS OPEN WOLLET TO GET CONFORMATION IS THIS CORRECT
     try {
       const res1 = await axios.post("api/createNFT", {
-        ...newSalesOrder,
+        ...props.salesOrder,
       });
       props.setMsg(res1.status === 201 ? "successful!!" : "Try again!!");
       props.setOpen(true);

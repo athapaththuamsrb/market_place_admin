@@ -66,6 +66,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     useGetMyCollectionItem();
   const { data: signer, isError, isLoading } = useSigner();
   const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -84,6 +85,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         .max(100, "maximum value is 100%")
         .min(0, "minimum value is 0%"),
     }),
+    //validate,
     onSubmit: async (values) => {
       const selectedCollection = collectionItem.map((collectionData) => {
         if (values.collection === collectionData.collectionAddress) {
@@ -129,7 +131,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         };
         await props.setSalesOrder({
           nftData: nftData,
-          signature: "",
           sold: false,
           name: withIpfs.name,
           description: withIpfs.description,

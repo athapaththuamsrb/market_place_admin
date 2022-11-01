@@ -21,7 +21,6 @@ export type NFT = {
 
 export type SalesOrder = {
   nftData: NFT;
-  signature: string | undefined;
   sold: boolean;
   name: string;
   description: string;
@@ -41,6 +40,8 @@ export type NFT_load = {
   image: string;
   name: string;
   listed: boolean;
+  listingtype: string;
+  endDate: string;
   royality: number;
   walletAddress: string;
   creatorWalletAddress: string;
@@ -75,7 +76,7 @@ export type User = {
   id: string;
   User_ID: string;
   Name: string;
-  Date: Date;
+  //Date: Date;
   Total: number;
   Created: number;
   Volume: number;
@@ -83,7 +84,7 @@ export type User = {
   Type: string;
   reportType: string;
   reportedBy: string;
-  reportedDate: Date;
+  //reportedDate: Date;
 };
 
 export type Collection = {
@@ -140,6 +141,16 @@ export type NFT_Report = {
   reportedDate: Date;
 };
 
+export type Report = {
+  id: string;
+  reportedId: string; // id of nft, user or collection
+  reportType: string; //nft, user or collection
+  reporter: string | undefined; // who reported
+  reporterId: string; // reported person's ID
+  reason: string;
+  DateTime: Date;
+  STATUS: string;
+};
 export type Session = {
   walletAddress: string;
   type: string;

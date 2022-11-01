@@ -40,7 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             tokenID: body.nftData.tokenID,
             uri: body.nftData.uri,
             ownerId: owner.id,
-            signature: body.signature,
+            // signature: body.signature,
           },
         });
       } else {

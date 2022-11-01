@@ -19,42 +19,32 @@ type AdminPopupProps = {
 };
 const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
   const [Name, setName] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
   const [User_ID, setUser_ID] = useState("");
   const [NameError, setNameError] = useState(false);
-  const [emailAddressError, setEmailAddressError] = useState(false);
   const [User_IDError, setUser_IDError] = useState(false);
 
   const handleSubmit = async () => {
     setUser_IDError(false);
     setNameError(false);
-    setEmailAddressError(false);
 
     if (Name == "") {
       setNameError(true);
-    }
-
-    if (emailAddress == "") {
-      setEmailAddressError(true);
     }
 
     if (User_ID == "") {
       setUser_IDError(true);
     }
 
-    if (Name && emailAddress && User_ID) {
+    if (Name && User_ID) {
       const newAdmin: User = users.find(
         (user: User) => user.User_ID === User_ID
       )!;
-      newAdmin.Type = "Admin";
-      axios
-        .put(`http://localhost:8000/users/${newAdmin.id}`, newAdmin)
-        .then(() => {
-          setEmailAddress("");
-          setName("");
-          setUser_ID("");
-          setOpenPopup(false);
-        });
+      axios.put("../../../api/addAdmin", { newAdmin }).then(() => {
+        //console.log(newAdmin);
+        setName("");
+        setUser_ID("");
+        setOpenPopup(false);
+      });
       // const response = await fetch(
       //   `http://localhost:8000/users/${newAdmin.id}`,
       //   {
@@ -89,10 +79,8 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
             onClick={() => {
               setName("");
               setUser_ID("");
-              setEmailAddress("");
               setUser_IDError(false);
               setNameError(false);
-              setEmailAddressError(false);
               setOpenPopup(false);
             }}
           >
@@ -116,7 +104,7 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
           autoFocus
           margin="dense"
           id="User_ID"
-          label="User_ID"
+          label="Wallet Address"
           type="text"
           fullWidth
           variant="outlined"
@@ -136,20 +124,6 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
           required
           error={NameError}
         />
-
-        <TextField
-          value={emailAddress}
-          onChange={(e) => setEmailAddress(e.target.value)}
-          autoFocus
-          margin="dense"
-          id="email address"
-          label="Email address"
-          type="email address"
-          fullWidth
-          variant="outlined"
-          required
-          error={emailAddressError}
-        />
       </DialogContent>
 
       <DialogActions>
@@ -157,10 +131,8 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
           onClick={() => {
             setName("");
             setUser_ID("");
-            setEmailAddress("");
             setUser_IDError(false);
             setNameError(false);
-            setEmailAddressError(false);
             setOpenPopup(false);
           }}
           size="small"

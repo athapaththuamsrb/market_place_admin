@@ -106,9 +106,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       collectionName: "",
       collectionDescription: "",
       collectionCategory: "",
-      featuredImage: undefined,
-      bannerImage: undefined,
-      logoImage: undefined,
+      featuredImage: "",
+      bannerImage: "",
+      logoImage: "",
     },
     validationSchema: Yup.object({
       collectionName: Yup.string()
@@ -150,8 +150,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             values.collectionName
           );
           const output = await smartContract.wait();
-          // console.log(output);
-          // console.log(output.logs[0].address);
+          console.log(output);
+          console.log(output.logs[0].address);
           //======================================================
           const address = output.logs[0].address;
           // console.log("res");
@@ -397,9 +397,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           <Button
             type="submit"
             disabled={
-              formik.errors.collectionName !== undefined ||
-              formik.errors.collectionDescription !== undefined ||
-              formik.errors.collectionCategory !== undefined ||
+              formik.errors.collectionName !== "" ||
+              formik.errors.collectionDescription !== "" ||
+              formik.errors.collectionCategory !== "" ||
               image["featuredImage"] ===
                 "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
               image["logoImage"] ===

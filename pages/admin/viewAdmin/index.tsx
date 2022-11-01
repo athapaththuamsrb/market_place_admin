@@ -55,13 +55,13 @@ const ViewAdmins: NextPage = (props) => {
       field: "id",
       headerName: "ID",
       type: "string",
-      width: 50,
+      width: 100,
     },
     {
       field: "User_ID",
-      headerName: "User_ID",
+      headerName: "Wallet Address",
       type: "string",
-      width: 400,
+      width: 300,
     },
     {
       field: "Name",
@@ -69,12 +69,12 @@ const ViewAdmins: NextPage = (props) => {
       type: "string",
       width: 200,
     },
-    {
+    /*{
       field: "Date",
       headerName: "Joined Date",
       type: "Date",
       width: 100,
-    },
+    },*/
     {
       field: "Total",
       headerName: "Total NFTs",
@@ -94,6 +94,12 @@ const ViewAdmins: NextPage = (props) => {
       width: 150,
     },
     {
+      field: "Status",
+      headerName: "Status",
+      type: "string",
+      width: 100,
+    },
+    {
       field: "actions",
       headerName: "Review",
       type: "actions",
@@ -105,7 +111,7 @@ const ViewAdmins: NextPage = (props) => {
           key={params.row.id}
           sx={{ color: "black" }}
         >
-          <Link href={`../users/${params.row.id}`} underline="hover">
+          <Link href={`../view/user/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
         </Button>,
@@ -124,7 +130,7 @@ const ViewAdmins: NextPage = (props) => {
     const selectedRowsData = ids.map((id: any) =>
       users.find((row: { id: string }) => row.id === id)
     );
-    console.log(selectedRowsData);
+    // console.log(selectedRowsData);
   };
   const [admins, setAdmins] = useState<User[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -137,10 +143,12 @@ const ViewAdmins: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("http://localhost:8000/users")
+        .get("../api/getUsers")
         .then((res) => {
-          setUsers(res.data);
-          setAdmins(res.data.filter((user: User) => user.Type === "Admin"));
+          setUsers(res.data.data);
+          setAdmins(
+            res.data.data.filter((user: User) => user.Type === "ADMIN")
+          );
           setIsPending(false);
           setError(null);
         })
@@ -155,16 +163,20 @@ const ViewAdmins: NextPage = (props) => {
     setOpen(true);
     setId(id);
   };
-
   const handleClose = (result: string, id: string) => () => {
     setOpen(false);
     if (result == "Yes") {
       const user: User = admins.find((user) => user.id === id)!;
-      console.log(user);
+      // console.log(user);
       user.Type = "User";
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, user)
+          // .put(`http://localhost:8000/users/${user.id}`, user)
+          .post("../../api/deleteAdmin", {
+            data: {
+              id: user.id,
+            },
+          })
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -176,6 +188,7 @@ const ViewAdmins: NextPage = (props) => {
       });
     }
   };
+
   return (
     <div>
       {isPending && (

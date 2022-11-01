@@ -29,12 +29,12 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ListingHistoryTable from "../ui/ItemActivity";
 import { useIsMounted } from "../hooks";
+import axios from "axios";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
 const SetPrice: FC<ViewNFTProps> = (props) => {
-  console.log(props.salesOrder);
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const { data: account } = useAccount();
@@ -81,7 +81,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
           },
         });
         if (props.salesOrder.id.length === 46) {
-          const res1 = await api.post("/api/addNFTToDB", {
+          const res1 = await axios.post("/api/addNFTToDB", {
             data: {
               collection: props.salesOrder.collection,
               ownerWalletAddress: props.salesOrder.walletAddress,
@@ -96,7 +96,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
           });
           setMsg(res1.status === 204 ? "Successful!" : "Try again!!");
         } else {
-          const res1 = await api.post("/api/setStateNFT", {
+          const res1 = await axios.post("/api/setStateNFT", {
             data: {
               action: "listed",
               value: true,
@@ -114,7 +114,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         formik.values.price = "";
         router.push("/explore-collections");
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setMsg("Try again!!");
       }
     },
