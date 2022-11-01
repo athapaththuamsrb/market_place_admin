@@ -26,7 +26,6 @@ const Edit: NextPage = (props) => {
       category: "",
       collection: "",
     },
-    signature: "",
     sold: false,
     name: "",
     description: "",

@@ -99,6 +99,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           endDate: endDate,
           sellingprice: price,
           signature: signature,
+          userId: ownerUser.id,
         },
       });
 
