@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "./NFT.sol";
+import "./Collection.sol";
 
-contract NFTCollection is NFT {
+contract NFTCollection is Collection {
 
     constructor(string memory _name,address _marketplace) NFT(_name, "Collection", _marketplace){
         
