@@ -28,43 +28,50 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             where: { id: owner?.userId },
           });
           let act: Activity = {
+            id: user?.id!,
             event: "Minted",
             price: "",
             from: "Null Address",
             to: user?.userName!,
-            date: nft.timestamp.toDateString(),
+            date: nft.timestamp.toLocaleDateString(),
           };
           activityList.push(act);
           for await (const activity of activities) {
             let act1: Activity;
             let act2: Activity;
+            const seller = await prisma.user.findFirst({
+              where: { id: activity.userId! },
+            });
             if (activity.buyingprice !== null) {
               const buyer = await prisma.user.findFirst({
                 where: { id: activity.buyerId! },
               });
               act1 = {
+                id: activity.id,
                 event: "Sale",
                 price: activity.buyingprice,
-                from: activity.buyerId!,
+                from: seller?.userName!,
                 to: buyer?.userName!,
-                date: activity.buyingTimestamp.toString()!,
+                date: activity.buyingTimestamp!.toLocaleString(),
               };
               activityList.push(act1);
               act2 = {
+                id: activity.id,
                 event: "Transfer",
                 price: "",
-                from: activity.buyerId!,
+                from: seller?.userName!,
                 to: buyer?.userName!,
-                date: activity.buyingTimestamp.toString()!,
+                date: activity.buyingTimestamp!.toLocaleString()!,
               };
               activityList.push(act2);
             } else {
               act1 = {
+                id: activity.id,
                 event: "List",
                 price: activity.sellingprice,
-                from: "Check", //TODO
+                from: seller?.userName!,
                 to: "",
-                date: activity.listingTimestamp.toString()!,
+                date: activity.listingTimestamp.toLocaleDateString()!,
               };
               activityList.push(act1);
             }
@@ -77,11 +84,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             where: { id: owner?.userId },
           });
           let act: Activity = {
+            id: user?.id!,
             event: "Minted",
             price: "",
             from: "Null Address",
             to: user?.userName!,
-            date: nft.timestamp.toDateString(),
+            date: nft.timestamp.toLocaleDateString(),
           };
           activityList.push(act);
         }
