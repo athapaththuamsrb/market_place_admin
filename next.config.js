@@ -1,10 +1,18 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-	reactStrictMode: true,
-	images: {
-		domains: ["exclusives.infura-ipfs.io"],
-		formats: ["image/webp"],
-	},
-};
+
+const withPWA = require("next-pwa")({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
+const nextConfig = withPWA({
+  reactStrictMode: true,
+  images: {
+    domains: ["exclusives.infura-ipfs.io"],
+    formats: ["image/webp"],
+  },
+});
 
 module.exports = nextConfig;
