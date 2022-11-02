@@ -53,6 +53,7 @@ export const useGetMyProfile = () => {
   const [isPendingProfile, setIsPendingProfile] = useState(true);
   const [errorProfile, setErrorProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
   useEffect(() => {
     if (account?.address !== undefined) {
@@ -76,6 +77,10 @@ export const useGetMyProfile = () => {
               case "ADMIN":
                 setIsAdmin(true);
                 break;
+              case "SUPER_ADMIN":
+                setIsAdmin(true);
+                setIsSuperAdmin(true);
+                break;
               default:
                 break;
             }
@@ -89,7 +94,7 @@ export const useGetMyProfile = () => {
       setIsPendingProfile(false);
     }
   }, [account?.address]);
-  return { profile, isPendingProfile, errorProfile, isAdmin };
+  return { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin };
 };
 
 export const useGetMyCollectionCard = () => {
