@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { Offer } from "../../src/interfaces";
+
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -33,9 +34,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 price: offer.price,
                 usd_price: offer.price,
                 floor_diff: "",
-                expiration: offer.timestamp.toString(),
+                expiration: offer.timestamp.toLocaleDateString(),
                 from: user?.userName!,
+                
               };
+
               offersList.push(off);
             }
             //console.log(activityList);

@@ -8,40 +8,45 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-
-import { useEffect, useState } from "react";
-import { User } from "../../src/interfaces";
+import { FC, useEffect, useState } from "react";
+import { Offer, User } from "../../src/interfaces";
+import { useAccount } from "wagmi";
 import axios from "axios";
 
-const Offers: NextPage = (props) => {
-  const columns = [
+type OffersProps = {
+  offers: Offer[];
+  user_id: string;
+};
+
+const Offers: FC<OffersProps> = ({ offers, user_id }) => {
+  const ownerColumns = [
     {
-      field: "User_ID",
+      field: "price",
       headerName: "Price",
       type: "string",
       width: 150,
     },
     {
-      field: "Name",
+      field: "usd_price",
       headerName: "USD Price",
       type: "string",
       width: 150,
     },
     {
-      field: "reportType",
+      field: "expiration",
       headerName: "Expiration",
       type: "string",
       width: 150,
     },
 
     {
-      field: "reportedDate",
+      field: "floor_diff",
       headerName: "Floor Difference",
-      type: "Date",
+      type: "string",
       width: 150,
     },
     {
-      field: "reportedBy",
+      field: "from",
       headerName: "From",
       type: "string",
       width: 150,
@@ -57,50 +62,111 @@ const Offers: NextPage = (props) => {
           color="primary"
           key={params.row.id}
           sx={{ color: "black" }}
-          onClick={() => handleClickOpenVerify(params.row.id)}
+          onClick={() => handleClickOpenAccept(params.row.id)}
         >
           <a>Accept</a>
+        </Button>,
+        <Button
+          variant="outlined"
+          color="primary"
+          key={params.row.id}
+          sx={{ color: "black" }}
+          onClick={() => handleClickOpenDecline(params.row.id)}
+        >
+          <a>Decline</a>
         </Button>,
       ],
     },
   ];
+  const columns = [
+    {
+      field: "price",
+      headerName: "Price",
+      type: "string",
+      width: 150,
+    },
+    {
+      field: "usd_price",
+      headerName: "USD Price",
+      type: "string",
+      width: 150,
+    },
+    {
+      field: "expiration",
+      headerName: "Expiration",
+      type: "string",
+      width: 150,
+    },
 
-  const [rows, setRows] = useState<User[]>([]);
-  const [openVerify, setOpenVerify] = useState(false);
-  const [id, setId] = useState("");
+    {
+      field: "floor_diff",
+      headerName: "Floor Difference",
+      type: "string",
+      width: 150,
+    },
+    {
+      field: "from",
+      headerName: "From",
+      type: "string",
+      width: 150,
+    },
+  ];
+
+  const [rows, setRows] = useState<Offer[]>([]);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openDecline, setOpenDecline] = useState(false);
+  const [rowId, setRowId] = useState("");
   const [status, setStatus] = useState("");
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
+  const { data: account } = useAccount();
 
-  useEffect(() => {
-    setTimeout(() => {
-      axios
-        .get("http://localhost:8000/users")
-        .then((res) => {
-          setRows(res.data.filter((user: User) => user.Status === "Reported"));
-          setIsPending(false);
-          setError(null);
-        })
-        .catch((error) => {
-          setIsPending(false);
-          setError(error.message);
-        });
-    }, 300);
-  }, [openVerify]);
+  // useEffect(() => {}, [openAccept, openDecline]);
 
-  const handleClickOpenVerify = (id: string) => {
-    setOpenVerify(true);
-    setId(id);
+  const handleClickOpenAccept = (id: string) => {
+    setOpenAccept(true);
+    setRowId(id);
   };
 
-  const handleCloseVerify = (result: string, id: string) => () => {
-    setOpenVerify(false);
+  const handleCloseAccept = (result: string, id: string) => () => {
+    setOpenAccept(false);
     if (result == "Yes") {
-      const user: User = rows.find((user) => user.id === id)!;
-      user.Status = "Active";
+      const offer: Offer = offers.find((offer) => offer.id == id)!;
       setTimeout(() => {
         axios
-          .put(`http://localhost:8000/users/${user.id}`, user)
+          .post("../../api/acceptOffer", {
+            data: {
+              id: offer.id,
+            },
+          })
+          .then(() => {
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
+      });
+    }
+  };
+
+  const handleClickOpenDecline = (id: string) => {
+    setOpenDecline(true);
+    setRowId(id);
+  };
+
+  const handleCloseDecline = (result: string, id: string) => () => {
+    setOpenDecline(false);
+    if (result == "Yes") {
+      const offer: Offer = offers.find((offer) => offer.id == id)!;
+      setTimeout(() => {
+        axios
+          .post("../../api/declineOffer", {
+            data: {
+              id: offer.id,
+            },
+          })
           .then(() => {
             setIsPending(false);
             setError(null);
@@ -128,29 +194,49 @@ const Offers: NextPage = (props) => {
             align: "center",
             borderRadius: "10px",
           }}
-          rows={rows}
-          columns={columns}
-          pageSize={12}
+          rows={offers}
+          columns={account?.address === user_id ? ownerColumns : columns}
+          pageSize={5}
           rowsPerPageOptions={[5]}
         />
       </Box>
 
       <Dialog
-        open={openVerify}
-        onClose={handleCloseVerify}
+        open={openAccept}
+        onClose={handleCloseAccept}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
           {"Are you sure?"}
           <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
-            {"Are you sure that you want to accept this offer " + id + "?"}
+            {"Are you sure that you want to accept this offer?"}
           </Typography>
         </DialogTitle>
         <DialogActions>
-          <Button autoFocus onClick={handleCloseVerify("Yes", id)}>
+          <Button autoFocus onClick={handleCloseAccept("Yes", rowId)}>
             Yes
           </Button>
-          <Button onClick={handleCloseVerify("No", id)} autoFocus>
+          <Button onClick={handleCloseAccept("No", rowId)} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openDecline}
+        onClose={handleCloseDecline}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Are you sure?"}
+          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
+            {"Are you sure that you want to decline this offer?"}
+          </Typography>
+        </DialogTitle>
+        <DialogActions>
+          <Button autoFocus onClick={handleCloseDecline("Yes", rowId)}>
+            Yes
+          </Button>
+          <Button onClick={handleCloseDecline("No", rowId)} autoFocus>
             No
           </Button>
         </DialogActions>

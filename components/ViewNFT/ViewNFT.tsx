@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Activity, NFT_load } from "../../src/interfaces";
+import { Activity, NFT_load, Offer } from "../../src/interfaces";
 import { Typography, Button, Grid, Avatar, Stack } from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
@@ -43,20 +43,20 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     contractInterface: MarketplaceAbi.abi,
     signerOrProvider: signer,
   });
-  console.log({
-    tokenID: props.salesOrder.tokenID,
-    uri: props.salesOrder.uri,
-    creator: props.salesOrder.creatorWalletAddress,
-    category: props.salesOrder.category,
-    collection: props.salesOrder.collection,
-    royality: props.salesOrder.royality,
-    price: ethers.utils.parseEther(props.salesOrder.price),
-    signature: props.salesOrder.signature,
-    price1: props.salesOrder.price,
-  });
-  console.log(
-    props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
-  );
+  // console.log({
+  //   tokenID: props.salesOrder.tokenID,
+  //   uri: props.salesOrder.uri,
+  //   creator: props.salesOrder.creatorWalletAddress,
+  //   category: props.salesOrder.category,
+  //   collection: props.salesOrder.collection,
+  //   royality: props.salesOrder.royality,
+  //   price: ethers.utils.parseEther(props.salesOrder.price),
+  //   signature: props.salesOrder.signature,
+  //   price1: props.salesOrder.price,
+  // });
+  // console.log(
+  //   props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
+  // );
   const isMounted = useIsMounted();
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -68,6 +68,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open1 = Boolean(anchorEl);
   const [activity, setActivity] = useState<Activity[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
   const {
     activeConnector,
     connect,
@@ -130,19 +131,36 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const getSetActivity = async () => {
     try {
       setIsPending(true);
-      await axios
-        .post("/api/getNFTActivity", {
-          data: { id: props.salesOrder.id },
-        })
-        .then((res) => {
-          setActivity(res.data.data);
-          //console.log("wdbneh");
-        });
+      const { data } = await api.post("/api/getNFTActivity", {
+        data: {
+          id: props.salesOrder.id,
+        },
+      });
+      const arr1: Activity[] = data.data.reverse();
+      setActivity(arr1);
       //console.log(activity);
       setIsPending(false);
       //console.log("hdbche");
     } catch (error) {
       console.log("Item activity error!");
+      setIsPending(false);
+    }
+  };
+
+  const getSetOffers = async () => {
+    try {
+      setIsPending(true);
+      const { data } = await api.post("/api/getNFTOffers", {
+        data: {
+          id: props.salesOrder.id,
+        },
+      });
+      const arr2: Offer[] = data.data.reverse();
+      setOffers(arr2);
+      setIsPending(false);
+      //console.log("hdbche");
+    } catch (error) {
+      console.log("Offer Loading error!");
       setIsPending(false);
     }
   };
@@ -214,6 +232,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
 
   useEffect(() => {
     getSetActivity();
+    getSetOffers();
   }, []);
 
   return isMounted ? (
@@ -468,7 +487,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 <Typography>Item Activity</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <ItemActivity />
+                <ItemActivity activity={activity} />
               </AccordionDetails>
             </Accordion>
           </Grid>
@@ -492,7 +511,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               </AccordionSummary>
               <AccordionDetails>
                 {/* <ListingHistoryTable activity={activity} /> */}
-                <Offers />
+                <Offers offers={offers} user_id={props.salesOrder.walletAddress}/>
               </AccordionDetails>
             </Accordion>
           </Grid>

@@ -157,6 +157,7 @@ export type Session = {
 };
 
 export type Activity = {
+  id: string;
   event: string;
   price: string;
   from: string;
@@ -165,9 +166,9 @@ export type Activity = {
 };
 
 export type Offer = {
-  id:string;
+  id: string;
   price: string;
-  usd_price:string;
+  usd_price: string;
   floor_diff: string;
   expiration: string;
   from: string;
