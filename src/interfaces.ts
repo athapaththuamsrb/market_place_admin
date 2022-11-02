@@ -45,6 +45,8 @@ export type NFT_load = {
   royality: number;
   walletAddress: string;
   creatorWalletAddress: string;
+  ownerUsername: string;
+  ownerUserID: string;
 };
 export type NFT_Card = {
   id: string;

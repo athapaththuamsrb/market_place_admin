@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { NFT_load } from "../../src/interfaces";
+import { FC, useEffect, useState } from "react";
+import { Activity, NFT_load } from "../../src/interfaces";
 import {
   Typography,
   Button,
@@ -27,7 +27,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ListingHistoryTable from "../ui/ItemActivity";
+import ItemActivity from "../ui/ItemActivity";
 import { useIsMounted } from "../hooks";
 import axios from "axios";
 
@@ -40,6 +40,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const { data: account } = useAccount();
   const [alignment, setAlignment] = useState("FIXED_PRICE");
   const [toggle, setToggle] = useState<string>("FIX");
+  const [activity, setActivity] = useState<Activity[]>([]);
   const isMounted = useIsMounted();
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -119,6 +120,30 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
       }
     },
   });
+
+  const getSetActivity = async () => {
+    try {
+      setIsPending(true);
+      const { data } = await api.post("/api/getNFTActivity", {
+        data: {
+          id: props.salesOrder.id,
+        },
+      });
+      const arr1: Activity[] = data.data.reverse();
+      setActivity(arr1);
+      //console.log(activity);
+      setIsPending(false);
+      //console.log("hdbche");
+    } catch (error) {
+      console.log("Item activity error!");
+      setIsPending(false);
+    }
+  };
+
+  useEffect(() => {
+    getSetActivity();
+  }, []);
+  
   const domain = {
     name: "Lazy Marketplace",
     version: "1.0",
@@ -309,7 +334,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 <Typography>Item Activity</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <ListingHistoryTable />
+                <ItemActivity activity={activity} />
               </AccordionDetails>
             </Accordion>
           </Grid>
