@@ -38,7 +38,8 @@ const Navbar: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
-  const { profile, isPendingProfile, errorProfile, isAdmin } = useGetMyProfile(); //TODO JWT
+  const { profile, isPendingProfile, errorProfile, isAdmin } =
+    useGetMyProfile();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [anchorE2, setAnchorE2] = useState<null | HTMLElement>(null);
@@ -108,11 +109,19 @@ const Navbar: FC = () => {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {isAdmin && (
               <Button
+                size="small"
+                color="primary"
                 variant="outlined"
-                href="/explore-collections"
-                sx={{ mx: 1 }}
+                href="/admin"
+                sx={{ marginX: 1 }}
               >
-                Admin Dashboard
+                <Typography
+                  color="black"
+                  variant="h6"
+                  sx={{ fontWeight: 500, fontSize: "medium" }}
+                >
+                  Admin Dashboard
+                </Typography>
               </Button>
             )}
             <Button
