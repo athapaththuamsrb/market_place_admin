@@ -28,6 +28,7 @@ import Link from "@mui/material/Link";
 import Title from "../../../components/ui/Title";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import axios from "axios";
+import { useGetMyProfile } from "../../../components/hooks/useHook";
 
 function CustomToolbar() {
   return (
@@ -51,17 +52,17 @@ function CustomToolbar() {
 
 const ViewAdmins: NextPage = (props) => {
   const columns = [
-    {
-      field: "id",
-      headerName: "ID",
-      type: "string",
-      width: 100,
-    },
+    // {
+    //   field: "id",
+    //   headerName: "ID",
+    //   type: "string",
+    //   width: 100,
+    // },
     {
       field: "User_ID",
       headerName: "Wallet Address",
       type: "string",
-      width: 300,
+      width: 400,
     },
     {
       field: "Name",
@@ -139,6 +140,8 @@ const ViewAdmins: NextPage = (props) => {
   const [id, setId] = useState("");
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
+  const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =
+    useGetMyProfile();
 
   useEffect(() => {
     setTimeout(() => {
@@ -147,7 +150,10 @@ const ViewAdmins: NextPage = (props) => {
         .then((res) => {
           setUsers(res.data.data);
           setAdmins(
-            res.data.data.filter((user: User) => user.Type === "ADMIN")
+            res.data.data.filter(
+              (user: User) =>
+                user.Type === "ADMIN" || user.Type === "SUPER_ADMIN"
+            )
           );
           setIsPending(false);
           setError(null);
@@ -220,21 +226,23 @@ const ViewAdmins: NextPage = (props) => {
           </Button>
         </Link>
         <AdminMenu />
-        <Button
-          onClick={() => setOpenPopup(true)}
-          type="submit"
-          size="small"
-          color="secondary"
-          variant="contained"
-          endIcon={<AddCircleIcon color="disabled" />}
-          sx={{
-            marginX: "10px",
-          }}
-        >
-          <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
-            Add Admin
-          </Typography>
-        </Button>
+        {isSuperAdmin && (
+          <Button
+            onClick={() => setOpenPopup(true)}
+            type="submit"
+            size="small"
+            color="secondary"
+            variant="contained"
+            endIcon={<AddCircleIcon color="disabled" />}
+            sx={{
+              marginX: "10px",
+            }}
+          >
+            <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
+              Add Admin
+            </Typography>
+          </Button>
+        )}
       </Grid>
       <Box
         sx={{

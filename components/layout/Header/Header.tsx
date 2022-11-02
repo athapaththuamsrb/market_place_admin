@@ -31,14 +31,13 @@ import Logout from "@mui/icons-material/Logout";
 const Navbar: FC = () => {
   const { connect, connectors, activeConnector } = useConnect();
   const { data: ethereumAccount } = useAccount();
-
   const { disconnect } = useDisconnect();
   const theme = useTheme();
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
-  const { profile, isPendingProfile, errorProfile, isAdmin } =
+  const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =
     useGetMyProfile();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
