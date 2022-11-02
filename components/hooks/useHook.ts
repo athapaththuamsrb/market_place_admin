@@ -73,7 +73,7 @@ export const useGetMyProfile = () => {
             localStorage.setItem("token", res.data.token);
             let decoded: Session = jwt_decode(res.data.token);
             switch (decoded.type) {
-              case "Admin":
+              case "ADMIN":
                 setIsAdmin(true);
                 break;
               default:
