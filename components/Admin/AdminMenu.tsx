@@ -101,7 +101,7 @@ export default function CustomizedMenus() {
             href="/admin/report/nft"
           >
             <ImageIcon />
-            Reported NFTs
+            <Typography variant="body1">Reported NFTs</Typography>
           </MenuItem>
         </Link>
         <Link href="/admin/report/users" underline="none">

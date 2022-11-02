@@ -37,14 +37,14 @@ export default function BasicModal() {
             justifyContent="center"
             alignItems="center"
           >
-            <Link href="/explore-collections">
+            <Link href="/explore-collections" id="explore">
               <Button size="large" color="secondary" variant="contained">
                 <Typography color="white" variant="h3">
                   Explore
                 </Typography>
               </Button>
             </Link>
-            <Link href="/create">
+            <Link href="/create" id="create">
               <Button
                 size="large"
                 color="primary"
