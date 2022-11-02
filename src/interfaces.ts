@@ -67,7 +67,6 @@ export type CreateFormData = {
 
 export type Profile = {
   walletAddress: string;
-  type: string;
   userName: string;
   bannerImage: string;
   profileImage: string;
@@ -151,4 +150,25 @@ export type Report = {
   reason: string;
   DateTime: Date;
   STATUS: string;
+};
+export type Session = {
+  walletAddress: string;
+  type: string;
+};
+
+export type Activity = {
+  event: string;
+  price: string;
+  from: string;
+  to: string;
+  date: string;
+};
+
+export type Offer = {
+  id:string;
+  price: string;
+  usd_price:string;
+  floor_diff: string;
+  expiration: string;
+  from: string;
 };

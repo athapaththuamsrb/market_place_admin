@@ -38,7 +38,7 @@ const Navbar: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
-  const { profile, isPendingProfile, errorProfile } = useGetMyProfile(); //TODO JWT
+  const { profile, isPendingProfile, errorProfile, isAdmin } = useGetMyProfile(); //TODO JWT
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [anchorE2, setAnchorE2] = useState<null | HTMLElement>(null);
@@ -106,7 +106,7 @@ const Navbar: FC = () => {
           <SearchBar />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {(profile?.type === "ADMIN" || profile?.type === "SUPER_ADMIN") && (
+            {isAdmin && (
               <Button
                 variant="outlined"
                 href="/explore-collections"

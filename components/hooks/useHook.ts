@@ -7,12 +7,14 @@ import {
   Collection_Item,
 } from "../../src/interfaces";
 import { useAccount } from "wagmi";
-import { gridTopLevelRowCountSelector } from "@mui/x-data-grid";
+import jwt_decode from "jwt-decode";
+import { Session } from "./../../src/interfaces";
+const jwt = require("jsonwebtoken");
+import authService from "../../services/auth.service";
+
 export const useIsMounted = () => {
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => setMounted(true), []);
-
   return mounted;
 };
 
@@ -27,7 +29,7 @@ export const useGetMyNFT = () => {
       if (account?.address !== undefined) {
         axios
           .post("/api/getMyNFT", {
-            data: { address: account?.address },
+            data: { token: authService.getUserToken() },
           })
           .then((res) => {
             setCollectedNFTCard(res.data.data[0]);
@@ -50,18 +52,33 @@ export const useGetMyProfile = () => {
   const [profile, setProfile] = useState<Profile>();
   const [isPendingProfile, setIsPendingProfile] = useState(true);
   const [errorProfile, setErrorProfile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
     if (account?.address !== undefined) {
       setIsPendingProfile(true);
       setTimeout(() => {
         axios
           .post("/api/getMyProfile", {
-            data: { address: account?.address },
+            data: {
+              address: account?.address,
+              // token: authService.getUserToken(),
+            },
           })
           .then((res) => {
             setProfile(res.data.data);
             setIsPendingProfile(false);
             setErrorProfile(null);
+            //local storage to stay logged in between page refreshes
+            localStorage.setItem("token", res.data.token);
+            let decoded: Session = jwt_decode(res.data.token);
+            switch (decoded.type) {
+              case "Admin":
+                setIsAdmin(true);
+                break;
+              default:
+                break;
+            }
           })
           .catch((error) => {
             setIsPendingProfile(false);
@@ -72,7 +89,7 @@ export const useGetMyProfile = () => {
       setIsPendingProfile(false);
     }
   }, [account?.address]);
-  return { profile, isPendingProfile, errorProfile };
+  return { profile, isPendingProfile, errorProfile, isAdmin };
 };
 
 export const useGetMyCollectionCard = () => {
@@ -86,7 +103,7 @@ export const useGetMyCollectionCard = () => {
       if (account?.address !== undefined) {
         axios
           .post("/api/getMyCollectionCard", {
-            data: { address: account?.address },
+            data: { token: authService.getUserToken() },
           })
           .then((res) => {
             setCollectionCards(res.data.data);
@@ -113,7 +130,10 @@ export const useGetMyCollectionItem = () => {
       if (account?.address !== undefined) {
         axios
           .post("/api/getMyCollectionItem", {
-            data: { address: account?.address },
+            data: {
+              // address: account?.address,
+              token: authService.getUserToken(),
+            },
           })
           .then((res) => {
             setCollectionItem(res.data.data);
