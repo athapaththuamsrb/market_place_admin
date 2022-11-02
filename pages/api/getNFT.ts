@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { NFT_load } from "../../src/interfaces";
 import axios from "axios";
+import { userInfo } from "os";
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -10,6 +11,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { id, ownerId } = req.body.data;
     const owner = await prisma.owner.findUnique({ where: { id: ownerId } });
     if (owner) {
+      const ownedUser = await prisma.user.findUnique({
+        where: { walletAddress: owner.walletAddress },
+      });
       try {
         if (id.length === 46) {
           //This is nft that in the block chain and didn't put any sale order yet
@@ -76,6 +80,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 royality: royality,
                 walletAddress: ownerWalletAddress,
                 creatorWalletAddress: ipfsData.data.creator,
+                ownerUsername: ownedUser?.userName!,
+                ownerUserID: ownedUser?.id!,
               },
             ];
             // console.log(list);
@@ -132,6 +138,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   royality: royality,
                   walletAddress: owner.walletAddress,
                   creatorWalletAddress: ipfsData.data.creator,
+                  ownerUsername: ownedUser?.userName!,
+                  ownerUserID: ownedUser?.id!,
                 },
               ];
             } else {
@@ -154,6 +162,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   royality: royality,
                   walletAddress: owner.walletAddress,
                   creatorWalletAddress: ipfsData.data.creator,
+                  ownerUsername: ownedUser?.userName!,
+                  ownerUserID: ownedUser?.id!,
                 },
               ];
             }
