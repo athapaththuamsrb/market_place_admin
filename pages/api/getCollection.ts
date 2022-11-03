@@ -15,6 +15,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (collection.status === "BLOCKED") {
           throw new Error("This collection not accecpted");
         }
+        const user1 = await prisma.user.findUnique({
+          where: { id: collection.creatorId },
+        });
         const collectionData: Collection_Profile = {
           id: collection.id,
           collectionName: collection.collectionName,
@@ -25,6 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           totalVolume: collection.totalVolume,
           bannerImage: collection.bannerImage,
           logoImage: collection.logoImage,
+          ownerWalletAddress: user1?.walletAddress!,
         };
         const nfts = await prisma.nFT.findMany({
           where: { collectionId: collection.id },

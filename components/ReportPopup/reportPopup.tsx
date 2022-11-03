@@ -4,72 +4,155 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Typography, IconButton, Stack } from "@mui/material";
+import axios from "axios";
+import {
+  Typography,
+  IconButton,
+  Stack,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Alert,
+  Snackbar,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
-import axios, { Axios } from "axios";
-import {
-  DatePicker,
-  DesktopDateTimePicker,
-  LocalizationProvider,
-} from "@mui/lab";
-import dayjs, { Dayjs } from "dayjs";
 
 type ReportPopupProps = {
   openReportPopup: boolean;
   setOpenReportPopup: (openPopup: boolean) => void;
+  reportedId: string;
+  reportType: string;
+  reporterId: string;
 };
 const ReportPopup: FC<ReportPopupProps> = ({
+  reportedId,
+  reportType,
+  reporterId,
   openReportPopup,
   setOpenReportPopup,
 }) => {
-  const [value, setValue] = useState<Dayjs | null>(
-    dayjs("2014-08-18T21:11:54")
-  );
+  const [reason, setReason] = useState("");
+  const [error, setError] = useState(false);
+  const [result, setResult] = useState(true);
+  const [snackOpen, setSnackOpen] = useState(false);
+
+  const handleCloseSnack = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackOpen(false);
+  };
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setReason(event.target.value as string);
+  };
+
+  const handleSubmit = async () => {
+    setError(false);
+    if (reason == "") {
+      setError(true);
+    }
+    if (reason) {
+      try {
+        const res1 = await axios.post("/api/addReport", {
+          data: {
+            reportedId: reportedId,
+            reportType: reportType,
+            reporterWalletAddress: reporterId,
+            reason: reason,
+          },
+        });
+        setResult(res1.status === 201 ? true : false);
+        setReason("");
+        setOpenReportPopup(false);
+        setSnackOpen(true);
+      } catch {
+        setResult(false);
+        setSnackOpen(true);
+      }
+    }
+  };
 
   return (
-    <Dialog open={openReportPopup}>
-      <DialogTitle
-        sx={{
-          backgroundColor: "#CA82FF",
-          color: "white",
-        }}
-      >
-        <div style={{ display: "flex" }}>
-          <Typography
-            variant="h5"
-            component="div"
-            style={{ flexGrow: 1, fontWeight: 600 }}
-          >
-            Report NFT
-          </Typography>
-          <IconButton
-            onClick={() => {
-              // setName("");
-              // setUser_ID("");
-              // setEmailAddress("");
-              // setUser_IDError(false);
-              // setNameError(false);
-              // setEmailAddressError(false);
-              setOpenReportPopup(false);
-            }}
-          >
-            <CloseIcon
-              sx={{
-                color: "white",
+    <Box>
+      <Dialog open={openReportPopup}>
+        <DialogTitle
+          sx={{
+            // backgroundColor: "#CA82FF",
+            backgroundColor: "#c9c9c9",
+            color: "black",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <Typography
+              variant="h5"
+              component="div"
+              style={{ flexGrow: 1, fontWeight: 600 }}
+            >
+              Report
+              {reportType == "USER"
+                ? " User"
+                : reportType == "NFT"
+                ? " NFT"
+                : " Collection"}
+            </Typography>
+            <IconButton
+              onClick={() => {
+                setOpenReportPopup(false);
+                setReason("");
+                setError(false);
               }}
-            />
-          </IconButton>
-        </div>
-      </DialogTitle>
-      <DialogContent
-        dividers
-        sx={{
-          fontWeight: 100,
-          width: "500px",
-        }}
-      >
-        <TextField
+            >
+              <CloseIcon
+                sx={{
+                  color: "black",
+                }}
+              />
+            </IconButton>
+          </div>
+        </DialogTitle>
+        <DialogContent
+          dividers
+          sx={{
+            fontWeight: 100,
+            width: "500px",
+          }}
+        >
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Reason</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={reason}
+                label="Age"
+                onChange={handleChange}
+              >
+                <MenuItem value={"Fake or possible scam"}>
+                  Fake{" "}
+                  {reportType == "USER"
+                    ? " User"
+                    : reportType == "NFT"
+                    ? " NFT"
+                    : " Collection"}{" "}
+                  or possible scam
+                </MenuItem>
+                <MenuItem value={"Sensitive content"}>
+                  Sensitive content
+                </MenuItem>
+                <MenuItem value={"Spam"}>Spam</MenuItem>
+                <MenuItem value={"Other"}>Other</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          {/* <TextField
           //value={Offer_Amount}
           //onChange={(e) => setUser_ID(e.target.value)}
 
@@ -82,31 +165,62 @@ const ReportPopup: FC<ReportPopupProps> = ({
           type="text"
           fullWidth
           variant="outlined"
-          required
 
           //error={Offer_AmountError}
-        />
-      </DialogContent>
+        /> */}
+        </DialogContent>
 
-      <DialogActions>
-        <Button
-          //onClick={() => handleChange(value)}
-          onClick={() => setOpenReportPopup(false)}
-          type="submit"
-          size="small"
-          color="secondary"
-          variant="contained"
-        >
-          <Typography
-            color="white"
-            variant="h6"
-            sx={{ fontWeight: 500, fontSize: "medium" }}
+        <DialogActions>
+          <Button
+            //onClick={() => handleChange(value)setOpenReportPopup(false)}
+            onClick={() => handleSubmit()}
+            type="submit"
+            size="small"
+            color="primary"
+            variant="contained"
           >
-            Submit
-          </Typography>
-        </Button>
-      </DialogActions>
-    </Dialog>
+            <Typography
+              color="white"
+              variant="h6"
+              sx={{ fontWeight: 500, fontSize: "medium" }}
+            >
+              Submit
+            </Typography>
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {result && (
+        <Snackbar
+          open={snackOpen}
+          autoHideDuration={5000}
+          onClose={handleCloseSnack}
+        >
+          <Alert
+            onClose={handleCloseSnack}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Report added successfully!
+          </Alert>
+        </Snackbar>
+      )}
+      {!result && (
+        <Snackbar
+          open={snackOpen}
+          autoHideDuration={5000}
+          onClose={handleCloseSnack}
+        >
+          <Alert
+            onClose={handleCloseSnack}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            Failed! Try again!
+          </Alert>
+        </Snackbar>
+      )}
+    </Box>
   );
 };
 
