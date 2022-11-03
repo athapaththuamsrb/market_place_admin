@@ -36,6 +36,7 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import FlagIcon from "@mui/icons-material/Flag";
 //import Avatar from '@mui/material/Avatar';
 //import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 //import Typography from '@mui/material/Typography';
@@ -329,6 +330,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             }}
                             sx={{ fontWeight: 500, fontSize: 14 }}
                           >
+                            <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
                             Report NFT
                           </MenuItem>
                         </Menu>
@@ -540,10 +542,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 </Typography>
               </CardContent> */}
               <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
+                <IconButton
+                  aria-label="add to favorites"
+                  sx={{ color: "black" }}
+                >
                   <FavoriteIcon />
                 </IconButton>
-                <IconButton aria-label="share">
+                <IconButton aria-label="share" sx={{ color: "black" }}>
                   <ShareIcon />
                 </IconButton>
                 {/* <CardActions>

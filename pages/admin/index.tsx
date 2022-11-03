@@ -46,12 +46,6 @@ const AllUsers: NextPage = (props) => {
       type: "string",
       width: 200,
     },
-    /*{
-      field: "Date",
-      headerName: "Joined Date",
-      type: "Date",
-      width: 100,
-    },*/
     {
       field: "Total",
       headerName: "Total NFTs",
@@ -65,8 +59,8 @@ const AllUsers: NextPage = (props) => {
       width: 100,
     },
     {
-      field: "Volume",
-      headerName: "Total volume",
+      field: "Collections",
+      headerName: "Created Collections",
       type: "Number",
       width: 150,
     },
