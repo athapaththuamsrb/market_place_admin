@@ -26,7 +26,7 @@ const MyNFTs: NextPage = (props) => {
   const isMounted = useIsMounted();
   const { activeConnector, connect, connectors } = useConnect();
   const { data: account } = useAccount();
-  const { profile, isPendingProfile, errorProfile, isAdmin } = useGetMyProfile();
+  const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } = useGetMyProfile();
   const { collectedNFTCard, createdNFTCard, isPending, error } = useGetMyNFT();
   const router = useRouter();
   const { data, isError, isLoading } = useBalance({
