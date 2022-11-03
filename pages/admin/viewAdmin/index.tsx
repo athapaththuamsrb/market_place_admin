@@ -70,12 +70,6 @@ const ViewAdmins: NextPage = (props) => {
       type: "string",
       width: 200,
     },
-    /*{
-      field: "Date",
-      headerName: "Joined Date",
-      type: "Date",
-      width: 100,
-    },*/
     {
       field: "Total",
       headerName: "Total NFTs",
@@ -89,8 +83,8 @@ const ViewAdmins: NextPage = (props) => {
       width: 100,
     },
     {
-      field: "Volume",
-      headerName: "Total volume",
+      field: "Collections",
+      headerName: "Created Collections",
       type: "Number",
       width: 150,
     },

@@ -1,51 +1,54 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { User } from "../../src/interfaces";
-import { date } from "yup";
-import NFTCard from "../../components/ui/NFT/NFTCard";
 import axios from "axios";
-import api from "../../lib/api";
-import { TodayOutlined } from "@mui/icons-material";
 
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    // Process a POST request
-    // const { address, name } = req.body.data;
     try {
-      const user = await prisma.user.findMany({
-        /*where: {
-          type: "USER",
-        },*/
-      });
+      const user = await prisma.user.findMany({});
       let results: User[] = [];
       for (const user_data of user) {
-        /*let reporter_name = await prisma.owner.findUnique({
-          where: {
-            walletAddress: user_data.walletAddress,
-          },
+        const allCollections = await prisma.collection.findMany({
+          where: { creatorId: user_data.id },
         });
-        console.log("This line to be executed" + reporter_name?.userId);*/
-        //TODO:get NFT statistics
-        /*const { data } = await api.post("/api/getUser", {
-          data: { userId: user_data.id },
-        });*/
-        //console.log(data.data);
+        var collection_count: number = 0;
+        if (allCollections) {
+          for (const result of allCollections) {
+            if (result.status === "BLOCKED") {
+              continue;
+            } else {
+              collection_count = collection_count + 1;
+            }
+          }
+        }
+
+        var created_count: number = 0;
+        var collected_count: number = 0;
+        const nfts = await prisma.nFT.findMany();
+        for await (const nft of nfts) {
+          const ipfsData = await axios.get(nft.uri);
+          if (ipfsData.data.creator === user_data.walletAddress) {
+            created_count += 1;
+          }
+          if (nft.ownerId === user_data.id) {
+            collected_count += 1;
+          }
+        }
+
         results.push({
           id: user_data.id,
           User_ID: user_data.walletAddress,
           Name: user_data.userName,
-          Total: await prisma.nFT.count({
-            //where: NFT.
-          }),
-          Created: 1,
-          Volume: 1,
+          Total: created_count + collected_count,
+          Created: created_count,
+          Collections: collection_count,
           Status: user_data.status,
           Type: user_data.type,
           reportType: "",
           reportedBy: "",
-          //reportedDate: null,
         });
       }
       res.status(201).json({
@@ -53,12 +56,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         success: true,
         data: results,
       });
-      /*if (user) {
-      } else {
-        res
-          .status(401)
-          .json({ message: "Unauthorized", success: false, data: [] });
-      }*/
     } catch (error) {
       console.log(error);
       await prisma.$disconnect();
