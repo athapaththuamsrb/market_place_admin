@@ -50,7 +50,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 600, fontSize: "15px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
                 {props.tokenID}
               </Typography>
@@ -66,7 +66,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 600, fontSize: "13px" }}
+                sx={{ fontWeight: 500, fontSize: "13px" }}
               >
                 {props.creator}
               </Typography>
@@ -82,7 +82,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 600, fontSize: "15px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
                 ERC721
               </Typography>
@@ -98,7 +98,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 600, fontSize: "13px" }}
+                sx={{ fontWeight: 500, fontSize: "13px" }}
               >
                 {props.collection}
               </Typography>
@@ -114,7 +114,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 600, fontSize: "15px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
                 Ethereum
               </Typography>
@@ -130,7 +130,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 600, fontSize: "15px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
                 Centralized
               </Typography>
@@ -146,7 +146,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 600, fontSize: "15px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
                 0%
               </Typography>

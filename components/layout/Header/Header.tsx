@@ -56,15 +56,9 @@ const Navbar: FC = () => {
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
-
-  //wagmi
   const isMounted = useIsMounted();
-
-  //console.log(connectors[0].ready);
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -235,22 +229,22 @@ const Navbar: FC = () => {
             >
               <MenuIcon />
             </IconButton>
+            <RenderMobileMenu
+              isMobileMenuOpen={isMobileMenuOpen}
+              mobileMenuId={mobileMenuId}
+              isMounted={isMounted}
+              handleMobileMenuClose={handleMobileMenuClose}
+              mobileMoreAnchorEl={mobileMoreAnchorEl}
+              connectors={connectors}
+              ethereumAccount={ethereumAccount}
+              connect={connect}
+              isAdmin={isAdmin}
+              disconnect={disconnect}
+              handleClose={handleClose}
+            />
           </Box>
         </Toolbar>
       </AppBar>
-      {/* <RenderMobileMenu
-        isMobileMenuOpen={isMobileMenuOpen}
-        mobileMenuId={mobileMenuId}
-        isMounted={isMounted}
-        activeConnector={activeConnector}
-        connect={connect}
-        connectors={connectors}
-        isConnecting={isConnecting}
-        disconnect={disconnect}
-        pendingConnector={pendingConnector}
-        handleMobileMenuClose={handleMobileMenuClose}
-        mobileMoreAnchorEl={mobileMoreAnchorEl}
-      /> */}
     </Box>
   );
 };
