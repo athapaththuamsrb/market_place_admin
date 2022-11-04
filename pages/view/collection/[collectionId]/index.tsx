@@ -136,7 +136,7 @@ const Collection: NextPage<CollectionProps> = ({
                     </MenuItem>
                   </Menu>
                   <ReportPopup
-                    reportedId={collectionId}
+                    reportedId={[collectionId]}
                     reportType={"Collection"}
                     reporterId={account?.address}
                     openReportPopup={openReportPopup}
