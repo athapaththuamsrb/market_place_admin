@@ -154,6 +154,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 continue;
               }
               const ipfsData = await axios.get(nft.tokenUri.raw);
+              //TODO get block chain collection
               const { data: collectionMetaData } = await axios.get(
                 `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getContractMetadata?contractAddress=${ipfsData.data.collection}`
               );

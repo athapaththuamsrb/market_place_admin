@@ -60,20 +60,21 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     contractInterface: MarketplaceAbi.abi,
     signerOrProvider: signer,
   });
-  // console.log({
-  //   tokenID: props.salesOrder.tokenID,
-  //   uri: props.salesOrder.uri,
-  //   creator: props.salesOrder.creatorWalletAddress,
-  //   category: props.salesOrder.category,
-  //   collection: props.salesOrder.collection,
-  //   royality: props.salesOrder.royality,
-  //   price: ethers.utils.parseEther(props.salesOrder.price),
-  //   signature: props.salesOrder.signature,
-  //   price1: props.salesOrder.price,
-  // });
-  // console.log(
-  //   props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
-  // );
+  console.log({
+    tokenID: props.salesOrder.tokenID,
+    uri: props.salesOrder.uri,
+    creator: props.salesOrder.creatorWalletAddress,
+    category: props.salesOrder.category,
+    collection: props.salesOrder.collection,
+    royality: props.salesOrder.royality,
+    price: ethers.utils.parseEther(props.salesOrder.price),
+    signature: props.salesOrder.signature,
+    price1: props.salesOrder.price,
+  });
+  console.log(
+    props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
+  );
+
   const isMounted = useIsMounted();
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -205,7 +206,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         {
           value: ethers.utils.parseEther(props.salesOrder.price),
-          gasLimit: 100000,
+          gasLimit: 220000,
         }
       );
       const output = await tokenID.wait();
@@ -506,6 +507,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         <Button
                           onClick={() => setOpenPopup(true)}
                           size="small"
+                          disabled={isPending}
                           color="secondary"
                           variant="contained"
                           sx={{ width: "30%", height: "50px", borderRadius: 3 }}
