@@ -214,6 +214,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="medium"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
@@ -259,6 +260,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="medium"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
@@ -304,6 +306,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="medium"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >

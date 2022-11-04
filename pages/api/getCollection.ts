@@ -48,7 +48,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             });
             let list: NFT_Card;
             if (owner) {
-              if (activity) {
+              if (activity && !nft.isMinted) {
                 list = {
                   id: nft.id,
                   price: activity.sellingprice,
@@ -59,7 +59,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   ownerId: owner.id,
                   ownerWalletAddress: owner.walletAddress,
                 };
-              } else {
+              } else if (!activity && !nft.isMinted) {
                 list = {
                   id: nft.id,
                   price: "0",
@@ -70,6 +70,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   ownerId: owner.id,
                   ownerWalletAddress: owner.walletAddress,
                 };
+              } else if (nft.isMinted) {
+                list = {
+                  id: nft.uri.split("/")[4],
+                  price: "0",
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: false,
+                  category: ipfsData.data.category,
+                  ownerId: nft.ownerId,
+                  ownerWalletAddress: owner.walletAddress,
+                };
+              } else {
+                throw new Error("nft wrong");
               }
               finslNFT.push(list);
             } else {

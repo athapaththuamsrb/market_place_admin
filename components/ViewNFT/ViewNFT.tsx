@@ -186,12 +186,10 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     //TODO adding data to blockchain
     setIsPending(true);
 
-    // console.log(nftData);
     if (
       props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
     ) {
       setMsg("processing.....");
-
       const tokenID = await marketplace_.lazyMintNFT(
         //TODO add blockchain
         {
@@ -206,12 +204,12 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         {
           value: ethers.utils.parseEther(props.salesOrder.price),
-          gasLimit: 220000,
+          gasLimit: 1000000,
         }
       );
       const output = await tokenID.wait();
       console.log(output);
-      // setMsg("Successful!");
+      //setMsg("Successful!");
       // setOpen(true);
       // setStateNFT("sold", true, "0");
     } else {

@@ -26,6 +26,7 @@ import * as Yup from "yup";
 import { useGetMyCollectionItem } from "../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
+//import ContractsDataAddress from "../../../contractsData/Collection-address.json";
 const projectId = "2DI7xsXof3jkeXnqqBcZ4QmiLmW"; // <---------- your Infura Project ID
 
 const projectSecret = "13f77964b78b57d2159a682b364cf50d"; // <---------- your Infura Secret
@@ -92,7 +93,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           return collectionData.category;
         }
       });
-      // console.log(selectedCollection);
+      //console.log(selectedCollection);
       const withIpfs = {
         ...values,
         image: props.ipfsImage,
@@ -129,7 +130,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           category: withIpfs.category,
           collection: withIpfs.collection,
         };
-        await props.setSalesOrder({
+        props.setSalesOrder({
           nftData: nftData,
           sold: false,
           name: withIpfs.name,
@@ -137,8 +138,10 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           image: withIpfs.image,
           royality: isRoyality ? values.royality : 0,
         });
+        props.setOpenModal(true);
+        props.setMsg("");
       } catch (error) {
-        // console.log("ipfs uri upload error: ", error);
+        console.log("ipfs uri upload error: ", error);
       }
     },
   });
@@ -203,6 +206,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 component="span"
                 size="large"
                 color="secondary"
+                disabled={props.msg === "processing....."}
                 variant="contained"
               >
                 <Typography color="white" variant="h3">
@@ -275,6 +279,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                         </MenuItem>
                       );
                     })}
+                  {/* <MenuItem value={ContractsDataAddress.address}>
+                    Test collection
+                  </MenuItem> */}
                 </Select>
               </FormControl>
               {formik.touched.collection && formik.errors.collection ? (
@@ -333,10 +340,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 ? true
                 : false
             }
-            onClick={() => {
-              props.setOpenModal(true);
-              props.setMsg("");
-            }}
             style={{ borderWidth: "3px" }}
             sx={{ marginTop: "50px" }}
             size="large"

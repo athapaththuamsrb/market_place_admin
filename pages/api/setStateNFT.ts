@@ -94,7 +94,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 const time = req.body.data.time;
                 await prisma.activity.update({
                   where: {
-                    id: oldNFT1.id,
+                    id: activity.id,
                   },
                   data: {
                     isExpired: true,

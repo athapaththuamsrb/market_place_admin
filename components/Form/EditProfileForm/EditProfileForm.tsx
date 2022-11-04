@@ -109,7 +109,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               bannerImageURL: image["bannerImage"],
               userName: values.userName,
               folder: "profile",
-              token: authService.getUserToken()
+              token: authService.getUserToken(),
             },
           });
           props.setMsg(
@@ -165,6 +165,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 component="span"
                 size="medium"
                 color="secondary"
+                disabled={props.msg === "processing....."}
                 variant="contained"
               >
                 <Typography
@@ -214,6 +215,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="large"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
