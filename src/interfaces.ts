@@ -113,6 +113,7 @@ export type Collection_Profile = {
   totalVolume: string;
   bannerImage: string;
   logoImage: string;
+  ownerWalletAddress: string;
 };
 
 export type Collection_Card = {

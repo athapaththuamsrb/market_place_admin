@@ -1,57 +1,98 @@
-import { MenuItem, Menu } from "@mui/material";
-import Link from "next/link";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import React, {
-  ChangeEvent,
-  FC,
-  SyntheticEvent,
-  useEffect,
-  useState,
-} from "react";
+import { MenuItem, Menu, ListItemText } from "@mui/material";
+import Link from "@mui/material/Link";
+import React, { FC } from "react";
+import { Connector } from "wagmi";
+import { GetAccountResult } from "@wagmi/core";
 type RenderMobileMenuProps = {
   isMobileMenuOpen: boolean;
   mobileMenuId: string;
-  isConnect: boolean;
+  isMounted: boolean;
   handleMobileMenuClose: () => void;
   mobileMoreAnchorEl: null | HTMLElement;
+  connectors: Connector<any, any>[];
+  ethereumAccount: any | undefined;
+  connect: any;
+  isAdmin: boolean;
+  disconnect: any;
+  handleClose: () => void;
 };
 const renderMobileMenu: FC<RenderMobileMenuProps> = ({
   isMobileMenuOpen,
   mobileMenuId,
-  isConnect,
+  isMounted,
   handleMobileMenuClose,
   mobileMoreAnchorEl,
+  connectors,
+  ethereumAccount,
+  connect,
+  isAdmin,
+  disconnect,
+  handleClose,
 }) => {
   return (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "left",
       }}
-      id={mobileMenuId}
-      // keepMounted
+      sx={{ my: 5 }}
+      id="demo-positioned-menu"
+      aria-labelledby="demo-positioned-button"
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "left",
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <Link href={"/create"}>Create</Link>
-      </MenuItem>
-      {isConnect && (
-        <MenuItem>
-          <Link href={"/connect"}>Connect</Link>
-        </MenuItem>
-      )}
-      {!isConnect && (
-        <MenuItem>
-          <Link href={"/account"}>
-            <AccountCircleOutlinedIcon />
+      {isAdmin && (
+        <MenuItem onClick={handleMobileMenuClose}>
+          <Link href={"/admin"} underline="none">
+            Admin
           </Link>
         </MenuItem>
+      )}
+      <MenuItem onClick={handleMobileMenuClose}>
+        <Link href={"/explore-collections"} underline="none">
+          Explore
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleMobileMenuClose}>
+        <Link href={"/create"} underline="none">
+          Create
+        </Link>
+      </MenuItem>
+      {isMounted && connectors[0].ready && !ethereumAccount && (
+        <MenuItem onClick={() => connect(connectors[0])}>
+          <Link href={""} underline="none">
+            Connect
+          </Link>
+        </MenuItem>
+      )}
+      {isMounted && ethereumAccount && (
+        <div>
+          <MenuItem onClick={handleMobileMenuClose}>
+            <Link href={"/account"} underline="none">
+              Profile
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleMobileMenuClose}>
+            <Link href={"/account/collection"} underline="none">
+              My Collection
+            </Link>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              disconnect();
+              handleClose();
+            }}
+          >
+            <Link href={""} underline="none">
+              Disconnect
+            </Link>
+          </MenuItem>
+        </div>
       )}
     </Menu>
   );

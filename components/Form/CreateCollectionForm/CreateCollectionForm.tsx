@@ -397,9 +397,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           <Button
             type="submit"
             disabled={
-              formik.errors.collectionName !== "" ||
-              formik.errors.collectionDescription !== "" ||
-              formik.errors.collectionCategory !== "" ||
+              formik.errors.collectionName === "" ||
+              formik.errors.collectionDescription === "" ||
+              formik.errors.collectionCategory === "" ||
               image["featuredImage"] ===
                 "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
               image["logoImage"] ===

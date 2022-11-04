@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 describe("admin page", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/admin");

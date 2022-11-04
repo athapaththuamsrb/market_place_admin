@@ -36,6 +36,7 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import FlagIcon from "@mui/icons-material/Flag";
 //import Avatar from '@mui/material/Avatar';
 //import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 //import Typography from '@mui/material/Typography';
@@ -59,20 +60,21 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     contractInterface: MarketplaceAbi.abi,
     signerOrProvider: signer,
   });
-  // console.log({
-  //   tokenID: props.salesOrder.tokenID,
-  //   uri: props.salesOrder.uri,
-  //   creator: props.salesOrder.creatorWalletAddress,
-  //   category: props.salesOrder.category,
-  //   collection: props.salesOrder.collection,
-  //   royality: props.salesOrder.royality,
-  //   price: ethers.utils.parseEther(props.salesOrder.price),
-  //   signature: props.salesOrder.signature,
-  //   price1: props.salesOrder.price,
-  // });
-  // console.log(
-  //   props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
-  // );
+  console.log({
+    tokenID: props.salesOrder.tokenID,
+    uri: props.salesOrder.uri,
+    creator: props.salesOrder.creatorWalletAddress,
+    category: props.salesOrder.category,
+    collection: props.salesOrder.collection,
+    royality: props.salesOrder.royality,
+    price: ethers.utils.parseEther(props.salesOrder.price),
+    signature: props.salesOrder.signature,
+    price1: props.salesOrder.price,
+  });
+  console.log(
+    props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
+  );
+
   const isMounted = useIsMounted();
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -136,14 +138,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           });
           props.salesOrder.sold = value;
           break;
-
         default:
-        // console.log("undefined");
       }
 
       setIsPending(false);
     } catch (error) {
-      // console.log("update error");
       setIsPending(false);
     }
   };
@@ -158,9 +157,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       });
       const arr1: Activity[] = data.data.reverse();
       setActivity(arr1);
-      //console.log(activity);
       setIsPending(false);
-      //console.log("hdbche");
     } catch (error) {
       console.log("Item activity error!");
       setIsPending(false);
@@ -209,7 +206,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         {
           value: ethers.utils.parseEther(props.salesOrder.price),
-          gasLimit: 100000,
+          gasLimit: 220000,
         }
       );
       const output = await tokenID.wait();
@@ -310,6 +307,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           <Grid item xs={7}>
             <Card>
               {activeConnector &&
+                account?.address &&
                 account?.address !== props.salesOrder?.walletAddress && (
                   <CardHeader
                     action={
@@ -329,10 +327,18 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             }}
                             sx={{ fontWeight: 500, fontSize: 14 }}
                           >
+                            <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
                             Report NFT
                           </MenuItem>
                         </Menu>
                         <ReportPopup
+                          reportedId={[
+                            props.salesOrder.id,
+                            props.salesOrder.ownerUserID,
+                            props.salesOrder.tokenID,
+                          ]}
+                          reportType={"NFT"}
+                          reporterId={account?.address}
                           openReportPopup={openReportPopup}
                           setOpenReportPopup={setOpenReportPopup}
                         ></ReportPopup>
@@ -501,6 +507,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         <Button
                           onClick={() => setOpenPopup(true)}
                           size="small"
+                          disabled={isPending}
                           color="secondary"
                           variant="contained"
                           sx={{ width: "30%", height: "50px", borderRadius: 3 }}
@@ -540,10 +547,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 </Typography>
               </CardContent> */}
               <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
+                <IconButton
+                  aria-label="add to favorites"
+                  sx={{ color: "black" }}
+                >
                   <FavoriteIcon />
                 </IconButton>
-                <IconButton aria-label="share">
+                <IconButton aria-label="share" sx={{ color: "black" }}>
                   <ShareIcon />
                 </IconButton>
                 {/* <CardActions>

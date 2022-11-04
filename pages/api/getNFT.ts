@@ -84,7 +84,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 ownerUserID: ownedUser?.id!,
               },
             ];
-            // console.log(list);
+            console.log(list);
             res.status(201).json({
               message: "Successfully received",
               success: true,

@@ -13,27 +13,47 @@ import {
   ImageListItem,
   Divider,
   LinearProgress,
+  Card,
+  CardHeader,
+  IconButton,
+  Link,
+  Menu,
+  MenuItem,
+  Grid,
 } from "@mui/material";
-import { useBalance } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { useIsMounted } from "../../../../components/hooks";
 import Connect from "../../../../components/Login/Connect";
 import Image from "next/image";
 import api from "../../../../lib/api";
 import UserTabBar from "../../../../components/ui/User/UserTabBar";
 import { Collection_Card, NFT_Card, Profile } from "../../../../src/interfaces";
+import { props } from "cypress/types/bluebird";
+import React, { useState } from "react";
+import ReportPopup from "../../../../components/ReportPopup";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import FlagIcon from "@mui/icons-material/Flag";
+
 interface UserProfileProps {
   collectedNFTCards: Collection_Card[];
   createdNFTCards: NFT_Card[];
   collectionCards: NFT_Card[];
   userProfile: Profile;
+  userId: string;
 }
 const UserProfile: NextPage<UserProfileProps> = ({
       collectedNFTCards,
       createdNFTCards,
       collectionCards,
       userProfile,
+      userId,
     }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
+  const [openReportPopup, setOpenReportPopup] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open1 = Boolean(anchorEl);
+  const { data: account } = useAccount();
+
   const {
     data: balance,
     isError,
@@ -42,7 +62,6 @@ const UserProfile: NextPage<UserProfileProps> = ({
     addressOrName: userProfile.walletAddress,
     chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
   });
-  // console.log(balance);
   function srcset(
     image: string,
     width: number,
@@ -57,6 +76,13 @@ const UserProfile: NextPage<UserProfileProps> = ({
       }&fit=crop&auto=format&dpr=2 2x`,
     };
   }
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return isMounted ? (
     <Box>
@@ -77,27 +103,61 @@ const UserProfile: NextPage<UserProfileProps> = ({
           </Stack>
         </ImageListItem>
       )}
-      <Container sx={{ pt: 5 }}>
-        <Typography variant="h2" sx={{ mt: -3 }} gutterBottom>
-          {userProfile.userName}
-        </Typography>
-        <Typography variant="h4" sx={{ mt: 0, fontWeight: 500 }} gutterBottom>
-          <Image
-            height={17}
-            width={17}
-            src={"/ethereum.png"}
-            alt={"logo"}
-            loading="lazy"
-          />
-          {userProfile.walletAddress}
-        </Typography>
-        <Typography
-          variant="h4"
-          sx={{ mt: 1, mb: 3, fontWeight: 500 }}
-          gutterBottom
-        >
-          Account balance: {balance?.formatted} {balance?.symbol}
-        </Typography>
+      <Container sx={{ pt: 3 }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={1}>
+            <Grid item xs={11} sx={{ marginBottom: "15px" }}>
+              <Typography variant="h2" gutterBottom>
+                {userProfile.userName}
+              </Typography>
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 600, color: "gray" }}
+                gutterBottom
+              >
+                <Image
+                  height={17.248}
+                  width={12}
+                  src={"/ethereum1.png"}
+                  alt={"logo"}
+                  loading="lazy"
+                />
+                {userProfile.walletAddress}
+              </Typography>
+            </Grid>
+            {account?.address && (
+              <Grid item xs={1}>
+                <IconButton id="long-button" onClick={handleClick}>
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  anchorEl={anchorEl}
+                  open={open1}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      setOpenReportPopup(true), setAnchorEl(null);
+                    }}
+                    sx={{ fontWeight: 500, fontSize: 14 }}
+                  >
+                    <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
+                    Report User
+                  </MenuItem>
+                </Menu>
+                <ReportPopup
+                  reportedId={[userId]}
+                  reportType={"USER"}
+                  reporterId={account?.address}
+                  openReportPopup={openReportPopup}
+                  setOpenReportPopup={setOpenReportPopup}
+                ></ReportPopup>
+              </Grid>
+            )}
+          </Grid>
+        </Box>
+
         {isMounted ? (
           <Box>
             <Box sx={{ marginBottom: "1%" }}>
@@ -158,11 +218,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
         createdNFTCards: data.data.createdNFTCards,
         collectionCards: data.data.collectionCards,
         userProfile: data.data.userProfile,
+        userId: params?.userId,
       },
       revalidate: 1,
     };
   } catch (error) {
-    // console.log(error);
     return { notFound: true };
   }
 };
