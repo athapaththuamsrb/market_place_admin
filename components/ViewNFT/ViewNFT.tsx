@@ -332,7 +332,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                           </MenuItem>
                         </Menu>
                         <ReportPopup
-                          reportedId={props.salesOrder.id}
+                          reportedId={[
+                            props.salesOrder.id,
+                            props.salesOrder.ownerUserID,
+                            props.salesOrder.tokenID,
+                          ]}
                           reportType={"NFT"}
                           reporterId={account?.address}
                           openReportPopup={openReportPopup}

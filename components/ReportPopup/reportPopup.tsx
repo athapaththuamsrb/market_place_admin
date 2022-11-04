@@ -24,7 +24,7 @@ import React, { FC, SyntheticEvent, useState } from "react";
 type ReportPopupProps = {
   openReportPopup: boolean;
   setOpenReportPopup: (openPopup: boolean) => void;
-  reportedId: string;
+  reportedId: any[];
   reportType: string;
   reporterId: string;
 };
