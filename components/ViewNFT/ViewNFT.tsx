@@ -137,14 +137,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           });
           props.salesOrder.sold = value;
           break;
-
         default:
-        // console.log("undefined");
       }
 
       setIsPending(false);
     } catch (error) {
-      // console.log("update error");
       setIsPending(false);
     }
   };
@@ -159,9 +156,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       });
       const arr1: Activity[] = data.data.reverse();
       setActivity(arr1);
-      //console.log(activity);
       setIsPending(false);
-      //console.log("hdbche");
     } catch (error) {
       console.log("Item activity error!");
       setIsPending(false);
@@ -311,6 +306,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           <Grid item xs={7}>
             <Card>
               {activeConnector &&
+                account?.address &&
                 account?.address !== props.salesOrder?.walletAddress && (
                   <CardHeader
                     action={
@@ -335,6 +331,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                           </MenuItem>
                         </Menu>
                         <ReportPopup
+                          reportedId={props.salesOrder.id}
+                          reportType={"NFT"}
+                          reporterId={account?.address}
                           openReportPopup={openReportPopup}
                           setOpenReportPopup={setOpenReportPopup}
                         ></ReportPopup>
