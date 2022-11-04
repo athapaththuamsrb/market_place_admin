@@ -26,6 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (report) {
         console.log(report);
         switch (reportType) {
+          //TODO - NFTs not present in DB
           case "NFT":
             await prisma.nFT.update({
               where: {
