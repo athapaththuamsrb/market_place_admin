@@ -106,11 +106,15 @@ const UserProfile: NextPage<UserProfileProps> = ({
       <Container sx={{ pt: 3 }}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={1}>
-            <Grid item xs={11} sx={{marginBottom:"15px"}}>
+            <Grid item xs={11} sx={{ marginBottom: "15px" }}>
               <Typography variant="h2" gutterBottom>
                 {userProfile.userName}
               </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 600, color:"gray" }} gutterBottom>
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 600, color: "gray" }}
+                gutterBottom
+              >
                 <Image
                   height={17.248}
                   width={12}
@@ -143,7 +147,7 @@ const UserProfile: NextPage<UserProfileProps> = ({
                   </MenuItem>
                 </Menu>
                 <ReportPopup
-                  reportedId={userId}
+                  reportedId={[userId]}
                   reportType={"USER"}
                   reporterId={account?.address}
                   openReportPopup={openReportPopup}
