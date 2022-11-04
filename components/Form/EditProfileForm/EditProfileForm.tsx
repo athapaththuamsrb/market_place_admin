@@ -156,6 +156,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "profileImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="profileImage"
                 multiple
@@ -207,6 +208,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "bannerImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="bannerImage"
                 multiple
@@ -240,6 +242,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 label="User Name"
                 variant="outlined"
                 fullWidth
+                disabled={props.msg === "processing....."}
                 value={formik.values.userName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}

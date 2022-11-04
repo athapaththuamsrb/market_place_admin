@@ -196,6 +196,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 <Input
                   name="image"
                   onChange={uploadToIPFS}
+                  disabled={props.msg === "processing....."}
                   accept="image/*"
                   id="image"
                   multiple
@@ -224,6 +225,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 name="name"
                 label="Name"
                 variant="outlined"
+                disabled={props.msg === "processing....."}
                 fullWidth
                 value={formik.values.name}
                 onBlur={formik.handleBlur}
@@ -243,6 +245,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 fullWidth
                 id="description"
                 name="description"
+                disabled={props.msg === "processing....."}
                 value={formik.values.description}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -263,6 +266,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   labelId="demo-simple-select-label"
                   id="collection"
                   name="collection"
+                  disabled={props.msg === "processing....."}
                   value={formik.values.collection}
                   label="Collection"
                   onBlur={formik.handleBlur}
@@ -294,7 +298,11 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <FormGroup>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={isRoyality} onChange={handleChange} />
+                    <Checkbox
+                      checked={isRoyality}
+                      onChange={handleChange}
+                      disabled={props.msg === "processing....."}
+                    />
                   }
                   label="Do you need to get royality fee?"
                 />
@@ -306,6 +314,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   id="royality"
                   label="royality"
                   variant="outlined"
+                  disabled={props.msg === "processing....."}
                   fullWidth
                   name="royality"
                   value={formik.values.royality}

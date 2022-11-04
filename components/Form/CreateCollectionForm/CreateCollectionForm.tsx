@@ -206,6 +206,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "logoImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="logoImage"
                 multiple
@@ -252,6 +253,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "featuredImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="featuredImage"
                 multiple
@@ -298,6 +300,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "bannerImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="bannerImage"
                 multiple
@@ -327,6 +330,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 id="collectionName"
                 name="collectionName"
                 label="Collection Name"
+                disabled={props.msg === "processing....."}
                 variant="outlined"
                 fullWidth
                 required
@@ -346,6 +350,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 id="collectionDescription"
                 name="collectionDescription"
                 label="Description"
+                disabled={props.msg === "processing....."}
                 variant="outlined"
                 multiline
                 fullWidth
