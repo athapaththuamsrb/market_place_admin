@@ -113,7 +113,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         setIsPending(false);
         setOpen(true);
         formik.values.price = "";
-        router.push("/explore-collections");
       } catch (error) {
         // console.log(error);
         setMsg("Try again!!");
@@ -143,7 +142,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   useEffect(() => {
     getSetActivity();
   }, []);
-  
+
   const domain = {
     name: "Lazy Marketplace",
     version: "1.0",
@@ -249,12 +248,11 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 </Typography>
                 <Box>
                   <TextField
-                    key={"price"}
                     sx={{ marginBottom: "5px" }}
-                    autoFocus
                     id="price"
                     label="Price"
                     variant="outlined"
+                    disabled={isPending}
                     fullWidth
                     name="price"
                     value={formik.values.price}
@@ -269,11 +267,11 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 </Box>
                 <Box>
                   <TextField
-                    key={"expireDate"}
                     id="expireDate"
                     variant="outlined"
                     fullWidth
                     type="datetime-local"
+                    disabled={isPending}
                     value={formik.values.expireDate}
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
@@ -282,7 +280,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                         .toISOString()
                         .slice(0, 16),
                     }}
-                    // error={ExpirationError}
                   />
                   {formik.touched.expireDate && formik.errors.expireDate ? (
                     <Typography sx={{ color: "error.main" }}>

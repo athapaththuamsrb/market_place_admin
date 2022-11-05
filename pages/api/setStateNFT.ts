@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       switch (action) {
         case "listed":
-          const oldNFT = await prisma.nFT.findFirst({
+          const oldNFT = await prisma.nFT.findUnique({
             where: {
               id: id,
             },
@@ -91,10 +91,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             if (activity) {
               if (activity.listingtype === "FIXED_PRICE") {
                 const price = req.body.data.price;
+                if (price != activity.sellingprice)
+                  throw new Error("Uncompatible price");
                 const time = req.body.data.time;
                 await prisma.activity.update({
                   where: {
-                    id: oldNFT1.id,
+                    id: activity.id,
                   },
                   data: {
                     isExpired: true,
@@ -103,6 +105,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     buyingTimestamp: time,
                   },
                 });
+
                 await prisma.nFT.update({
                   where: {
                     id: oldNFT1.id,

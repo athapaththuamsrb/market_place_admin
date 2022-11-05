@@ -109,7 +109,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               bannerImageURL: image["bannerImage"],
               userName: values.userName,
               folder: "profile",
-              token: authService.getUserToken()
+              token: authService.getUserToken(),
             },
           });
           props.setMsg(
@@ -156,6 +156,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "profileImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="profileImage"
                 multiple
@@ -165,6 +166,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 component="span"
                 size="medium"
                 color="secondary"
+                disabled={props.msg === "processing....."}
                 variant="contained"
               >
                 <Typography
@@ -206,6 +208,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "bannerImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="bannerImage"
                 multiple
@@ -214,6 +217,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="large"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
@@ -238,6 +242,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 label="User Name"
                 variant="outlined"
                 fullWidth
+                disabled={props.msg === "processing....."}
                 value={formik.values.userName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}

@@ -13,6 +13,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { Box } from "@mui/system";
 interface ViewProps {
   nft: NFT_load;
+  saleNum: number;
 }
 const View: NextPage<ViewProps> = (
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -21,7 +22,7 @@ const View: NextPage<ViewProps> = (
   // console.log(props.nft);
   return isMounted ? (
     <Box>
-      <ViewNFT salesOrder={props.nft} />
+      <ViewNFT salesOrder={props.nft} saleNum={props.saleNum} />
     </Box>
   ) : (
     <Box sx={{ width: "100%" }}>
@@ -42,10 +43,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const { data } = await api.post("/getNFT", {
       data: { id: params?.nftId, ownerId: params?.ownerId },
     });
-    if (data.data.length === 0) {
+    if (data.data.nft.length === 0) {
       return { notFound: true };
     }
-    return { props: { nft: data.data[0] }, revalidate: 1 };
+    return {
+      props: { nft: data.data.nft[0], saleNum: data.data.saleNum },
+      revalidate: 1,
+    };
   } catch (error) {
     // console.log(error);
     return { notFound: true };

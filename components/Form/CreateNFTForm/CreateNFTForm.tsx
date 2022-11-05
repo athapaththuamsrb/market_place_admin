@@ -26,6 +26,7 @@ import * as Yup from "yup";
 import { useGetMyCollectionItem } from "../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
+//import ContractsDataAddress from "../../../contractsData/Collection-address.json";
 const projectId = "2DI7xsXof3jkeXnqqBcZ4QmiLmW"; // <---------- your Infura Project ID
 
 const projectSecret = "13f77964b78b57d2159a682b364cf50d"; // <---------- your Infura Secret
@@ -87,18 +88,18 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     }),
     //validate,
     onSubmit: async (values) => {
-      const selectedCollection = collectionItem.map((collectionData) => {
-        if (values.collection === collectionData.collectionAddress) {
-          return collectionData.category;
-        }
-      });
-      // console.log(selectedCollection);
+      let category: string;
       const withIpfs = {
         ...values,
         image: props.ipfsImage,
-        category: selectedCollection[0],
+        category: "",
       };
-
+      const selectedCollection = collectionItem.map((collectionData) => {
+        if (values.collection === collectionData.collectionAddress) {
+          withIpfs.category = collectionData.category;
+          return collectionData.category;
+        }
+      });
       try {
         const result = await client.add(
           JSON.stringify({
@@ -114,6 +115,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         const uri = `https://exclusives.infura-ipfs.io/ipfs/${result.path}`;
         // let tokenId = await nftCollection1_._tokenIdCounter();
         // tokenId = tokenId.toNumber();
+
         const creator = await signer?.getAddress();
         if (creator === undefined) {
           throw new Error("Crator address is undefine");
@@ -129,7 +131,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           category: withIpfs.category,
           collection: withIpfs.collection,
         };
-        await props.setSalesOrder({
+        props.setSalesOrder({
           nftData: nftData,
           sold: false,
           name: withIpfs.name,
@@ -137,8 +139,10 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           image: withIpfs.image,
           royality: isRoyality ? values.royality : 0,
         });
+        props.setOpenModal(true);
+        props.setMsg("");
       } catch (error) {
-        // console.log("ipfs uri upload error: ", error);
+        console.log("ipfs uri upload error: ", error);
       }
     },
   });
@@ -193,6 +197,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 <Input
                   name="image"
                   onChange={uploadToIPFS}
+                  disabled={props.msg === "processing....."}
                   accept="image/*"
                   id="image"
                   multiple
@@ -203,6 +208,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 component="span"
                 size="large"
                 color="secondary"
+                disabled={props.msg === "processing....."}
                 variant="contained"
               >
                 <Typography color="white" variant="h3">
@@ -220,6 +226,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 name="name"
                 label="Name"
                 variant="outlined"
+                disabled={props.msg === "processing....."}
                 fullWidth
                 value={formik.values.name}
                 onBlur={formik.handleBlur}
@@ -239,6 +246,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 fullWidth
                 id="description"
                 name="description"
+                disabled={props.msg === "processing....."}
                 value={formik.values.description}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -259,6 +267,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   labelId="demo-simple-select-label"
                   id="collection"
                   name="collection"
+                  disabled={props.msg === "processing....."}
                   value={formik.values.collection}
                   label="Collection"
                   onBlur={formik.handleBlur}
@@ -275,6 +284,9 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                         </MenuItem>
                       );
                     })}
+                  {/* <MenuItem value={ContractsDataAddress.address}>
+                    Test collection
+                  </MenuItem> */}
                 </Select>
               </FormControl>
               {formik.touched.collection && formik.errors.collection ? (
@@ -287,7 +299,11 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <FormGroup>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={isRoyality} onChange={handleChange} />
+                    <Checkbox
+                      checked={isRoyality}
+                      onChange={handleChange}
+                      disabled={props.msg === "processing....."}
+                    />
                   }
                   label="Do you need to get royality fee?"
                 />
@@ -299,6 +315,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                   id="royality"
                   label="royality"
                   variant="outlined"
+                  disabled={props.msg === "processing....."}
                   fullWidth
                   name="royality"
                   value={formik.values.royality}
@@ -333,10 +350,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 ? true
                 : false
             }
-            onClick={() => {
-              props.setOpenModal(true);
-              props.setMsg("");
-            }}
             style={{ borderWidth: "3px" }}
             sx={{ marginTop: "50px" }}
             size="large"
