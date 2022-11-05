@@ -40,6 +40,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import Link from "next/link";
+import theme from "../../src/theme";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -239,13 +240,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         secondWord="NFT"
       />
       <Box sx={{ width: "70%", marginX: "auto" }}>
-        <Grid container>
-          <Grid alignSelf={"center"} item xs={5}>
-            <Card
-              sx={{
-                boxShadow: 0,
-              }}
-            >
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={5}>
+            <Card sx={{ display: "flex", boxShadow: 0 }}>
               <CardMedia
                 component="img"
                 // height="400"
@@ -253,28 +250,21 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 image={props.salesOrder?.image}
                 alt="avatar"
                 sx={{
-                  width: 400,
                   height: 400,
                   borderRadius: 2,
                 }}
               />
             </Card>
-            {/* <Stack alignItems="left">
-              <Avatar
-                alt="avatar"
-                src={props.salesOrder?.image}
-                sx={{
-                  width: 400,
-                  height: 400,
-                  boxShadow: 3,
-                  borderRadius: 1,
-                }}
-                variant="square"
-              />
-            </Stack> */}
           </Grid>
-          <Grid item xs={7}>
-            <Card>
+          <Grid item xs={12} sm={12} md={7}>
+            <Card
+              sx={{
+                [theme.breakpoints.up("md")]: {
+                  height: 400,
+                },
+                borderRadius: 2,
+              }}
+            >
               {activeConnector &&
                 account?.address &&
                 account?.address !== props.salesOrder?.walletAddress && (
@@ -725,9 +715,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         </Grid>
       </Box>
       <br />
-      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
-        <Grid container columnSpacing={2}>
-          <Grid alignSelf={"left"} item xs={5}>
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "25px" }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid alignSelf={"left"} item xs={12} sm={12} md={5}>
             <FurtherDetails
               creator={props.salesOrder?.creatorWalletAddress}
               tokenID={props.salesOrder?.tokenID}
@@ -735,7 +725,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               uri={props.salesOrder?.uri}
             />
           </Grid>
-          <Grid alignSelf={"left"} item xs={7}>
+          <Grid alignSelf={"left"} item xs={12} sm={12} md={7}>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -756,7 +746,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "25px" }}>
         <Grid container columnSpacing={2}>
           <Grid alignSelf={"center"} item xs={12}>
             <Accordion>
