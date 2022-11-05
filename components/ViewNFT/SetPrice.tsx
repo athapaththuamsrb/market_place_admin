@@ -113,7 +113,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         setIsPending(false);
         setOpen(true);
         formik.values.price = "";
-        router.push("/explore-collections");
       } catch (error) {
         // console.log(error);
         setMsg("Try again!!");
@@ -143,7 +142,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   useEffect(() => {
     getSetActivity();
   }, []);
-  
+
   const domain = {
     name: "Lazy Marketplace",
     version: "1.0",
@@ -255,6 +254,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                     id="price"
                     label="Price"
                     variant="outlined"
+                    disabled={isPending}
                     fullWidth
                     name="price"
                     value={formik.values.price}
@@ -274,6 +274,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                     variant="outlined"
                     fullWidth
                     type="datetime-local"
+                    disabled={isPending}
                     value={formik.values.expireDate}
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}

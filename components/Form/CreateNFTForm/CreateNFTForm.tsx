@@ -88,18 +88,18 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     }),
     //validate,
     onSubmit: async (values) => {
-      const selectedCollection = collectionItem.map((collectionData) => {
-        if (values.collection === collectionData.collectionAddress) {
-          return collectionData.category;
-        }
-      });
-      //console.log(selectedCollection);
+      let category: string;
       const withIpfs = {
         ...values,
         image: props.ipfsImage,
-        category: selectedCollection[0],
+        category: "",
       };
-
+      const selectedCollection = collectionItem.map((collectionData) => {
+        if (values.collection === collectionData.collectionAddress) {
+          withIpfs.category = collectionData.category;
+          return collectionData.category;
+        }
+      });
       try {
         const result = await client.add(
           JSON.stringify({
@@ -115,6 +115,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         const uri = `https://exclusives.infura-ipfs.io/ipfs/${result.path}`;
         // let tokenId = await nftCollection1_._tokenIdCounter();
         // tokenId = tokenId.toNumber();
+
         const creator = await signer?.getAddress();
         if (creator === undefined) {
           throw new Error("Crator address is undefine");

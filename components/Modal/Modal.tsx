@@ -60,14 +60,14 @@ const AlertDialog: FC<AlertDialogProps> = (props) => {
           }}
         >
           <DialogContentText id="alert-dialog-description">
-            <Typography variant="h6" sx={{ fontSize: 18, fontWeight: 500 }}>
+            <Typography variant="body2" sx={{ fontSize: 18, fontWeight: 500 }}>
               {props.msg}
             </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} autoFocus>
-            <Typography variant="h6" sx={{ fontSize: 18, fontWeight: 500 }}>
+            <Typography variant="body2" sx={{ fontSize: 18, fontWeight: 500 }}>
               OK
             </Typography>
           </Button>

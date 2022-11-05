@@ -114,12 +114,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       collectionName: Yup.string()
         .trim()
         .min(5, "Give more than 5")
-        .max(20, "can't exit  more than 20")
+        .max(100, "can't exit  more than 20")
         .required("Required"),
       collectionDescription: Yup.string()
         .trim()
         .min(5, "Give more than 5")
-        .max(500, "can't exit  more than 500")
+        .max(1000, "can't exit  more than 500")
         .required("Required"),
       collectionCategory: Yup.mixed()
         .oneOf([
@@ -150,8 +150,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             values.collectionName
           );
           const output = await smartContract.wait();
-          console.log(output);
-          console.log(output.logs[0].address);
+          // console.log(output);
+          // console.log(output.logs[0].address);
           //======================================================
           const address = output.logs[0].address;
           // console.log("res");
