@@ -248,9 +248,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 </Typography>
                 <Box>
                   <TextField
-                    key={"price"}
                     sx={{ marginBottom: "5px" }}
-                    autoFocus
                     id="price"
                     label="Price"
                     variant="outlined"
@@ -269,7 +267,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                 </Box>
                 <Box>
                   <TextField
-                    key={"expireDate"}
                     id="expireDate"
                     variant="outlined"
                     fullWidth
@@ -283,7 +280,6 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
                         .toISOString()
                         .slice(0, 16),
                     }}
-                    // error={ExpirationError}
                   />
                   {formik.touched.expireDate && formik.errors.expireDate ? (
                     <Typography sx={{ color: "error.main" }}>

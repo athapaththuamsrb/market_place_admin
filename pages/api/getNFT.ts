@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         if (id.length === 46) {
           //This is nft that in the block chain and didn't put any sale order yet
-          const ownerWalletAddress = owner?.walletAddress;
+          const ownerWalletAddress = owner.walletAddress;
           const { data } = await axios.get(
             `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getNFTs?owner=${ownerWalletAddress}`
           );
@@ -44,30 +44,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               if (ipfsData.data.royality) {
                 royality = ipfsData.data.royality;
               }
-              const collection = await prisma.collection.findMany({
+              const collection = await prisma.collection.findUnique({
                 where: {
                   collectionAddress: ipfsData.data.collection,
                 },
               });
-              if (collection.length === 0) {
-                let user = await prisma.user.findUnique({
-                  where: { walletAddress: ipfsData.data.creator },
-                });
-                if (!user) {
-                  user = await prisma.user.create({
-                    data: { walletAddress: ipfsData.data.creator },
-                  });
-                }
-                await prisma.collection.create({
-                  data: {
-                    creatorId: user.id,
-                    collectionCategory: ipfsData.data.category,
-                    collectionName:
-                      data.ownedNfts[indexNo].contractMetadata.name,
-                    collectionAddress: ipfsData.data.collection,
-                    collectionDescription: ipfsData.data.description,
-                  },
-                });
+              if (!collection) {
+                throw new Error("Collection is not in here");
               }
               const list: NFT_load[] = [
                 {
@@ -92,11 +75,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   ownerUserID: ownedUser?.id!,
                 },
               ];
-              console.log(list);
+              const activityList = await prisma.activity.findMany({
+                where: { nftId: lazyNfts.id, isExpired: true },
+              });
+              let count = 0;
+              for (let index = 0; index < activityList.length; index++) {
+                const element = activityList[index];
+                if (element.buyingprice !== null) count++;
+              }
               res.status(201).json({
                 message: "Successfully received",
                 success: true,
-                data: list,
+                data: { nft: list, saleNum: count },
               });
             } else {
               res.status(201).json({
@@ -120,7 +110,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               isMinted: false,
             },
           });
-          // console.log(nft);
           if (nft) {
             const activity = await prisma.activity.findFirst({
               where: { nftId: nft.id, isExpired: false },

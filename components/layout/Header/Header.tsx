@@ -34,7 +34,7 @@ const Navbar: FC = () => {
   const { disconnect } = useDisconnect();
   const theme = useTheme();
   const router = useRouter();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
   const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =

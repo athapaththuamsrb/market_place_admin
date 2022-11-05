@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       switch (action) {
         case "listed":
-          const oldNFT = await prisma.nFT.findFirst({
+          const oldNFT = await prisma.nFT.findUnique({
             where: {
               id: id,
             },

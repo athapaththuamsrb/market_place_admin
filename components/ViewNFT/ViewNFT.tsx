@@ -48,7 +48,6 @@ interface ViewNFTProps {
 
 const ViewNFT: FC<ViewNFTProps> = (props) => {
   const { data: signer, isError, isLoading } = useSigner();
-  // console.log(signer); //TODO data is useSigner attibute we assign that value to signer
   const marketplace_ = useContract({
     //TODO create connection with marketplace
     addressOrName: MarketplaceAddress.address,
@@ -164,13 +163,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const mintAndBuy = async () => {
     //TODO adding data to blockchain
     setIsPending(true);
-
+    setMsg("processing.....");
     if (
       props.salesOrder.walletAddress ===
         props.salesOrder.creatorWalletAddress &&
       props.saleNum === 0
     ) {
-      setMsg("processing.....");
+      console.log("came lazymint");
       const tokenID = await marketplace_.lazyMintNFT(
         //TODO add blockchain
         {
@@ -190,6 +189,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       );
       const output = await tokenID.wait();
     } else {
+      console.log("came mint");
       const tokenID = await marketplace_.mintNFT(
         //TODO add blockchain
         {
@@ -199,7 +199,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           category: props.salesOrder.category,
           collection: props.salesOrder.collection,
           owner: props.salesOrder.walletAddress,
-          royality: Number(props.salesOrder.royality),
+          royality: props.salesOrder.royality,
           price: ethers.utils.parseEther(props.salesOrder.price),
         },
         props.salesOrder.signature,
