@@ -49,19 +49,19 @@ const AllUsers: NextPage = (props) => {
     {
       field: "Total",
       headerName: "Total NFTs",
-      type: "Number",
+      type: "string",
       width: 100,
     },
     {
       field: "Created",
       headerName: "Created NFTs",
-      type: "Number",
+      type: "string",
       width: 100,
     },
     {
       field: "Collections",
       headerName: "Created Collections",
-      type: "Number",
+      type: "string",
       width: 150,
     },
     {
@@ -185,7 +185,7 @@ const AllUsers: NextPage = (props) => {
           }}
           rows={rows}
           columns={column}
-          rowsPerPageOptions={[5]}
+          //rowsPerPageOptions={[5]}
           components={{
             Toolbar: CustomToolbar,
           }}
