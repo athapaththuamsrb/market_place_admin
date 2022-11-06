@@ -78,14 +78,21 @@ model Activity {
 }
 
 model Bidding {
-  id          String      @id @default(uuid())
+  id          String        @id @default(uuid())
   activityId  String
   userId      String
   listingtype LISTINGTYPE
   price       String
   endDate     BigInt
-  timestamp   DateTime    @default(now())
-  isExpired   Boolean     @default(false)
+  state       BIDDING_STATE @default(PENDDING)
+  timestamp   DateTime      @default(now())
+  isExpired   Boolean       @default(false)
+}
+
+enum BIDDING_STATE {
+  PENDDING
+  ACCEPTED
+  REJECTED
 }
 
 enum LISTINGTYPE {
