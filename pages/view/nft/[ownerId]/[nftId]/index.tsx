@@ -19,7 +19,6 @@ const View: NextPage<ViewProps> = (
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) => {
   const isMounted = useIsMounted();
-  // console.log(props.nft);
   return isMounted ? (
     <Box>
       <ViewNFT salesOrder={props.nft} saleNum={props.saleNum} />
@@ -51,7 +50,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       revalidate: 1,
     };
   } catch (error) {
-    // console.log(error);
     return { notFound: true };
   }
 };

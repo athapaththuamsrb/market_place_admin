@@ -75,7 +75,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     isConnecting,
     pendingConnector,
   } = useConnect();
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };

@@ -130,9 +130,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
       });
       const arr1: Activity[] = data.data.reverse();
       setActivity(arr1);
-      //console.log(activity);
       setIsPending(false);
-      //console.log("hdbche");
     } catch (error) {
       console.log("Item activity error!");
       setIsPending(false);

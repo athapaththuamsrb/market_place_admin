@@ -16,7 +16,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const user = await prisma.user.findUnique({
             where: { walletAddress: address },
           });
-          // console.log(body);
           if (user) {
             switch (body.folder) {
               case "profile":
@@ -32,7 +31,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
                 break;
               case "collection":
-                console.log(body);
                 await prisma.collection.create({
                   data: {
                     creatorId: user.id,
@@ -45,6 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     collectionCategory: body.collectionCategory,
                   },
                 });
+
                 break;
               default:
                 throw new Error("not exit folder");

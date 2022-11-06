@@ -74,6 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
         data: {
           isMinted: false,
+          tokenID: tokenID,
           ownerId: owner.id,
         },
       });
