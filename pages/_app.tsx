@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import Head from "next/head";
 import NextHead from "next/head";
 import { AppProps } from "next/app";
@@ -45,12 +46,21 @@ const client = createClient({
   webSocketProvider,
 });
 
-export default function MyApp(props: { Component: any; emotionCache?: EmotionCache | undefined; pageProps: any; }) {
+export default function MyApp(props) {
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((reg) => console.log("service worker registered", reg))
+        .catch((err) => console.log("service worker not registered", err));
+    }
+  }, []);
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
     <WagmiConfig client={client}>
       <CacheProvider value={emotionCache}>
         <Head>
+          <title>Exclusives</title>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
         </Head>
         <ThemeProvider theme={theme}>
