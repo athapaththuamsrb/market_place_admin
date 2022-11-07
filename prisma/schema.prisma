@@ -87,6 +87,7 @@ model Bidding {
   state       BIDDING_STATE @default(PENDDING)
   timestamp   DateTime      @default(now())
   isExpired   Boolean       @default(false)
+  isPaid      Boolean       @default(false)
 }
 
 enum BIDDING_STATE {
