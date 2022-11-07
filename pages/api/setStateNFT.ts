@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       switch (action) {
         case "listed":
-          const oldNFT = await prisma.nFT.findFirst({
+          const oldNFT = await prisma.nFT.findUnique({
             where: {
               id: id,
             },
@@ -49,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               if (activity) {
                 await prisma.activity.update({
                   where: { id: activity.id },
-                  data: { isExpired: true },
+                  data: { isExpired: true, isPenddingPayment: false },
                 });
               } else {
                 throw new Error("activity is not exist");
@@ -91,18 +91,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             if (activity) {
               if (activity.listingtype === "FIXED_PRICE") {
                 const price = req.body.data.price;
+                if (price != activity.sellingprice)
+                  throw new Error("Uncompatible price");
                 const time = req.body.data.time;
+                //update activity table
                 await prisma.activity.update({
                   where: {
-                    id: oldNFT1.id,
+                    id: activity.id,
                   },
                   data: {
                     isExpired: true,
                     buyerId: owner.id,
                     buyingprice: price,
                     buyingTimestamp: time,
+                    isPenddingPayment: false,
                   },
                 });
+                //update nft table
                 await prisma.nFT.update({
                   where: {
                     id: oldNFT1.id,
@@ -112,8 +117,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     ownerId: owner.id,
                   },
                 });
-              } else if (activity.listingtype == "TIMED_AUCTION") {
-                //Biding selling noraml
               } else {
                 throw new Error("the listing type is not exist");
               }

@@ -71,20 +71,11 @@ contract Marketplace is ReentrancyGuard, EIP712 {
     function lazyMintNFT(
       SignedNFTData calldata nft, bytes calldata signature
     ) public payable returns (uint256) {
-        console.log("came1");
         require(msg.value == nft.price, 'SimonDevNFT: Message value != price');
-        console.log("came2");
         address signer = _validateSignature(_hashLazyMint(nft), signature);
-        console.log("came3");
-        console.log(signer == nft.creator);
         require(signer == nft.creator, 'invalid signature');
-        console.log("came4");
         Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening
-        console.log("came5");
         Address.sendValue(payable(nft.creator), msg.value);//TODO pay for creator
-        console.log("came6");
-        feeAccount.transfer(msg.value*feePercent/100);//pay for marketplace
-        console.log("came7");
         return nft.tokenID;
     }
     function mintNFT(
@@ -94,9 +85,8 @@ contract Marketplace is ReentrancyGuard, EIP712 {
         address signer = _validateSignature(_hashMint(nft), signature);//TODO current owner 
         require(signer == nft.owner, 'invalid signature');//TODO  check the current owner and walletaddress are equal
         Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening        
-        Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality)/100);//TODO pay for creator
-        Address.sendValue(payable(nft.creator), msg.value*nft.royality/100);
-        feeAccount.transfer(msg.value*feePercent/100);//pay for marketplace
+        Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality)/100);
+        Address.sendValue(payable(nft.creator), msg.value*nft.royality/100);//TODO pay for creator
         
         
         return nft.tokenID;

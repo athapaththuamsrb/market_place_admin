@@ -50,12 +50,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const { data } = await api.post("/getNFT", {
       data: { id: params?.nftId, ownerId: params?.ownerId },
     });
-    if (data.data.length === 0) {
+    if (data.data.nft.length === 0) {
       return { notFound: true };
     }
-    return { props: { nft: data.data[0] }, revalidate: 1 };
+    return { props: { nft: data.data.nft[0] }, revalidate: 1 };
   } catch (error) {
-    // console.log(error);
     return { notFound: true };
   }
 };

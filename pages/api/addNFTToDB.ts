@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import axios from "axios";
+import Collection from "../account/collection";
 
 const prisma = new PrismaClient();
 
@@ -61,37 +62,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       if (!collectionData) {
-        collectionData = await prisma.collection.create({
-          data: {
-            creatorId: creatorUser.id,
-            collectionName: collectionMetaData.contractMetadata.name,
-            collectionAddress: collectionMetaData.address,
-            collectionCategory: ipfsData.data.category,
-            collectionDescription: "This is new to here",
-          },
-        });
+        throw new Error("Collection is not exist");
       }
       let nft = await prisma.nFT.findUnique({ where: { uri: uri } });
       if (!nft) {
-        nft = await prisma.nFT.create({
-          data: {
-            collectionId: collectionData.id,
-            tokenID: tokenID,
-            uri: uri,
-            ownerId: owner.id,
-          },
-        });
-      } else {
-        await prisma.nFT.update({
-          where: {
-            id: nft.id,
-          },
-          data: {
-            isMinted: false,
-            ownerId: owner.id,
-          },
-        });
+        throw new Error("Collection is not exist");
       }
+      await prisma.nFT.update({
+        where: {
+          id: nft.id,
+        },
+        data: {
+          isMinted: false,
+          tokenID: tokenID,
+          ownerId: owner.id,
+        },
+      });
+
       await prisma.activity.create({
         data: {
           nftId: nft.id,

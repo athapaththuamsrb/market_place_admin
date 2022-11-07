@@ -106,6 +106,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
                 createdNFTCards.push(list);
               } else if (nft.ownerId === owner.id) {
+                if (nft.isMinted) continue;
                 const activity = await prisma.activity.findFirst({
                   where: {
                     nftId: nft.id,
@@ -145,12 +146,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           );
           if (data.ownedNfts.length !== 0) {
             for await (const nft of data.ownedNfts) {
-              const lazyNfts = await prisma.nFT.findMany({
+              const lazyNfts = await prisma.nFT.findUnique({
                 where: {
                   uri: nft.tokenUri.raw,
                 },
               });
-              if (lazyNfts.length !== 0) {
+              if (!lazyNfts) {
                 continue;
               }
               const ipfsData = await axios.get(nft.tokenUri.raw);
@@ -172,15 +173,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
               });
               if (!collection) {
-                collection = await prisma.collection.create({
-                  data: {
-                    creatorId: nftCreater.id,
-                    collectionCategory: ipfsData.data.category,
-                    collectionName: collectionMetaData.contractMetadata.name,
-                    collectionAddress: collectionMetaData.address,
-                    collectionDescription: "This is new to here",
-                  },
-                });
+                continue;
               }
               const list: NFT_Card = {
                 id: nft.tokenUri.raw.split("/")[4],
@@ -195,12 +188,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               collectedNFTCards.push(list);
             }
           }
-          // console.log({
-          //   collectionCards,
-          //   collectedNFTCards,
-          //   createdNFTCards,
-          //   userProfile,
-          // });
           res.status(201).json({
             message: "Successfully get",
             success: true,

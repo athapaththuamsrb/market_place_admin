@@ -37,44 +37,24 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import FlagIcon from "@mui/icons-material/Flag";
-//import Avatar from '@mui/material/Avatar';
-//import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-//import Typography from '@mui/material/Typography';
-import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import Link from "next/link";
-//import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-//import MoreVertIcon from '@mui/icons-material/MoreVert';
+import theme from "../../src/theme";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
+  saleNum: number;
 }
 
 const ViewNFT: FC<ViewNFTProps> = (props) => {
   const { data: signer, isError, isLoading } = useSigner();
-  // console.log(signer); //TODO data is useSigner attibute we assign that value to signer
   const marketplace_ = useContract({
     //TODO create connection with marketplace
     addressOrName: MarketplaceAddress.address,
     contractInterface: MarketplaceAbi.abi,
     signerOrProvider: signer,
   });
-  console.log({
-    tokenID: props.salesOrder.tokenID,
-    uri: props.salesOrder.uri,
-    creator: props.salesOrder.creatorWalletAddress,
-    category: props.salesOrder.category,
-    collection: props.salesOrder.collection,
-    royality: props.salesOrder.royality,
-    price: ethers.utils.parseEther(props.salesOrder.price),
-    signature: props.salesOrder.signature,
-    price1: props.salesOrder.price,
-  });
-  console.log(
-    props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
-  );
-
   const isMounted = useIsMounted();
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -95,7 +75,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     isConnecting,
     pendingConnector,
   } = useConnect();
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -134,6 +113,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               id: props.salesOrder.id,
               buyerWalletAddress: account?.address,
               time: timestampInMs,
+              price: price,
             },
           });
           props.salesOrder.sold = value;
@@ -175,23 +155,21 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       const arr2: Offer[] = data.data.reverse();
       setOffers(arr2);
       setIsPending(false);
-      //console.log("hdbche");
     } catch (error) {
       console.log("Offer Loading error!");
       setIsPending(false);
     }
   };
-
   const mintAndBuy = async () => {
     //TODO adding data to blockchain
     setIsPending(true);
-
-    // console.log(nftData);
+    setMsg("processing.....");
     if (
-      props.salesOrder.walletAddress === props.salesOrder.creatorWalletAddress
+      props.salesOrder.walletAddress ===
+        props.salesOrder.creatorWalletAddress &&
+      props.saleNum === 0
     ) {
-      setMsg("processing.....");
-
+      console.log("came lazymint");
       const tokenID = await marketplace_.lazyMintNFT(
         //TODO add blockchain
         {
@@ -206,25 +184,12 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         props.salesOrder.signature,
         {
           value: ethers.utils.parseEther(props.salesOrder.price),
-          gasLimit: 220000,
+          gasLimit: 1000000,
         }
       );
       const output = await tokenID.wait();
-      console.log(output);
-      // setMsg("Successful!");
-      // setOpen(true);
-      // setStateNFT("sold", true, "0");
     } else {
-      console.log({
-        tokenID: props.salesOrder.tokenID,
-        uri: props.salesOrder.uri,
-        creator: props.salesOrder.creatorWalletAddress,
-        category: props.salesOrder.category,
-        collection: props.salesOrder.collection,
-        royality: props.salesOrder.royality,
-        price: ethers.utils.parseEther(props.salesOrder.price),
-        signature: props.salesOrder.signature,
-      });
+      console.log("came mint");
       const tokenID = await marketplace_.mintNFT(
         //TODO add blockchain
         {
@@ -238,12 +203,16 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           price: ethers.utils.parseEther(props.salesOrder.price),
         },
         props.salesOrder.signature,
-        { value: ethers.utils.parseEther(props.salesOrder.price) }
+        {
+          value: ethers.utils.parseEther(props.salesOrder.price),
+          gasLimit: 1000000,
+        }
       );
-      setMsg("Successful!");
-      setOpen(true);
-      setStateNFT("sold", true, "0");
+      const output = await tokenID.wait();
     }
+    setMsg("Successful!");
+    setOpen(true);
+    setStateNFT("sold", true, props.salesOrder.price);
     setIsPending(false);
   };
 
@@ -270,13 +239,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         secondWord="NFT"
       />
       <Box sx={{ width: "70%", marginX: "auto" }}>
-        <Grid container>
-          <Grid alignSelf={"center"} item xs={5}>
-            <Card
-              sx={{
-                boxShadow: 0,
-              }}
-            >
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={5}>
+            <Card sx={{ display: "flex", boxShadow: 0 }}>
               <CardMedia
                 component="img"
                 // height="400"
@@ -284,28 +249,21 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 image={props.salesOrder?.image}
                 alt="avatar"
                 sx={{
-                  width: 400,
                   height: 400,
                   borderRadius: 2,
                 }}
               />
             </Card>
-            {/* <Stack alignItems="left">
-              <Avatar
-                alt="avatar"
-                src={props.salesOrder?.image}
-                sx={{
-                  width: 400,
-                  height: 400,
-                  boxShadow: 3,
-                  borderRadius: 1,
-                }}
-                variant="square"
-              />
-            </Stack> */}
           </Grid>
-          <Grid item xs={7}>
-            <Card>
+          <Grid item xs={12} sm={12} md={7}>
+            <Card
+              sx={{
+                [theme.breakpoints.up("md")]: {
+                  height: 400,
+                },
+                borderRadius: 2,
+              }}
+            >
               {activeConnector &&
                 account?.address &&
                 account?.address !== props.salesOrder?.walletAddress && (
@@ -756,9 +714,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         </Grid>
       </Box>
       <br />
-      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
-        <Grid container columnSpacing={2}>
-          <Grid alignSelf={"left"} item xs={5}>
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "25px" }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid alignSelf={"left"} item xs={12} sm={12} md={5}>
             <FurtherDetails
               creator={props.salesOrder?.creatorWalletAddress}
               tokenID={props.salesOrder?.tokenID}
@@ -766,7 +724,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               uri={props.salesOrder?.uri}
             />
           </Grid>
-          <Grid alignSelf={"left"} item xs={7}>
+          <Grid alignSelf={"left"} item xs={12} sm={12} md={7}>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -787,7 +745,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "3%" }}>
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "25px" }}>
         <Grid container columnSpacing={2}>
           <Grid alignSelf={"center"} item xs={12}>
             <Accordion>

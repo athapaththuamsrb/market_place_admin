@@ -114,12 +114,12 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       collectionName: Yup.string()
         .trim()
         .min(5, "Give more than 5")
-        .max(20, "can't exit  more than 20")
+        .max(100, "can't exit  more than 20")
         .required("Required"),
       collectionDescription: Yup.string()
         .trim()
         .min(5, "Give more than 5")
-        .max(500, "can't exit  more than 500")
+        .max(1000, "can't exit  more than 500")
         .required("Required"),
       collectionCategory: Yup.mixed()
         .oneOf([
@@ -150,8 +150,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             values.collectionName
           );
           const output = await smartContract.wait();
-          console.log(output);
-          console.log(output.logs[0].address);
+          // console.log(output);
+          // console.log(output.logs[0].address);
           //======================================================
           const address = output.logs[0].address;
           // console.log("res");
@@ -206,6 +206,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "logoImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="logoImage"
                 multiple
@@ -214,6 +215,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="medium"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
@@ -251,6 +253,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "featuredImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="featuredImage"
                 multiple
@@ -259,6 +262,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="medium"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
@@ -296,6 +300,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "bannerImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="bannerImage"
                 multiple
@@ -304,6 +309,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="medium"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
@@ -324,6 +330,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 id="collectionName"
                 name="collectionName"
                 label="Collection Name"
+                disabled={props.msg === "processing....."}
                 variant="outlined"
                 fullWidth
                 required
@@ -343,6 +350,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 id="collectionDescription"
                 name="collectionDescription"
                 label="Description"
+                disabled={props.msg === "processing....."}
                 variant="outlined"
                 multiline
                 fullWidth

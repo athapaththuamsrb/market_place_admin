@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "PUT") {
     const { newAdmin } = req.body;
-    // console.log("====================", newAdmin);
     try {
       await prisma.user.update({
         where: {
@@ -16,7 +15,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
     } catch (error) {
-      console.log(error);
       await prisma.$disconnect();
       res
         .status(401)
