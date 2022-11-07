@@ -49,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               if (activity) {
                 await prisma.activity.update({
                   where: { id: activity.id },
-                  data: { isExpired: true },
+                  data: { isExpired: true, isPenddingPayment: false },
                 });
               } else {
                 throw new Error("activity is not exist");
