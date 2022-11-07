@@ -63,18 +63,20 @@ model NFT {
 }
 
 model Activity {
-  id               String               @id @default(uuid())
-  nftId            String
-  buyerId          String?
-  listingtype      Activity_listingtype
-  endDate          BigInt
-  isExpired        Boolean              @default(false)
-  sellingprice     String
-  buyingprice      String?
-  signature        String
-  listingTimestamp DateTime             @default(now())
-  buyingTimestamp  BigInt?
-  userId           String
+  id                String               @id @default(uuid())
+  nftId             String
+  buyerId           String?
+  listingtype       Activity_listingtype
+  endDate           BigInt
+  isExpired         Boolean              @default(false)
+  sellingprice      String
+  buyingprice       String?
+  biddingSignature  String?
+  isPenddingPayment Boolean              @default(false)
+  signature         String
+  listingTimestamp  DateTime             @default(now())
+  buyingTimestamp   BigInt?
+  userId            String
 }
 
 model Bidding {

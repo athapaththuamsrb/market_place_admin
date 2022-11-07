@@ -94,6 +94,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 if (price != activity.sellingprice)
                   throw new Error("Uncompatible price");
                 const time = req.body.data.time;
+                //update activity table
                 await prisma.activity.update({
                   where: {
                     id: activity.id,
@@ -103,9 +104,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     buyerId: owner.id,
                     buyingprice: price,
                     buyingTimestamp: time,
+                    isPenddingPayment: false,
                   },
                 });
-
+                //update nft table
                 await prisma.nFT.update({
                   where: {
                     id: oldNFT1.id,
@@ -115,8 +117,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     ownerId: owner.id,
                   },
                 });
-              } else if (activity.listingtype == "TIMED_AUCTION") {
-                //Biding selling noraml
               } else {
                 throw new Error("the listing type is not exist");
               }
