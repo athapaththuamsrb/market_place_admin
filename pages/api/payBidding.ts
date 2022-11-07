@@ -38,40 +38,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             });
             if (!bidding) throw new Error("bidding is not exist");
             if (price != bidding.price) throw new Error("Uncompatible price");
-            switch (activity.listingtype) {
-              case "FIXED_PRICE":
-                //update bidding table
-                await prisma.bidding.update({
-                  where: { id: bidding.id },
-                  data: { isPaid: true, isExpired: true },
-                });
-                //update activity table
-                await prisma.activity.update({
-                  where: { id: activity.id },
-                  data: {
-                    isPenddingPayment: false,
-                    isExpired: true,
-                    buyerId: owner.id,
-                    buyingprice: price,
-                    buyingTimestamp: time,
-                  },
-                });
-                //update nft table
-                await prisma.nFT.update({
-                  where: {
-                    id: nft.id,
-                  },
-                  data: {
-                    isMinted: true,
-                    ownerId: owner.id,
-                  },
-                });
-                break;
-              case "TIMED_AUCTION":
-                break;
-              default:
-                throw new Error("listing type is not exist");
-            }
+            //update bidding table
+            await prisma.bidding.update({
+              where: { id: bidding.id },
+              data: { isPaid: true, isExpired: true },
+            });
+            //update activity table
+            await prisma.activity.update({
+              where: { id: activity.id },
+              data: {
+                isPenddingPayment: false,
+                isExpired: true,
+                buyerId: owner.id,
+                buyingprice: price,
+                buyingTimestamp: time,
+              },
+            });
+            //update nft table
+            await prisma.nFT.update({
+              where: {
+                id: nft.id,
+              },
+              data: {
+                isMinted: true,
+                ownerId: owner.id,
+              },
+            });
             await prisma.$disconnect();
             res
               .status(201)
