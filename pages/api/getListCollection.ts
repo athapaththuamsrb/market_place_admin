@@ -29,7 +29,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         data: collections,
       });
     } catch (error) {
-      console.log(error);
       await prisma.$disconnect();
       res
         .status(400)

@@ -20,7 +20,7 @@ const formik = useFormik({
   },
   onSubmit: async (values) => {
     const withIpfs = { ...values, image: props.ipfsImage };
-    console.log(withIpfs);
+    //console.log(withIpfs);
     try {
       const result = await client.add(
         JSON.stringify({
@@ -63,7 +63,7 @@ const uploadToIPFS = async (event: SyntheticEvent) => {
     if (typeof file !== "undefined") {
       try {
         const result = await client.add(file);
-        console.log(result);
+        //console.log(result);
         props.setIpfsImage(`https://ipfs.infura.io/ipfs/${result.path}`);
       } catch (error) {
         console.table("ipfs image upload error: ", error);

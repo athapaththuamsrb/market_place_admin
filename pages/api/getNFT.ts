@@ -104,10 +104,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         } else {
           //it's data in DB
-          const nft = await prisma.nFT.findFirst({
+          const nft = await prisma.nFT.findUnique({
             where: {
               id: id,
-              isMinted: false,
             },
           });
           if (nft) {

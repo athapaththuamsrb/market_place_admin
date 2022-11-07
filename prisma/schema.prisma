@@ -63,29 +63,39 @@ model NFT {
 }
 
 model Activity {
-  id               String               @id @default(uuid())
-  nftId            String
-  buyerId          String?
-  listingtype      Activity_listingtype
-  endDate          BigInt
-  isExpired        Boolean              @default(false)
-  sellingprice     String
-  buyingprice      String?
-  signature        String
-  listingTimestamp DateTime             @default(now())
-  buyingTimestamp  BigInt?
-  userId           String
+  id                String               @id @default(uuid())
+  nftId             String
+  buyerId           String?
+  listingtype       Activity_listingtype
+  endDate           BigInt
+  isExpired         Boolean              @default(false)
+  sellingprice      String
+  buyingprice       String?
+  biddingSignature  String?
+  isPenddingPayment Boolean              @default(false)
+  signature         String
+  listingTimestamp  DateTime             @default(now())
+  buyingTimestamp   BigInt?
+  userId            String
 }
 
 model Bidding {
-  id          String      @id @default(uuid())
+  id          String        @id @default(uuid())
   activityId  String
   userId      String
   listingtype LISTINGTYPE
   price       String
   endDate     BigInt
-  timestamp   DateTime    @default(now())
-  isExpired   Boolean     @default(false)
+  state       BIDDING_STATE @default(PENDDING)
+  timestamp   DateTime      @default(now())
+  isExpired   Boolean       @default(false)
+  isPaid      Boolean       @default(false)
+}
+
+enum BIDDING_STATE {
+  PENDDING
+  ACCEPTED
+  REJECTED
 }
 
 enum LISTINGTYPE {

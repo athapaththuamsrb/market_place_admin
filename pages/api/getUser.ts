@@ -106,6 +106,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
                 createdNFTCards.push(list);
               } else if (nft.ownerId === owner.id) {
+                if (nft.isMinted) continue;
                 const activity = await prisma.activity.findFirst({
                   where: {
                     nftId: nft.id,
@@ -187,12 +188,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               collectedNFTCards.push(list);
             }
           }
-          // console.log({
-          //   collectionCards,
-          //   collectedNFTCards,
-          //   createdNFTCards,
-          //   userProfile,
-          // });
           res.status(201).json({
             message: "Successfully get",
             success: true,
