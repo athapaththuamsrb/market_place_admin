@@ -52,37 +52,37 @@ const ViewReportedNFTs: NextPage = (props) => {
     {
       field: "id",
       headerName: "ID",
-      type: "String",
+      type: "string",
       width: 50,
     },
     {
       field: "reportedId",
       headerName: "NFT ID",
-      type: "String",
+      type: "string",
       width: 130,
     },
     {
       field: "reporterId",
       headerName: "Reported By",
-      type: "String",
+      type: "string",
       width: 220,
     },
     {
       field: "reporter",
       headerName: "Reporter Name",
-      type: "String",
+      type: "string",
       width: 220,
     },
     {
       field: "reason",
       headerName: "Reason",
-      type: "String",
+      type: "string",
       width: 200,
     },
     {
       field: "DateTime",
       headerName: "Reported Date",
-      type: "String",
+      type: "string",
       width: 210,
     },
     {
@@ -259,8 +259,8 @@ const ViewReportedNFTs: NextPage = (props) => {
           }}
           rows={nfts}
           columns={columns}
-          pageSize={12}
-          rowsPerPageOptions={[5]}
+          //pageSize={12}
+          //rowsPerPageOptions={[5]}
           components={{
             Toolbar: CustomToolbar,
           }}

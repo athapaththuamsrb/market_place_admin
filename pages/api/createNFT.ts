@@ -43,6 +43,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             // signature: body.signature,
           },
         });
+        await prisma.collection.update({
+          where: {
+            collectionAddress: body.nftData.collection,
+          },
+          data: {
+            nftCount: collection.nftCount + 1,
+          },
+        });
       } else {
         throw new Error("Collection address is not exit");
       }

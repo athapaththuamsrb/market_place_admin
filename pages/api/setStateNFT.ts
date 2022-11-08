@@ -42,6 +42,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   userId: user.id,
                 },
               });
+
+              //get NFTs in particular collection
+              const nfts = await prisma.nFT.findMany({
+                where: {
+                  collectionId: oldNFT.collectionId,
+                },
+              });
+              let buyings: number[] = [];
+              var floor_price: number = 0;
+              //find floor  price from all nfts in the updated collection
+              for (let nft of nfts) {
+                await prisma.activity
+                  .findFirst({
+                    where: {
+                      nftId: nft.id,
+                      isExpired: false,
+                    },
+                  })
+                  .then((data) => {
+                    if (data?.sellingprice) {
+                      buyings.push(Number(data?.sellingprice));
+                    }
+                    floor_price = Math.min.apply(null, buyings);
+                  });
+              }
+              //update floor price
+              await prisma.collection.update({
+                where: {
+                  id: oldNFT.collectionId,
+                },
+                data: {
+                  floorPrice: String(floor_price),
+                },
+              });
             } else {
               const activity = await prisma.activity.findFirst({
                 where: { nftId: oldNFT.id, isExpired: false },
@@ -50,6 +84,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 await prisma.activity.update({
                   where: { id: activity.id },
                   data: { isExpired: true, isPenddingPayment: false },
+                });
+
+                //get NFTs in particular collection
+                const nfts = await prisma.nFT.findMany({
+                  where: {
+                    collectionId: oldNFT.collectionId,
+                  },
+                });
+                let buyings: number[] = [];
+                var floor_price: number = 0;
+                //find floor  price from all nfts in the updated collection
+                for (let nft of nfts) {
+                  await prisma.activity
+                    .findFirst({
+                      where: {
+                        nftId: nft.id,
+                        isExpired: false,
+                      },
+                    })
+                    .then((data) => {
+                      if (data?.sellingprice) {
+                        buyings.push(Number(data?.sellingprice));
+                      }
+                      floor_price = Math.min.apply(null, buyings);
+                    });
+                }
+                //update floor price
+                await prisma.collection.update({
+                  where: {
+                    id: oldNFT.collectionId,
+                  },
+                  data: {
+                    floorPrice: String(floor_price),
+                  },
                 });
               } else {
                 throw new Error("activity is not exist");
@@ -107,6 +175,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     isPenddingPayment: false,
                   },
                 });
+                const nft = await prisma.nFT.findUnique({
+                  where: { id: id },
+                });
+                //set collection volume
+                const pre_volume = await prisma.collection.findUnique({
+                  where: {
+                    id: nft?.collectionId,
+                  },
+                });
+                await prisma.collection.update({
+                  where: {
+                    id: nft?.collectionId,
+                  },
+                  data: {
+                    totalVolume: pre_volume + price,
+                  },
+                });
+
                 //update nft table
                 await prisma.nFT.update({
                   where: {
