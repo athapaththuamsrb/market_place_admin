@@ -264,31 +264,31 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 borderRadius: 2,
               }}
             >
-              {activeConnector &&
-                account?.address &&
-                account?.address !== props.salesOrder?.walletAddress && (
-                  <CardHeader
-                    action={
-                      <div>
-                        <IconButton id="long-button" onClick={handleClick}>
-                          <MoreVertIcon />
-                        </IconButton>
-                        <Menu
-                          id="long-menu"
-                          anchorEl={anchorEl}
-                          open={open1}
-                          onClose={handleClose}
-                        >
-                          <MenuItem
-                            onClick={() => {
-                              setOpenReportPopup(true), setAnchorEl(null);
-                            }}
-                            sx={{ fontWeight: 500, fontSize: 14 }}
-                          >
-                            <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
-                            Report NFT
-                          </MenuItem>
-                        </Menu>
+              <CardHeader
+                action={
+                  <div>
+                    <IconButton id="long-button" onClick={handleClick}>
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      id="long-menu"
+                      anchorEl={anchorEl}
+                      open={open1}
+                      onClose={handleClose}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          setOpenReportPopup(true), setAnchorEl(null);
+                        }}
+                        sx={{ fontWeight: 500, fontSize: 14 }}
+                      >
+                        <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
+                        Report NFT
+                      </MenuItem>
+                    </Menu>
+                    {activeConnector &&
+                      account?.address &&
+                      account?.address !== props.salesOrder?.walletAddress && (
                         <ReportPopup
                           reportedId={[
                             props.salesOrder.id,
@@ -300,37 +300,21 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                           openReportPopup={openReportPopup}
                           setOpenReportPopup={setOpenReportPopup}
                         ></ReportPopup>
-                      </div>
-                    }
-                    title={props.salesOrder?.name}
-                    subheader={
-                      <div>
-                        Owned by{" "}
-                        <Link
-                          href={`../../user/${props.salesOrder.ownerUserID}`}
-                        >
-                          {props.salesOrder.ownerUsername}
-                        </Link>
-                      </div>
-                    }
-                  />
-                )}
-              {activeConnector &&
-                account?.address === props.salesOrder?.walletAddress && (
-                  <CardHeader
-                    title={props.salesOrder?.name}
-                    subheader={
-                      <div>
-                        Owned by{" "}
-                        <Link
-                          href={`../../user/${props.salesOrder.ownerUserID}`}
-                        >
-                          you
-                        </Link>
-                      </div>
-                    }
-                  />
-                )}
+                      )}
+                  </div>
+                }
+                title={props.salesOrder?.name}
+                subheader={
+                  <div>
+                    Owned by{" "}
+                    <Link href={`../../user/${props.salesOrder.ownerUserID}`}>
+                      {account?.address === props.salesOrder?.walletAddress
+                        ? "you"
+                        : props.salesOrder.ownerUsername}
+                    </Link>
+                  </div>
+                }
+              />
 
               <CardContent>
                 <Typography variant="h4">Description :</Typography>
