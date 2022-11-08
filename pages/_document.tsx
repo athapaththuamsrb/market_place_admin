@@ -12,6 +12,9 @@ export default class MyDocument extends Document {
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link rel="manifest" href="/manifest.json" />
+          {/*<!-- ios support -->*/}
+          <meta name="apple-mobile-web-app-status-bar" content="#ffffff"></meta>
+          <link rel="apple-touch-icon" href="../public/icon-192x192.png"></link>
           <link rel="shortcut icon" href="/favicon.ico" />
           <link
             rel="stylesheet"
