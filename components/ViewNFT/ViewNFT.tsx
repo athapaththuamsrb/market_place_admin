@@ -266,42 +266,43 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
             >
               <CardHeader
                 action={
-                  <div>
-                    <IconButton id="long-button" onClick={handleClick}>
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                      id="long-menu"
-                      anchorEl={anchorEl}
-                      open={open1}
-                      onClose={handleClose}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          setOpenReportPopup(true), setAnchorEl(null);
-                        }}
-                        sx={{ fontWeight: 500, fontSize: 14 }}
+                  activeConnector &&
+                  account?.address &&
+                  account?.address !== props.salesOrder?.walletAddress && (
+                    <div>
+                      <IconButton id="long-button" onClick={handleClick}>
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        open={open1}
+                        onClose={handleClose}
                       >
-                        <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
-                        Report NFT
-                      </MenuItem>
-                    </Menu>
-                    {activeConnector &&
-                      account?.address &&
-                      account?.address !== props.salesOrder?.walletAddress && (
-                        <ReportPopup
-                          reportedId={[
-                            props.salesOrder.id,
-                            props.salesOrder.ownerUserID,
-                            props.salesOrder.tokenID,
-                          ]}
-                          reportType={"NFT"}
-                          reporterId={account?.address}
-                          openReportPopup={openReportPopup}
-                          setOpenReportPopup={setOpenReportPopup}
-                        ></ReportPopup>
-                      )}
-                  </div>
+                        <MenuItem
+                          onClick={() => {
+                            setOpenReportPopup(true), setAnchorEl(null);
+                          }}
+                          sx={{ fontWeight: 500, fontSize: 14 }}
+                        >
+                          <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
+                          Report NFT
+                        </MenuItem>
+                      </Menu>
+
+                      <ReportPopup
+                        reportedId={[
+                          props.salesOrder.id,
+                          props.salesOrder.ownerUserID,
+                          props.salesOrder.tokenID,
+                        ]}
+                        reportType={"NFT"}
+                        reporterId={account?.address}
+                        openReportPopup={openReportPopup}
+                        setOpenReportPopup={setOpenReportPopup}
+                      ></ReportPopup>
+                    </div>
+                  )
                 }
                 title={props.salesOrder?.name}
                 subheader={
