@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoIcon from "@mui/icons-material/Info";
 import CardContent from "@mui/material/CardContent";
+import theme from "../../src/theme";
 
 import { FC, useState } from "react";
 import Card from "@mui/material/Card";
@@ -62,7 +63,10 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
                 marginTop: "10px",
               }}
             >
-              <Typography variant="h4">Creator :</Typography>
+              <Typography variant="h4" sx={{ minWidth: "20%" }}>
+                Creator :
+              </Typography>
+
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -152,83 +156,6 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               </Typography>
             </div>
           </Card>
-          {/* <Typography
-            sx={{
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Token ID : {props.tokenID}
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Creator : {props.creator}
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Token Standard : ERC721
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Contract Address : {props.collection}
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Blockchain : Etheruem
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Metadata : {props.uri}
-          </Typography>
-
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Creator Fee : 0%
-          </Typography> */}
         </AccordionDetails>
       </Accordion>
     </div>

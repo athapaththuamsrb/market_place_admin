@@ -54,6 +54,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     id: offer.id,
                     userId: user?.id,
                     walletAddress: user?.walletAddress,
+                    price:offer.price
                   });
                 }
               }
