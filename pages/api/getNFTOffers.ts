@@ -20,9 +20,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         });
         const offersList: Offer[] = [];
         if (activity) {
+          let isPenddingPayment = false;
           const offers = await prisma.bidding.findMany({
             where: { activityId: activity.id },
           });
+          let acceptedBuyer = [];
+          if (activity.isPenddingPayment == true) {
+            isPenddingPayment = true;
+          }
           if (offers.length !== 0) {
             for await (const offer of offers) {
               let off: Offer;
@@ -36,17 +41,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 floor_diff: "",
                 expiration: offer.timestamp.toLocaleDateString(),
                 from: user?.userName!,
-                
+                isExpired: offer.isExpired,
+                state: offer.state,
+                isPaid: offer.isPaid,
               };
 
               offersList.push(off);
+
+              if (isPenddingPayment) {
+                if (offer.state == "ACCEPTED") {
+                  acceptedBuyer.push({
+                    id: offer.id,
+                    userId: user?.id,
+                    walletAddress: user?.walletAddress,
+                  });
+                }
+              }
             }
-            //console.log(activityList);
+            //console.log(acceptedBuyer[0].walletAddress);
             await prisma.$disconnect();
             res.status(201).json({
               message: "Successfully received",
               success: true,
-              data: offersList,
+              data: [offersList, isPenddingPayment, acceptedBuyer],
             });
           } else {
             await prisma.$disconnect();

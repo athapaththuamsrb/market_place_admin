@@ -175,4 +175,7 @@ export type Offer = {
   floor_diff: string;
   expiration: string;
   from: string;
+  isExpired: boolean;
+  state: "ACCEPTED" | "REJECTED" | "PENDDING";
+  isPaid: boolean;
 };

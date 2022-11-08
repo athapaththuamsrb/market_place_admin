@@ -12,13 +12,15 @@ import { FC, useEffect, useState } from "react";
 import { Offer, User } from "../../src/interfaces";
 import { useAccount } from "wagmi";
 import axios from "axios";
+import api from "../../lib/api";
 
 type OffersProps = {
   offers: Offer[];
   user_id: string;
+  getSetOffers: () => Promise<void>;
 };
 
-const Offers: FC<OffersProps> = ({ offers, user_id }) => {
+const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
   const ownerColumns = [
     {
       field: "price",
@@ -27,8 +29,8 @@ const Offers: FC<OffersProps> = ({ offers, user_id }) => {
       width: 150,
     },
     {
-      field: "usd_price",
-      headerName: "USD Price",
+      field: "state",
+      headerName: "Status",
       type: "string",
       width: 150,
     },
@@ -58,19 +60,19 @@ const Offers: FC<OffersProps> = ({ offers, user_id }) => {
       headerName: "Review",
       getActions: (params: GridRowParams) => [
         <Button
-          variant="outlined"
-          color="primary"
+          variant="contained"
+          // color="primary"
           key={params.row.id}
-          sx={{ color: "black" }}
+          sx={{ backgroundColor: "green",color:"whitesmoke" }}
           onClick={() => handleClickOpenAccept(params.row.id)}
         >
           <a>Accept</a>
         </Button>,
         <Button
-          variant="outlined"
+          variant="contained"
           color="primary"
           key={params.row.id}
-          sx={{ color: "black" }}
+          sx={{ backgroundColor: "red", color: "whitesmoke" }}
           onClick={() => handleClickOpenDecline(params.row.id)}
         >
           <a>Decline</a>
@@ -83,32 +85,32 @@ const Offers: FC<OffersProps> = ({ offers, user_id }) => {
       field: "price",
       headerName: "Price",
       type: "string",
-      width: 150,
+      width: 200,
     },
     {
       field: "usd_price",
       headerName: "USD Price",
       type: "string",
-      width: 150,
+      width: 200,
     },
     {
       field: "expiration",
       headerName: "Expiration",
       type: "string",
-      width: 150,
+      width: 200,
     },
 
     {
       field: "floor_diff",
       headerName: "Floor Difference",
       type: "string",
-      width: 150,
+      width: 200,
     },
     {
       field: "from",
       headerName: "From",
       type: "string",
-      width: 150,
+      width: 200,
     },
   ];
 
@@ -117,11 +119,11 @@ const Offers: FC<OffersProps> = ({ offers, user_id }) => {
   const [openDecline, setOpenDecline] = useState(false);
   const [rowId, setRowId] = useState("");
   const [status, setStatus] = useState("");
-  const [isPending, setIsPending] = useState(true);
+  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
   const { data: account } = useAccount();
 
-  // useEffect(() => {}, [openAccept, openDecline]);
+  useEffect(() => {}, [openAccept, openDecline]);
 
   const handleClickOpenAccept = (id: string) => {
     setOpenAccept(true);
@@ -131,23 +133,18 @@ const Offers: FC<OffersProps> = ({ offers, user_id }) => {
   const handleCloseAccept = (result: string, id: string) => () => {
     setOpenAccept(false);
     if (result == "Yes") {
-      const offer: Offer = offers.find((offer) => offer.id == id)!;
-      setTimeout(() => {
-        axios
-          .post("../../api/acceptOffer", {
-            data: {
-              id: offer.id,
-            },
-          })
-          .then(() => {
-            setIsPending(false);
-            setError(null);
-          })
-          .catch((error) => {
-            setIsPending(false);
-            setError(error.message);
-          });
-      });
+      try {
+        const offer: Offer = offers.find((offer) => offer.id == id)!;
+        axios.post("../../../api/acceptOffer", {
+          data: {
+            id: offer.id,
+          },
+        });
+        getSetOffers();
+        setError(null);
+      } catch (error) {
+        console.log("Offer Accepting error!");
+      }
     }
   };
 

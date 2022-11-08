@@ -41,6 +41,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import Link from "next/link";
 import theme from "../../src/theme";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -60,6 +61,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
+  const [isPendingPayment, setIsPendingPayment] = useState(false);
+  const [PendingPaymentBuyer, setPendingPaymentBuyer] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const { data: account } = useAccount();
@@ -152,7 +155,12 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           id: props.salesOrder.id,
         },
       });
-      const arr2: Offer[] = data.data.reverse();
+      const arr2: Offer[] = data.data[0].reverse();
+      setIsPendingPayment(data.data[1]);
+      if (isPendingPayment == true) {
+        //console.log(data.data[2][0].walletAddress);
+        setPendingPaymentBuyer(data.data[2][0].walletAddress);
+      }
       setOffers(arr2);
       setIsPending(false);
     } catch (error) {
@@ -259,78 +267,63 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
             <Card
               sx={{
                 [theme.breakpoints.up("md")]: {
-                  height: 400,
+                  minHeight: 400,
                 },
                 borderRadius: 2,
               }}
             >
-              {activeConnector &&
-                account?.address &&
-                account?.address !== props.salesOrder?.walletAddress && (
-                  <CardHeader
-                    action={
-                      <div>
-                        <IconButton id="long-button" onClick={handleClick}>
-                          <MoreVertIcon />
-                        </IconButton>
-                        <Menu
-                          id="long-menu"
-                          anchorEl={anchorEl}
-                          open={open1}
-                          onClose={handleClose}
+              <CardHeader
+                action={
+                  activeConnector &&
+                  account?.address &&
+                  account?.address !== props.salesOrder?.walletAddress && (
+                    <div>
+                      <IconButton id="long-button" onClick={handleClick}>
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        open={open1}
+                        onClose={handleClose}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            setOpenReportPopup(true), setAnchorEl(null);
+                          }}
+                          sx={{ fontWeight: 500, fontSize: 14 }}
                         >
-                          <MenuItem
-                            onClick={() => {
-                              setOpenReportPopup(true), setAnchorEl(null);
-                            }}
-                            sx={{ fontWeight: 500, fontSize: 14 }}
-                          >
-                            <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
-                            Report NFT
-                          </MenuItem>
-                        </Menu>
-                        <ReportPopup
-                          reportedId={[
-                            props.salesOrder.id,
-                            props.salesOrder.ownerUserID,
-                            props.salesOrder.tokenID,
-                          ]}
-                          reportType={"NFT"}
-                          reporterId={account?.address}
-                          openReportPopup={openReportPopup}
-                          setOpenReportPopup={setOpenReportPopup}
-                        ></ReportPopup>
-                      </div>
-                    }
-                    title={props.salesOrder?.name}
-                    subheader={
-                      <div>
-                        Owned by{" "}
-                        <Link
-                          href={`../../user/${props.salesOrder.ownerUserID}`}
-                        >
-                          {props.salesOrder.ownerUsername}
-                        </Link>
-                      </div>
-                    }
-                  />
-                )}
-              {activeConnector &&
-                account?.address === props.salesOrder?.walletAddress && (
-                  <CardHeader
-                    title={props.salesOrder?.name}
-                    subheader={
-                      <div>
-                        Owned by{" "}
-                        <Link
-                          href={`../../user/${props.salesOrder.ownerUserID}`}
-                        >
-                          you
-                        </Link>
-                      </div>
-                    }
-                  />
-                )}
+                          <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
+                          Report NFT
+                        </MenuItem>
+                      </Menu>
+
+                      <ReportPopup
+                        reportedId={[
+                          props.salesOrder.id,
+                          props.salesOrder.ownerUserID,
+                          props.salesOrder.tokenID,
+                        ]}
+                        reportType={"NFT"}
+                        reporterId={account?.address}
+                        openReportPopup={openReportPopup}
+                        setOpenReportPopup={setOpenReportPopup}
+                      ></ReportPopup>
+                    </div>
+                  )
+                }
+                title={props.salesOrder?.name}
+                subheader={
+                  <div>
+                    Owned by{" "}
+                    <Link href={`../../user/${props.salesOrder.ownerUserID}`}>
+                      {account?.address === props.salesOrder?.walletAddress
+                        ? "me"
+                        : props.salesOrder.ownerUsername}
+                    </Link>
+                  </div>
+                }
+              />
 
               <CardContent>
                 <Typography variant="h4">Description :</Typography>
@@ -360,7 +353,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                       sx={{
                         fontSize: 20,
                         height: "70px",
-                        width: "60%",
+                        minWidth: "60%",
                         marginTop: "10px",
                       }}
                     />
@@ -371,7 +364,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Remove sell */}
               {activeConnector &&
                 account?.address === props.salesOrder?.walletAddress &&
-                props.salesOrder?.listed && (
+                props.salesOrder?.listed &&
+                isPendingPayment !== true && (
                   <CardActions
                     sx={{ display: "flex", justifyContent: "space-evenly" }}
                   >
@@ -391,7 +385,10 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                       ></RemoveShoppingCartIcon>
                       <Typography
                         color="white"
-                        sx={{ fontWeight: 600, fontSize: 20 }}
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: 20,
+                        }}
                       >
                         REMOVE SELL
                       </Typography>
@@ -432,7 +429,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Buy , make offer, bid*/}
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
-                props.salesOrder?.listed && (
+                props.salesOrder?.listed &&
+                isPendingPayment === false && (
                   <CardContent>
                     <Box
                       textAlign={"right"}
@@ -453,7 +451,16 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                           ></ShoppingCartIcon>
                           <Typography
                             color="white"
-                            sx={{ fontWeight: 600, fontSize: 20 }}
+                            sx={{
+                              [theme.breakpoints.up("md")]: {
+                                fontWeight: 600,
+                                fontSize: 20,
+                              },
+                              [theme.breakpoints.down("md")]: {
+                                fontWeight: 600,
+                                fontSize: 15,
+                              },
+                            }}
                           >
                             BUY NFT
                           </Typography>
@@ -468,14 +475,25 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                           disabled={isPending}
                           color="secondary"
                           variant="contained"
-                          sx={{ width: "30%", height: "50px", borderRadius: 3 }}
+                          sx={{ width: "35%", height: "50px", borderRadius: 3 }}
                         >
                           <LocalOfferIcon
                             sx={{ color: "white", marginX: "5px" }}
                           ></LocalOfferIcon>
                           <Typography
                             color="white"
-                            sx={{ fontWeight: 600, fontSize: 20 }}
+                            sx={{
+                              fontWeight: 600,
+                              fontSize: 20,
+                              [theme.breakpoints.up("md")]: {
+                                fontWeight: 600,
+                                fontSize: 20,
+                              },
+                              [theme.breakpoints.down("md")]: {
+                                fontWeight: 600,
+                                fontSize: 15,
+                              },
+                            }}
                           >
                             {props.salesOrder?.listingtype === "FIXED_PRICE"
                               ? "MAKE OFFER"
@@ -492,6 +510,54 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                           activity={props.salesOrder.listingtype}
                           endDate={props.salesOrder.endDate}
                         />
+                      )}
+                    </Box>
+                  </CardContent>
+                )}
+
+              {activeConnector &&
+                PendingPaymentBuyer === account?.address &&
+                account?.address !== props.salesOrder?.walletAddress &&
+                props.salesOrder?.listed && (
+                  <CardContent>
+                    <Box
+                      textAlign={"right"}
+                      display="flex"
+                      justifyContent="space-evenly"
+                    >
+                      {props.salesOrder?.listingtype === "FIXED_PRICE" && (
+                        <Button
+                          onClick={mintAndBuy}
+                          disabled={isPending}
+                          size="small"
+                          //color="secondary"
+                          variant="contained"
+                          sx={{
+                            minWidth: "40%",
+                            height: "50px",
+                            borderRadius: 3,
+                            backgroundColor: "#01baef",
+                          }}
+                        >
+                          <ThumbUpAltIcon
+                            sx={{ color: "white", marginX: "5px" }}
+                          ></ThumbUpAltIcon>
+                          <Typography
+                            color="white"
+                            sx={{
+                              [theme.breakpoints.up("sm")]: {
+                                fontWeight: 600,
+                                fontSize: 20,
+                              },
+                              [theme.breakpoints.down("xs")]: {
+                                fontWeight: 600,
+                                fontSize: 15,
+                              },
+                            }}
+                          >
+                            Confirm Offer
+                          </Typography>
+                        </Button>
                       )}
                     </Box>
                   </CardContent>
@@ -766,6 +832,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 <Offers
                   offers={offers}
                   user_id={props.salesOrder.walletAddress}
+                  getSetOffers={getSetOffers}
                 />
               </AccordionDetails>
             </Accordion>
