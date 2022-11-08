@@ -82,6 +82,7 @@ const Navbar: FC = () => {
                   src={"/logo-background.png"}
                   alt={"logo"}
                   loading="lazy"
+                  layout="fixed"
                 />
               </Box>
               <Typography
