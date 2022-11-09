@@ -34,7 +34,6 @@ import OfferPopup from "../OfferPopup";
 import ReportPopup from "../ReportPopup";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import React from "react";
-import axios from "axios";
 import Offers from "../ui/Offers";
 import ItemActivity from "../ui/ItemActivity";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -47,7 +46,6 @@ import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import FlagIcon from "@mui/icons-material/Flag";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-//import Link from "next/link";
 import Link from "@mui/material/Link";
 import theme from "../../src/theme";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
@@ -251,7 +249,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     getSetOffers();
     copy();
   }, [isPendingPayment, PendingPaymentBuyer, PendingPaymentPrice]);
-
   return isMounted ? (
     <Box>
       {isPending && (
@@ -576,8 +573,10 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             sm={12}
                             md={6}
                           >
+                            {/* TODO HAVE TO CHAGE */}
                             <Button
                               disabled={isPending}
+                              onClick={mintAndBuy}
                               size="small"
                               variant="contained"
                               color="secondary"
@@ -718,6 +717,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               <AccordionDetails>
                 {/* <ListingHistoryTable activity={activity} /> */}
                 <Offers
+                  salesOrder={props.salesOrder}
                   offers={offers}
                   user_id={props.salesOrder.walletAddress}
                   getSetOffers={getSetOffers}

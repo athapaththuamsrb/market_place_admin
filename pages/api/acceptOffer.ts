@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const { id } = req.body.data;
+    const { id, biddingSignature } = req.body.data;
     try {
       const offer = await prisma.bidding.findUnique({
         where: {
@@ -27,7 +27,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           });
           await prisma.activity.update({
             where: { id: offer.activityId },
-            data: { isPenddingPayment: true },
+            data: {
+              isPenddingPayment: true,
+              biddingSignature: biddingSignature,
+            },
           });
           console.log(offer);
           await prisma.$disconnect();
