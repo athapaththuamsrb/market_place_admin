@@ -10,6 +10,7 @@ import {
   ImageListItem,
   Divider,
   LinearProgress,
+  Tooltip,
 } from "@mui/material";
 import { useAccount, useConnect, useBalance } from "wagmi";
 import {
@@ -19,16 +20,21 @@ import {
 } from "../../components/hooks";
 import Connect from "../../components/Login/Connect";
 import MyTabBar from "../../components/ui/MyTabBar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import React from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 const MyNFTs: NextPage = (props) => {
   const isMounted = useIsMounted();
   const { activeConnector, connect, connectors } = useConnect();
   const { data: account } = useAccount();
-  const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } = useGetMyProfile();
+  const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =
+    useGetMyProfile();
   const { collectedNFTCard, createdNFTCard, isPending, error } = useGetMyNFT();
   const router = useRouter();
+  const [isCopied, setIsCopied] = useState(false);
+  const [copyValue, setCopyValue] = useState(account?.address);
   const { data, isError, isLoading } = useBalance({
     addressOrName: account?.address,
     chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
@@ -78,16 +84,34 @@ const MyNFTs: NextPage = (props) => {
         <Typography variant="h2" sx={{ mt: -3 }} gutterBottom>
           {profile?.userName}
         </Typography>
-        <Typography variant="h4" sx={{ mt: 0, fontWeight: 500 }} gutterBottom>
+        <Typography variant="h4" sx={{ mt: 0, fontWeight: 600 }} gutterBottom>
           <Image
-            height={17}
-            width={17}
-            src={"/ethereum.png"}
+            height={16.248}
+            width={12}
+            src={"/ethereum1.png"}
             alt={"logo"}
             loading="lazy"
-          />
-          {account?.address}
+          />{"   "}
+          <CopyToClipboard
+            text={copyValue ? copyValue : ""}
+            onCopy={() => setIsCopied(true)}
+          >
+            <Tooltip title="Copy" placement="right" arrow>
+              <Button
+                sx={{
+                  //backgroundColor: "#eeeeee",
+                  backgroundColor: "#fefefe",
+                  borderRadius: 4,
+                  color: "#3366CC",
+                }}
+              >
+                {account?.address?.slice(0, 10)}......
+                {account?.address?.slice(35)}
+              </Button>
+            </Tooltip>
+          </CopyToClipboard>
         </Typography>
+
         <Typography
           variant="h4"
           sx={{ mt: 1, mb: 3, fontWeight: 500 }}
@@ -115,14 +139,16 @@ const MyNFTs: NextPage = (props) => {
             )}
 
             <Box sx={{ marginBottom: "1%" }}>
-              {collectedNFTCard.length === 0 && createdNFTCard.length === 0 ? (
+              {!isPending &&
+              collectedNFTCard.length === 0 &&
+              createdNFTCard.length === 0 ? (
                 <Box>
                   <Divider sx={{ mt: 3 }} />
                   <Typography
                     color="black"
                     align="center"
-                    variant="h2"
-                    sx={{ mt: 3 }}
+                    variant="h3"
+                    sx={{ mt: 3, mb: 5 }}
                   >
                     No NFTs Exists!
                   </Typography>

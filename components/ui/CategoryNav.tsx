@@ -36,7 +36,7 @@ const CategoryNav: FC<CategoryNavProps> = ({ collections }) => {
         : collections.filter((collection) => item === collection.category);
     const collectionEls = filtercollections.map((collection) => {
       return (
-        <Grid key={collection.id} item xs={3}>
+        <Grid key={collection.id} item md={12}>
           <CollectionCard
             id={collection.id}
             collectionName={collection.collectionName}
@@ -68,13 +68,25 @@ const CategoryNav: FC<CategoryNavProps> = ({ collections }) => {
         <Box sx={{ marginX: "auto", marginBottom: "20px" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tabs
+              // centered
+              // value={value}
+              // onChange={handleChange}
+              // textColor="secondary"
+              // indicatorColor="secondary"
+              // aria-label="secondary tabs example"
+              // sx={{ borderBottom: "1px solid #808080", marginX: "auto" }}
               centered
+              variant="scrollable"
+              scrollButtons={false}
+              //allowScrollButtonsMobile={true}
               value={value}
               onChange={handleChange}
-              textColor="secondary"
+              textColor="primary"
               indicatorColor="secondary"
-              aria-label="secondary tabs example"
-              sx={{ borderBottom: "1px solid #808080", marginX: "auto" }}
+              aria-label="scrollable prevent tabs example"
+              //aria-label="scrollable force tabs example"
+              //aria-label="secondary tabs example"
+              sx={{ marginX: "auto" }}
             >
               {tabEls}
             </Tabs>

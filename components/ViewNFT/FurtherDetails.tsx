@@ -1,15 +1,18 @@
 import * as React from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Card,
+  Tooltip,
+  Button,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoIcon from "@mui/icons-material/Info";
-import CardContent from "@mui/material/CardContent";
 import theme from "../../src/theme";
-
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FC, useState } from "react";
-import Card from "@mui/material/Card";
 
 interface FurtherDetailsProps {
   tokenID: number;
@@ -19,6 +22,8 @@ interface FurtherDetailsProps {
 }
 
 const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
+  const [isCopied, setIsCopied] = useState(false);
+  const [copyValue, setCopyValue] = useState(props.creator);
   return (
     <div>
       <Accordion>
@@ -72,7 +77,24 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
                 color="text.secondary"
                 sx={{ fontWeight: 500, fontSize: "13px" }}
               >
-                {props.creator}
+                <CopyToClipboard
+                  text={copyValue ? copyValue : ""}
+                  onCopy={() => setIsCopied(true)}
+                >
+                  <Tooltip title="Copy" placement="bottom" arrow>
+                    <Button
+                      sx={{
+                        //backgroundColor: "#eeeeee",
+                        backgroundColor: "#fefefe",
+                        borderRadius: 1,
+                        color: "#3366CC",
+                        padding:0
+                      }}
+                    >
+                      {props.creator.slice(0,10)}...{props.creator.slice(35)}
+                    </Button>
+                  </Tooltip>
+                </CopyToClipboard>
               </Typography>
             </div>
             <div
