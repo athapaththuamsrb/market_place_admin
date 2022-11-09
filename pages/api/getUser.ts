@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
             collectionCards.push({
               id: result.id,
-              collectionName: result.collectionAddress,
+              collectionName: result.collectionName,
               featuredImage: result.featuredImage,
               logoImage: result.logoImage,
               category: result.collectionCategory,

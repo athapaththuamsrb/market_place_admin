@@ -20,7 +20,10 @@ import {
   Menu,
   MenuItem,
   Grid,
+  Button,
+  Tooltip,
 } from "@mui/material";
+import theme from "../../../../src/theme";
 import { useAccount, useBalance } from "wagmi";
 import { useIsMounted } from "../../../../components/hooks";
 import Connect from "../../../../components/Login/Connect";
@@ -33,6 +36,7 @@ import React, { useState } from "react";
 import ReportPopup from "../../../../components/ReportPopup";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FlagIcon from "@mui/icons-material/Flag";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 interface UserProfileProps {
   collectedNFTCards: Collection_Card[];
@@ -51,6 +55,8 @@ const UserProfile: NextPage<UserProfileProps> = ({
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isCopied, setIsCopied] = useState(false);
+  const [copyValue, setCopyValue] = useState(userProfile.walletAddress);
   const open1 = Boolean(anchorEl);
   const { data: account } = useAccount();
 
@@ -122,39 +128,58 @@ const UserProfile: NextPage<UserProfileProps> = ({
                   alt={"logo"}
                   loading="lazy"
                 />
-                {userProfile.walletAddress}
+                {"   "}
+                <CopyToClipboard
+                  text={copyValue ? copyValue : ""}
+                  onCopy={() => setIsCopied(true)}
+                >
+                  <Tooltip title="Copy" placement="right" arrow>
+                    <Button
+                      sx={{
+                        //backgroundColor: "#eeeeee",
+                        backgroundColor: "#fefefe",
+                        borderRadius: 4,
+                        color: "#3366CC",
+                      }}
+                    >
+                      {userProfile.walletAddress.slice(0, 10)}...
+                      {userProfile.walletAddress.slice(35)}
+                    </Button>
+                  </Tooltip>
+                </CopyToClipboard>
               </Typography>
             </Grid>
-            {account?.address && (
-              <Grid item xs={1}>
-                <IconButton id="long-button" onClick={handleClick}>
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="long-menu"
-                  anchorEl={anchorEl}
-                  open={open1}
-                  onClose={handleClose}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      setOpenReportPopup(true), setAnchorEl(null);
-                    }}
-                    sx={{ fontWeight: 500, fontSize: 14 }}
+            {account?.address !== userProfile.walletAddress &&
+              account?.address && (
+                <Grid item xs={1}>
+                  <IconButton id="long-button" onClick={handleClick}>
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="long-menu"
+                    anchorEl={anchorEl}
+                    open={open1}
+                    onClose={handleClose}
                   >
-                    <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
-                    Report User
-                  </MenuItem>
-                </Menu>
-                <ReportPopup
-                  reportedId={[userId]}
-                  reportType={"USER"}
-                  reporterId={account?.address}
-                  openReportPopup={openReportPopup}
-                  setOpenReportPopup={setOpenReportPopup}
-                ></ReportPopup>
-              </Grid>
-            )}
+                    <MenuItem
+                      onClick={() => {
+                        setOpenReportPopup(true), setAnchorEl(null);
+                      }}
+                      sx={{ fontWeight: 500, fontSize: 14 }}
+                    >
+                      <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
+                      Report User
+                    </MenuItem>
+                  </Menu>
+                  <ReportPopup
+                    reportedId={[userId]}
+                    reportType={"USER"}
+                    reporterId={account?.address}
+                    openReportPopup={openReportPopup}
+                    setOpenReportPopup={setOpenReportPopup}
+                  ></ReportPopup>
+                </Grid>
+              )}
           </Grid>
         </Box>
 

@@ -14,6 +14,7 @@ import { Box } from "@mui/system";
 interface ViewProps {
   nft: NFT_load;
   saleNum: number;
+  ownerID: string;
 }
 const View: NextPage<ViewProps> = (
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -21,7 +22,11 @@ const View: NextPage<ViewProps> = (
   const isMounted = useIsMounted();
   return isMounted ? (
     <Box>
-      <ViewNFT salesOrder={props.nft} saleNum={props.saleNum} />
+      <ViewNFT
+        salesOrder={props.nft}
+        saleNum={props.saleNum}
+        ownerID={props.ownerID}
+      />
     </Box>
   ) : (
     <Box sx={{ width: "100%" }}>
@@ -46,7 +51,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
       return { notFound: true };
     }
     return {
-      props: { nft: data.data.nft[0], saleNum: data.data.saleNum },
+      props: {
+        nft: data.data.nft[0],
+        saleNum: data.data.saleNum,
+        ownerID: params?.ownerId,
+      },
       revalidate: 1,
     };
   } catch (error) {
