@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
             collectionCards.push({
               id: result.id,
-              collectionName: result.collectionAddress,
+              collectionName: result.collectionName,
               featuredImage: result.featuredImage,
               logoImage: result.logoImage,
               category: result.collectionCategory,
@@ -175,16 +175,36 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               if (!collection) {
                 continue;
               }
-              const list: NFT_Card = {
-                id: nft.tokenUri.raw.split("/")[4],
-                price: "0",
-                image: ipfsData.data.image,
-                name: ipfsData.data.name,
-                listed: false,
-                category: ipfsData.data.category,
-                ownerId: owner.id,
-                ownerWalletAddress: owner.walletAddress,
-              };
+              const activity = await prisma.activity.findFirst({
+                where: {
+                  nftId: lazyNfts.id,
+                  isExpired: false,
+                },
+              });
+              let list: NFT_Card;
+              if (activity) {
+                list = {
+                  id: lazyNfts.id,
+                  price: activity.sellingprice,
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: true,
+                  category: ipfsData.data.category,
+                  ownerId: owner.id,
+                  ownerWalletAddress: owner.walletAddress,
+                };
+              } else {
+                list = {
+                  id: nft.tokenUri.raw.split("/")[4],
+                  price: "0",
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: false,
+                  category: ipfsData.data.category,
+                  ownerId: owner.id,
+                  ownerWalletAddress: owner.walletAddress,
+                };
+              }
               collectedNFTCards.push(list);
             }
           }

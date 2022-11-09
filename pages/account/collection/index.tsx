@@ -19,7 +19,7 @@ const Collection: NextPage = (props) => {
 
   const collectionEls = collectionCards.map((salesOrder) => {
     return (
-      <Grid key={salesOrder.id} item xs={3}>
+      <Grid key={salesOrder.id} item xs={12}>
         <CollectionCard
           id={salesOrder.id}
           collectionName={salesOrder.collectionName}
@@ -56,8 +56,8 @@ const Collection: NextPage = (props) => {
             </Box>
           )}
           <br />
-          {collectionCards.length === 0 ? (
-            <Typography color="black" align="center" variant="h2">
+          {!isPendingCollectionCards && collectionCards.length === 0 ? (
+            <Typography color="black" align="center" variant="h3">
               No Collection Exists
             </Typography>
           ) : (

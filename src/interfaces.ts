@@ -47,6 +47,10 @@ export type NFT_load = {
   creatorWalletAddress: string;
   ownerUsername: string;
   ownerUserID: string;
+  creatorUsername: string;
+  creatorUserID: string;
+  collectionName: string;
+  collectionID: string;
 };
 export type NFT_Card = {
   id: string;

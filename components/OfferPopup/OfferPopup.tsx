@@ -117,7 +117,6 @@ const OfferPopup: FC<OfferPopupProps> = ({
             onChange={formik.handleChange}
           />
           <TextField
-            key={"expireDate"}
             id="expireDate"
             variant="outlined"
             fullWidth

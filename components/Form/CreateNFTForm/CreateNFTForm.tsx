@@ -16,6 +16,8 @@ import {
   FormGroup,
   Box,
   Grid,
+  Card,
+  CardMedia,
 } from "@mui/material";
 import Image from "next/image";
 import { useSigner, useContract } from "wagmi";
@@ -175,13 +177,20 @@ const CreateForm: FC<CreateFormProps> = (props) => {
   }, [collectionItem.length, isPendingCollectionItem, router]);
 
   return !isPendingCollectionItem ? (
-    <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
+    <Box sx={{ width: "70%", marginX: "auto" }}>
       <form onSubmit={formik.handleSubmit}>
-        <Grid container spacing={0}>
-          <Grid item xs={6} alignSelf="center" textAlign={"center"}>
+        <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid
+            item
+            alignSelf="center"
+            textAlign={"center"}
+            xs={12}
+            sm={12}
+            md={6}
+          >
             <label htmlFor="image">
-              <Stack alignItems="center">
-                <Avatar
+              {/* <Stack alignItems="center"> */}
+              {/* <Avatar
                   alt="Remy Sharp"
                   src={props.ipfsImage}
                   sx={{
@@ -190,8 +199,21 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                     boxShadow: 3,
                   }}
                   variant="square"
+                /> */}
+              <Card sx={{ display: "flex", boxShadow: 0 }}>
+                <CardMedia
+                  component="img"
+                  
+                  image={props.ipfsImage}
+                  alt="avatar"
+                  sx={{
+                    
+                    height: 400,
+                    borderRadius: 2,
+                  }}
                 />
-              </Stack>
+              </Card>
+              {/* </Stack> */}
               <br />
               <Box>
                 <Input
@@ -217,8 +239,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               </Button>
             </label>
           </Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={5}>
+          {/* <Grid item xs={1}></Grid> */}
+          <Grid alignSelf={"left"} item xs={12} sm={12} md={6}>
             <Box>
               <TextField
                 sx={{ marginBottom: "30px" }}
@@ -244,6 +266,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 label="Description"
                 variant="outlined"
                 fullWidth
+                multiline
+                rows={5}
                 id="description"
                 name="description"
                 disabled={props.msg === "processing....."}
@@ -258,7 +282,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               ) : null}
             </Box>
 
-            <Box>
+            <Box  sx={{marginBottom:"20px"}}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
                   Collection
@@ -295,6 +319,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 </Typography>
               ) : null}
             </Box>
+
             <Box>
               <FormGroup>
                 <FormControlLabel
@@ -350,8 +375,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 ? true
                 : false
             }
-            style={{ borderWidth: "3px" }}
-            sx={{ marginTop: "50px" }}
+            sx={{ marginTop: "30px" }}
             size="large"
             color="secondary"
             variant="contained"
@@ -375,7 +399,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       />
     </Box>
   ) : (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%"}}>
       <LinearProgress />
     </Box>
   );

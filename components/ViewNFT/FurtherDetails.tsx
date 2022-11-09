@@ -1,20 +1,23 @@
 import * as React from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Card,
+  Link,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoIcon from "@mui/icons-material/Info";
-import CardContent from "@mui/material/CardContent";
-
-import { FC, useState } from "react";
-import Card from "@mui/material/Card";
+import { FC } from "react";
 
 interface FurtherDetailsProps {
   tokenID: number;
-  collection: string;
+  creatorUserID: string;
+  creatorUserName: string;
+  collectionID: string;
+  collectionName: string;
   uri: string;
-  creator: string;
 }
 
 const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
@@ -62,13 +65,18 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
                 marginTop: "10px",
               }}
             >
-              <Typography variant="h4">Creator :</Typography>
+              <Typography variant="h4" sx={{ minWidth: "20%" }}>
+                Creator :
+              </Typography>
+
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 500, fontSize: "13px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
-                {props.creator}
+                <Link href={`../../user/${props.creatorUserID}`}>
+                  {props.creatorUserName}
+                </Link>
               </Typography>
             </div>
             <div
@@ -98,9 +106,11 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 500, fontSize: "13px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
-                {props.collection}
+                <Link href={`../../collection/${props.collectionID}`}>
+                  {props.collectionName}
+                </Link>
               </Typography>
             </div>
             <div
@@ -152,83 +162,6 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               </Typography>
             </div>
           </Card>
-          {/* <Typography
-            sx={{
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Token ID : {props.tokenID}
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Creator : {props.creator}
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Token Standard : ERC721
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Contract Address : {props.collection}
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Blockchain : Etheruem
-          </Typography>
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Metadata : {props.uri}
-          </Typography>
-
-          <Typography
-            sx={{
-              marginTop: "10px",
-              fontWeight: 400,
-              fontSize: 15,
-            }}
-            variant="h4"
-            align="left"
-          >
-            Creator Fee : 0%
-          </Typography> */}
         </AccordionDetails>
       </Accordion>
     </div>

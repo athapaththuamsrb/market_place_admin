@@ -74,7 +74,7 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
       const res1 = await axios.post("api/createNFT", {
         ...props.salesOrder,
       });
-      props.setMsg(res1.status === 201 ? "successful!!" : "Try again!!");
+      props.setMsg(res1.status === 201 ? "Successful!" : "Try Again!");
       props.setOpen(true);
     } catch (error) {
       props.setOpen(true);

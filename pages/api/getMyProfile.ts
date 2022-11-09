@@ -25,13 +25,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (user.status == "ACTIVE" || user.status == "REPORTED") {
           const profile: Profile = {
             bannerImage: user.bannerImage,
-            profileImage: user.profileImage,  
+            profileImage: user.profileImage,
             userName: user.userName,
             walletAddress: user.walletAddress,
           };
 
           // create a jwt token that is valid for 2 days
-          const token : String = jwt.sign(
+          const token: String = jwt.sign(
             { walletAddress: user.walletAddress, type: user.type },
             process.env.ACCESS_TOKEN_SECRET,
             {

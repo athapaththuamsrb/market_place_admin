@@ -13,8 +13,11 @@ import {
   Stack,
   Box,
   Grid,
+  Card,
+  CardMedia,
 } from "@mui/material";
 import axios from "axios";
+import theme from "../../../src/theme";
 import ModalPopUp from "../../Modal";
 import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import * as Yup from "yup";
@@ -180,11 +183,28 @@ const CreateForm: FC<CreateFormProps> = (props) => {
   });
   //TODO THIS IS USE FOR SHOW NFT IMAGE IN CONFIRM MODAL
   return (
-    <Box sx={{ flexGrow: 1, width: "70%", marginX: "auto" }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        [theme.breakpoints.up("md")]: {
+          width: "60%",
+        },
+        [theme.breakpoints.down("md")]: {
+          width: "80%",
+        },
+        marginX: "auto",
+      }}
+    >
       <form onSubmit={formik.handleSubmit}>
-        <Grid container spacing={0}>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={8} alignSelf="center" textAlign={"center"}>
+        <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            alignSelf="center"
+            textAlign={"center"}
+          >
             <label htmlFor="logoImage">
               {image["logoImage"] && (
                 <Stack alignItems="center">
@@ -231,20 +251,34 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             </label>
 
             <label htmlFor="featuredImage">
-              <br />
               {image["featuredImage"] && (
-                <Stack alignItems="center">
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={image["featuredImage"]}
+                // <Stack alignItems="center">
+                //   <Avatar
+                //     alt="Remy Sharp"
+                //     src={image["featuredImage"]}
+                //     sx={{
+                //       width: 500,
+                //       height: 200,
+                //       boxShadow: 3,
+                //     }}
+                //     variant="square"
+                //   />
+                // </Stack>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius: 5 }}>
+                  <CardMedia
+                    component="img"
+                    // height="400"
+                    // width="400"
+                    image={image["featuredImage"]}
+                    alt="avatar"
                     sx={{
-                      width: 500,
-                      height: 200,
+                      //maxWidth: 600,
+                      height: 300,
+                      borderRadius: 5,
                       boxShadow: 3,
                     }}
-                    variant="square"
                   />
-                </Stack>
+                </Card>
               )}
               <br />
               <Input
@@ -275,23 +309,37 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 homepage, category pages. 600 x 400 recommended.
               </Typography>
             </label>
-            <br />
 
             <label htmlFor="bannerImage">
               <br />
               {image["bannerImage"] && (
-                <Stack alignItems="center">
-                  <Avatar
-                    alt="Remy Sharp"
-                    src={image["bannerImage"]}
+                // <Stack alignItems="center">
+                //   <Avatar
+                //     alt="Remy Sharp"
+                //     src={image["bannerImage"]}
+                //     sx={{
+                //       width: 500,
+                //       height: 200,
+                //       boxShadow: 3,
+                //     }}
+                //     variant="square"
+                //   />
+                // </Stack>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius: 5 }}>
+                  <CardMedia
+                    component="img"
+                    // height="400"
+                    // width="400"
+                    image={image["bannerImage"]}
+                    alt="avatar"
                     sx={{
-                      width: 500,
-                      height: 200,
+                      //maxWidth: 600,
+                      height: 400,
+                      borderRadius: 5,
                       boxShadow: 3,
                     }}
-                    variant="square"
                   />
-                </Stack>
+                </Card>
               )}
               <br />
               <Input
@@ -399,9 +447,8 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               ) : null}
             </Box>
           </Grid>
-          <Grid item xs={2}></Grid>
         </Grid>
-        <Box textAlign={"center"} sx={{ marginY: "40px" }}>
+        <Box textAlign={"center"} sx={{ marginBottom: "60px" }}>
           <Button
             type="submit"
             disabled={

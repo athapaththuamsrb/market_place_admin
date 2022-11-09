@@ -26,19 +26,21 @@ import { Report } from "../../../../src/interfaces";
 import AdminMenu from "../../../../components/Admin/AdminMenu";
 import Title from "../../../../components/ui/Title";
 import axios from "axios";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import theme from "../../../../src/theme";
 
 function CustomToolbar() {
   return (
     <GridToolbarContainer
       sx={{
-        backgroundColor: "#FCFCFC",
+        backgroundColor: "white",
       }}
     >
       <GridToolbarExport
         sx={{
           mx: 1,
           color: "white",
-          backgroundColor: "#CA82FF",
+          backgroundColor: "#c9c9c9",
           marginY: 0.15,
           fontSize: 16,
         }}
@@ -131,7 +133,7 @@ const ReportedUsers: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("../../../api/getReports")
+        .get("api/getReports")
         .then((res) => {
           setRows(
             res.data.data.filter(
@@ -159,7 +161,7 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("../../api/setBlock", {
+          .post("api/setBlock", {
             data: {
               id: user.reportedId,
             },
@@ -188,7 +190,7 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("../../api/setBlock", {
+          .post("api/setBlock", {
             data: {
               id: user.reportedId,
             },
@@ -221,29 +223,50 @@ const ReportedUsers: NextPage = (props) => {
         </Box>
       )}
       <Title firstWord="Reported" secondWord="Users" />
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Link href="/admin" underline="none">
-          <Button
-            size="small"
-            color="secondary"
-            variant="contained"
-            endIcon={<GroupIcon color="disabled" />}
-            sx={{
-              marginX: "10px",
-            }}
-          >
-            <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
-              Admin Dashboard
-            </Typography>
-          </Button>
-        </Link>
-        <AdminMenu />
-      </Grid>
+
+      <Box textAlign={"center"} display="flex" justifyContent="space-evenly">
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          rowSpacing={2}
+          columnSpacing={{ xs: 1, sm: 1, md: 1 }}
+          sx={{ maxWidth: "80%" }}
+        >
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <Link href="/admin" underline="none">
+              <Button
+                size="small"
+                color="secondary"
+                variant="contained"
+                endIcon={<ArrowBackIcon color="action" fontSize="large" />}
+                sx={{
+                  minWidth: "40%",
+                  height: "50px",
+                  borderRadius: 3,
+                }}
+              >
+                <Typography
+                  color="white"
+                  variant="h6"
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      fontWeight: 600,
+                      fontSize: 17,
+                    },
+                  }}
+                >
+                  Admin Dashboard
+                </Typography>
+              </Button>
+            </Link>
+          </Grid>{" "}
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <AdminMenu />
+          </Grid>
+        </Grid>
+      </Box>
       <Box
         sx={{
           flexGrow: 1,
@@ -294,7 +317,6 @@ const ReportedUsers: NextPage = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog
         open={openVerify}
         onClose={handleCloseVerify}

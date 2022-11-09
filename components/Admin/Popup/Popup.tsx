@@ -39,7 +39,7 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
       const newAdmin: User = users.find(
         (user: User) => user.User_ID === User_ID
       )!;
-      axios.put("../../../api/addAdmin", { newAdmin }).then(() => {
+      axios.put("api/addAdmin", { newAdmin }).then(() => {
         //console.log(newAdmin);
         setName("");
         setUser_ID("");
@@ -62,7 +62,8 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
     <Dialog open={openPopup}>
       <DialogTitle
         sx={{
-          backgroundColor: "#CA82FF",
+          //backgroundColor: "#CA82FF",
+          backgroundColor: "#b9b9b9",
           color: "white",
         }}
       >
@@ -151,8 +152,9 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
           onClick={() => handleSubmit()}
           type="submit"
           size="small"
-          color="secondary"
+          //color="secondary"
           variant="contained"
+          sx={{backgroundColor:"#b9b9b9"}}
         >
           <Typography
             color="white"
