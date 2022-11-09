@@ -44,6 +44,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               if (ipfsData.data.royality) {
                 royality = ipfsData.data.royality;
               }
+              const creator = await prisma.user.findUnique({
+                where: { walletAddress: ipfsData.data.creator },
+              });
               const collection = await prisma.collection.findUnique({
                 where: {
                   collectionAddress: ipfsData.data.collection,
@@ -73,6 +76,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   creatorWalletAddress: ipfsData.data.creator,
                   ownerUsername: ownedUser?.userName!,
                   ownerUserID: ownedUser?.id!,
+                  creatorUsername: creator?.userName!,
+                  creatorUserID: creator?.id!,
+                  collectionName: collection.collectionName,
+                  collectionID: collection.id,
                 },
               ];
               const activityList = await prisma.activity.findMany({
@@ -120,6 +127,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             if (ipfsData.data.royality) {
               royality = ipfsData.data.royality;
             }
+            const collection = await prisma.collection.findUnique({
+              where: { collectionAddress: ipfsData.data.collection },
+            });
+            const creator = await prisma.user.findUnique({
+              where: { walletAddress: ipfsData.data.creator },
+            });
             let finalNFT: NFT_load[];
             if (activity) {
               finalNFT = [
@@ -143,6 +156,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   creatorWalletAddress: ipfsData.data.creator,
                   ownerUsername: ownedUser?.userName!,
                   ownerUserID: ownedUser?.id!,
+                  creatorUsername: creator?.userName!,
+                  creatorUserID: creator?.id!,
+                  collectionName: collection?.collectionName!,
+                  collectionID: collection?.id!,
                 },
               ];
             } else {
@@ -167,6 +184,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   creatorWalletAddress: ipfsData.data.creator,
                   ownerUsername: ownedUser?.userName!,
                   ownerUserID: ownedUser?.id!,
+                  creatorUsername: creator?.userName!,
+                  creatorUserID: creator?.id!,
+                  collectionName: collection?.collectionName!,
+                  collectionID: collection?.id!,
                 },
               ];
             }

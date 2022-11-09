@@ -1,6 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import { Activity, NFT_load, Offer } from "../../src/interfaces";
-import { Typography, Button, Grid, Avatar, Stack, Chip } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Grid,
+  Avatar,
+  Stack,
+  Chip,
+  Tooltip,
+} from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
@@ -44,10 +52,12 @@ import Link from "@mui/material/Link";
 import theme from "../../src/theme";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
   saleNum: number;
+  ownerID: string;
 }
 
 const ViewNFT: FC<ViewNFTProps> = (props) => {
@@ -73,6 +83,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const open1 = Boolean(anchorEl);
   const [activity, setActivity] = useState<Activity[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
+  const [copyURL, setCopyURL] = useState(
+    "http://localhost:3000/view/nft/" +
+      props.ownerID +
+      "/" +
+      props.salesOrder.id
+  );
+  const [isURLCopied, setIsURLCopied] = useState(false);
   const {
     activeConnector,
     connect,
@@ -632,10 +649,17 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   sx={{ color: "black" }}
                 >
                   <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share" sx={{ color: "black" }}>
-                  <ShareIcon />
-                </IconButton>
+                </IconButton>{" "}
+                <CopyToClipboard
+                  text={copyURL}
+                  onCopy={() => setIsURLCopied(true)}
+                >
+                  <Tooltip title="Copy URL" placement="right" arrow>
+                    <IconButton aria-label="share" sx={{ color: "black" }}>
+                      <ShareIcon />
+                    </IconButton>
+                  </Tooltip>
+                </CopyToClipboard>
               </CardActions>
             </Card>
           </Grid>
@@ -646,9 +670,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid alignSelf={"left"} item xs={12} sm={12} md={5}>
             <FurtherDetails
-              creator={props.salesOrder?.creatorWalletAddress}
+              creatorUserID={props.salesOrder?.creatorUserID}
+              creatorUserName={props.salesOrder?.creatorUsername}
               tokenID={props.salesOrder?.tokenID}
-              collection={props.salesOrder?.collection}
+              collectionID={props.salesOrder?.collectionID}
+              collectionName={props.salesOrder?.collectionName}
               uri={props.salesOrder?.uri}
             />
           </Grid>

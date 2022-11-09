@@ -5,25 +5,22 @@ import {
   AccordionDetails,
   Typography,
   Card,
-  Tooltip,
-  Button,
+  Link,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoIcon from "@mui/icons-material/Info";
-import theme from "../../src/theme";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 interface FurtherDetailsProps {
   tokenID: number;
-  collection: string;
+  creatorUserID: string;
+  creatorUserName: string;
+  collectionID: string;
+  collectionName: string;
   uri: string;
-  creator: string;
 }
 
 const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
-  const [isCopied, setIsCopied] = useState(false);
-  const [copyValue, setCopyValue] = useState(props.creator);
   return (
     <div>
       <Accordion>
@@ -75,26 +72,11 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 500, fontSize: "13px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
-                <CopyToClipboard
-                  text={copyValue ? copyValue : ""}
-                  onCopy={() => setIsCopied(true)}
-                >
-                  <Tooltip title="Copy" placement="bottom" arrow>
-                    <Button
-                      sx={{
-                        //backgroundColor: "#eeeeee",
-                        backgroundColor: "#fefefe",
-                        borderRadius: 1,
-                        color: "#3366CC",
-                        padding:0
-                      }}
-                    >
-                      {props.creator.slice(0,10)}...{props.creator.slice(35)}
-                    </Button>
-                  </Tooltip>
-                </CopyToClipboard>
+                <Link href={`../../user/${props.creatorUserID}`}>
+                  {props.creatorUserName}
+                </Link>
               </Typography>
             </div>
             <div
@@ -124,9 +106,11 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ fontWeight: 500, fontSize: "13px" }}
+                sx={{ fontWeight: 500, fontSize: "15px" }}
               >
-                {props.collection}
+                <Link href={`../../collection/${props.collectionID}`}>
+                  {props.collectionName}
+                </Link>
               </Typography>
             </div>
             <div
