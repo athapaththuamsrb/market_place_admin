@@ -164,11 +164,12 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: user.reportedId,
             },
             action: "block",
+            type: "User",
           })
           .then(() => {
             setIsPending(false);
@@ -193,11 +194,12 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: user.reportedId,
             },
             action: "verify",
+            type: "User",
           })
           .then(() => {
             setIsPending(false);

@@ -169,11 +169,12 @@ const ViewReportedCollections: NextPage = (props) => {
       setTimeout(() => {
         collection;
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: collection.reportedId,
             },
             action: "block",
+            type: "Collection",
           })
           .then(() => {
             setIsPending(false);
@@ -200,11 +201,12 @@ const ViewReportedCollections: NextPage = (props) => {
       )!;
       setTimeout(() => {
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: collection.reportedId,
             },
             action: "verify",
+            type: "Collection",
           })
           .then(() => {
             setIsPending(false);
