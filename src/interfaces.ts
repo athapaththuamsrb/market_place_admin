@@ -151,6 +151,7 @@ export type NFT_Report = {
 export type Report = {
   id: string;
   reportedId: string; // id of nft, user or collection
+  reportedOwner: string | undefined; // owner id of reported nft
   reportType: string; //nft, user or collection
   reporter: string | undefined; // who reported
   reporterId: string; // reported person's ID

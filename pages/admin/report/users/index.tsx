@@ -99,7 +99,10 @@ const ReportedUsers: NextPage = (props) => {
           key={params.row.id}
           sx={{ color: "black" }}
         >
-          <Link href={`../../view/user/${params.row.id}`} underline="hover">
+          <Link
+            href={`../../view/user/${params.row.reportedId}`}
+            underline="hover"
+          >
             <a>View Account</a>
           </Link>
         </Button>,
