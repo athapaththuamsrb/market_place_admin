@@ -31,7 +31,7 @@ const CollectionCard: FC<NFTProps> = ({
         <Card
           sx={{
             border: "solid",
-            width: 450,
+            //width: 450,
             marginX: "auto",
             "&:hover": {
               opacity: [0.9, 0.8, 0.7],
