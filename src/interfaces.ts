@@ -83,9 +83,9 @@ export type User = {
   User_ID: string;
   Name: string;
   //Date: Date;
-  Total: number;
-  Created: number;
-  Collections: number;
+  //Total: number;
+  //Created: number;
+  //Collections: number;
   Status: string;
   Type: string;
   reportType: string;
