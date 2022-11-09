@@ -9,6 +9,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Typography } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import Link from "@mui/material/Link";
+import theme from "../../src/theme";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -77,11 +78,23 @@ export default function CustomizedMenus() {
         size="small"
         color="primary"
         sx={{
-          marginX: "10px",
+          minWidth: "40%",
+          height: "50px",
+          borderRadius: 3,
         }}
         //sx={{display:"inline"}}
       >
-        <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
+        <Typography
+          color="white"
+          variant="h6"
+          sx={{
+            fontWeight: 500,
+            [theme.breakpoints.down("sm")]: {
+              fontWeight: 600,
+              fontSize: 15,
+            },
+          }}
+        >
           Reports
         </Typography>
       </Button>

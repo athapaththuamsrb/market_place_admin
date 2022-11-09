@@ -86,8 +86,8 @@ const ReportPopup: FC<ReportPopupProps> = ({
         <DialogTitle
           sx={{
             // backgroundColor: "#CA82FF",
-            backgroundColor: "#c9c9c9",
-            color: "black",
+            backgroundColor: "#b9b9b9",
+            color: "white",
           }}
         >
           <div style={{ display: "flex" }}>
@@ -152,22 +152,6 @@ const ReportPopup: FC<ReportPopupProps> = ({
               </Select>
             </FormControl>
           </Box>
-          {/* <TextField
-          //value={Offer_Amount}
-          //onChange={(e) => setUser_ID(e.target.value)}
-
-          autoFocus
-          margin="dense"
-          id="Reason"
-          label="Reason"
-          multiline
-          rows={4}
-          type="text"
-          fullWidth
-          variant="outlined"
-
-          //error={Offer_AmountError}
-        /> */}
         </DialogContent>
 
         <DialogActions>

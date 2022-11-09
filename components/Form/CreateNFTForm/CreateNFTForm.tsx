@@ -203,12 +203,11 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Card sx={{ display: "flex", boxShadow: 0 }}>
                 <CardMedia
                   component="img"
-                  // height="400"
-                  // width="400"
+                  
                   image={props.ipfsImage}
                   alt="avatar"
                   sx={{
-                    //width: 400,
+                    
                     height: 400,
                     borderRadius: 2,
                   }}
@@ -400,7 +399,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       />
     </Box>
   ) : (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%"}}>
       <LinearProgress />
     </Box>
   );

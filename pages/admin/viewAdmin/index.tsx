@@ -21,27 +21,28 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import GroupIcon from "@mui/icons-material/Group";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PopUp from "../../../components/Admin/Popup";
 import { User } from "../../../src/interfaces";
-import AdminMenu from "../../../components/Admin/AdminMenu";
 import Link from "@mui/material/Link";
 import Title from "../../../components/ui/Title";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import axios from "axios";
 import { useGetMyProfile } from "../../../components/hooks/useHook";
+import theme from "../../../src/theme";
 
 function CustomToolbar() {
   return (
     <GridToolbarContainer
       sx={{
-        backgroundColor: "#FCFCFC",
+        backgroundColor: "white",
       }}
     >
       <GridToolbarExport
         sx={{
           mx: 1,
           color: "white",
-          backgroundColor: "#CA82FF",
+          backgroundColor: "#c9c9c9",
           marginY: 0.15,
           fontSize: 16,
         }}
@@ -197,47 +198,77 @@ const ViewAdmins: NextPage = (props) => {
         </Box>
       )}
       <Title firstWord="Admin" secondWord="Panel" />
-
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Link href="/admin" underline="none">
-          <Button
-            size="small"
-            color="secondary"
-            variant="contained"
-            endIcon={<GroupIcon color="disabled" />}
-            sx={{
-              marginX: "10px",
-            }}
-          >
-            <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
-              Admin Dashboard
-            </Typography>
-          </Button>
-        </Link>
-        <AdminMenu />
-        {isSuperAdmin && (
-          <Button
-            onClick={() => setOpenPopup(true)}
-            type="submit"
-            size="small"
-            color="secondary"
-            variant="contained"
-            endIcon={<AddCircleIcon color="disabled" />}
-            sx={{
-              marginX: "10px",
-            }}
-          >
-            <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
-              Add Admin
-            </Typography>
-          </Button>
-        )}
-      </Grid>
+      <Box textAlign={"center"} display="flex" justifyContent="space-evenly">
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          rowSpacing={2}
+          columnSpacing={{ xs: 1, sm: 1, md: 1 }}
+          sx={{ maxWidth: "80%" }}
+        >
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <Link href="/admin" underline="none">
+              <Button
+                size="small"
+                color="secondary"
+                variant="contained"
+                startIcon={<ArrowBackIcon color="action" fontSize="large" />}
+                sx={{
+                  minWidth: "40%",
+                  height: "50px",
+                  borderRadius: 3,
+                }}
+              >
+                <Typography
+                  color="white"
+                  variant="h6"
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      fontWeight: 600,
+                      fontSize: 17,
+                    },
+                  }}
+                >
+                  Admin Dashboard
+                </Typography>
+              </Button>
+            </Link>
+          </Grid>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            {isSuperAdmin && (
+              <Button
+                onClick={() => setOpenPopup(true)}
+                type="submit"
+                size="small"
+                //color="primary"
+                variant="contained"
+                endIcon={<AddCircleIcon/>}
+                sx={{
+                  minWidth: "40%",
+                  height: "50px",
+                  borderRadius: 3,
+                  backgroundColor: "black",
+                }}
+              >
+                <Typography
+                  color="white"
+                  variant="h6"
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      fontWeight: 600,
+                      fontSize: 17,
+                    },
+                  }}
+                >
+                  Add Admin
+                </Typography>
+              </Button>
+            )}
+          </Grid>
+        </Grid>
+      </Box>
       <Box
         sx={{
           flexGrow: 1,
