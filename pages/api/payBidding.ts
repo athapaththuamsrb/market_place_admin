@@ -85,9 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               .json({ message: "Successfully done", success: true });
           } else {
             await prisma.$disconnect();
-            res
-              .status(401)
-              .json({ message: "unauthorized", success: false, data: [] });
+            res.status(401).json({ message: "unauthorized", success: false });
           }
         } catch (error) {
           console.log(error);
@@ -95,16 +93,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           res.status(401).json({ message: "unauthorized", success: false });
         }
       } else {
-        res
-          .status(401)
-          .json({ message: "Unauthorized", success: false, data: [] });
+        res.status(401).json({ message: "Unauthorized", success: false });
       }
     });
-    res.status(200).json({ message: "success", success: true, data: [] });
   } else {
-    res
-      .status(405)
-      .json({ message: "Method not alloed", success: false, data: [] });
+    res.status(405).json({ message: "Method not alloed", success: false });
   }
 };
 export default handler;

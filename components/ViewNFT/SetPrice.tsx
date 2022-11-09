@@ -107,6 +107,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
               endDate: timestampInMs,
               signature: signature,
               saleWay: alignment,
+              token: token,
             },
           });
           setMsg(res1.status === 204 ? "Successful!" : "Try again!!");

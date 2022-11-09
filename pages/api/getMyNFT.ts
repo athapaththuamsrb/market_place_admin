@@ -76,8 +76,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     ownerWalletAddress: ownerCreator.walletAddress,
                   };
                 } else {
+                  const id = nft.isMinted ? nft.uri.split("/")[4] : nft.id;
                   list = {
-                    id: nft.id,
+                    id: id,
                     price: "0",
                     image: ipfsData.data.image,
                     name: ipfsData.data.name,
@@ -88,39 +89,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   };
                 }
                 createdNFTCard.push(list);
-              } else if (nft.ownerId === owner.id) {
-                if (nft.isMinted) continue;
-                const activity = await prisma.activity.findFirst({
-                  where: {
-                    nftId: nft.id,
-                    isExpired: false,
-                  },
-                });
-                let list: NFT_Card;
-                if (activity) {
-                  list = {
-                    id: nft.id,
-                    price: activity.sellingprice,
-                    image: ipfsData.data.image,
-                    name: ipfsData.data.name,
-                    listed: true,
-                    category: ipfsData.data.category,
-                    ownerId: owner.id,
-                    ownerWalletAddress: owner.walletAddress,
-                  };
-                } else {
-                  list = {
-                    id: nft.id,
-                    price: "0",
-                    image: ipfsData.data.image,
-                    name: ipfsData.data.name,
-                    listed: false,
-                    category: ipfsData.data.category,
-                    ownerId: owner.id,
-                    ownerWalletAddress: owner.walletAddress,
-                  };
-                }
-                collectedNFTCard.push(list);
               }
             }
           }
@@ -153,6 +121,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               if (!collection) {
                 throw new Error("Collection is not exist");
               }
+              console.log(nft.tokenUri.raw);
               const activity = await prisma.activity.findFirst({
                 where: {
                   nftId: lazyNfts.id,
@@ -187,7 +156,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               collectedNFTCard.push(list);
             }
           }
-          console.log(collectedNFTCard);
           res.status(201).json({
             message: "Successfully received",
             success: true,
