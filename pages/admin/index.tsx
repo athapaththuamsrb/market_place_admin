@@ -25,6 +25,7 @@ import Link from "@mui/material/Link";
 import GroupIcon from "@mui/icons-material/Group";
 import axios from "axios";
 import { User } from "../../src/interfaces";
+import theme from "../../src/theme";
 
 const AllUsers: NextPage = (props) => {
   const column = [
@@ -116,14 +117,14 @@ const AllUsers: NextPage = (props) => {
     return (
       <GridToolbarContainer
         sx={{
-          backgroundColor: "#FCFCFC",
+          backgroundColor: "white",
         }}
       >
         <GridToolbarExport
           sx={{
             mx: 1,
             color: "white",
-            backgroundColor: "#CA82FF",
+            backgroundColor: "#c9c9c9",
             marginY: 0.15,
             fontSize: 16,
           }}
@@ -138,31 +139,56 @@ const AllUsers: NextPage = (props) => {
           <LinearProgress />
         </Box>
       )}
-      <Title firstWord="Admin" secondWord="Dashboard" />
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Link href="/admin/viewAdmin" underline="none">
-          <Button
-            size="small"
-            color="secondary"
-            variant="contained"
-            endIcon={<GroupIcon color="disabled" />}
-            sx={{
-              marginX: "20px",
-            }}
-          >
-            <Typography color="white" variant="h6" sx={{ fontWeight: 500 }}>
-              Admin Panel
-            </Typography>
-          </Button>
-        </Link>
-        <AdminMenu />
-      </Grid>
 
+      <Title firstWord="Admin" secondWord="Dashboard" />
+      <Typography variant="h2" align="center" marginBottom={3}>
+        Exclusives Users
+      </Typography>
+      <Box
+        marginTop={5}
+        textAlign={"center"}
+        display="flex"
+        justifyContent="space-evenly"
+      >
+        <Grid
+          container
+          rowSpacing={2}
+          columnSpacing={{ xs: 1, sm: 1, md: 1 }}
+          sx={{ maxWidth: "80%" }}
+        >
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <Link href="/admin/viewAdmin" underline="none">
+              <Button
+                size="small"
+                color="secondary"
+                variant="contained"
+                endIcon={<GroupIcon color="disabled" />}
+                sx={{
+                  minWidth: "40%",
+                  height: "50px",
+                  borderRadius: 3,
+                }}
+              >
+                <Typography
+                  color="white"
+                  variant="h6"
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      fontWeight: 600,
+                      fontSize: 15,
+                    },
+                  }}
+                >
+                  Admin Panel
+                </Typography>
+              </Button>
+            </Link>
+          </Grid>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <AdminMenu />
+          </Grid>
+        </Grid>
+      </Box>
       <Box
         sx={{
           flexGrow: 1,
