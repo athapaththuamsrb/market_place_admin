@@ -101,7 +101,7 @@ const ViewReportedCollections: NextPage = (props) => {
           key={params.row.id}
         >
           <Link
-            href={`../../view/collection/${params.row.id}`}
+            href={`../../view/collection/${params.row.reportedId}`}
             underline="hover"
           >
             <a>View Collection</a>
