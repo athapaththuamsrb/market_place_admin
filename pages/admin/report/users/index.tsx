@@ -136,7 +136,7 @@ const ReportedUsers: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("api/getReports")
+        .get("../../../api/getReports")
         .then((res) => {
           setRows(
             res.data.data.filter(

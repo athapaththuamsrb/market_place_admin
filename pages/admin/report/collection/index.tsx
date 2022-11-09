@@ -137,8 +137,9 @@ const ViewReportedCollections: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("api/getReports")
+        .get("../../../api/getReports")
         .then((res) => {
+          console.log(res);
           setCollections(
             res.data.data.filter(
               (report: Report) => report.reportType === "Collection"
