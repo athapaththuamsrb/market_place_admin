@@ -105,39 +105,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   };
                 }
                 createdNFTCards.push(list);
-              } else if (nft.ownerId === owner.id) {
-                if (nft.isMinted) continue;
-                const activity = await prisma.activity.findFirst({
-                  where: {
-                    nftId: nft.id,
-                    isExpired: false,
-                  },
-                });
-                let list: NFT_Card;
-                if (activity) {
-                  list = {
-                    id: nft.id,
-                    price: activity.sellingprice,
-                    image: ipfsData.data.image,
-                    name: ipfsData.data.name,
-                    listed: true,
-                    category: ipfsData.data.category,
-                    ownerId: owner.id,
-                    ownerWalletAddress: owner.walletAddress,
-                  };
-                } else {
-                  list = {
-                    id: nft.id,
-                    price: "0",
-                    image: ipfsData.data.image,
-                    name: ipfsData.data.name,
-                    listed: false,
-                    category: ipfsData.data.category,
-                    ownerId: owner.id,
-                    ownerWalletAddress: owner.walletAddress,
-                  };
-                }
-                collectedNFTCards.push(list);
               }
             }
           }
