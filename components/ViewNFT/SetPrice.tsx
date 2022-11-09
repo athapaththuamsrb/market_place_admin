@@ -11,7 +11,7 @@ import {
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
-import { useSigner, useAccount } from "wagmi";
+import { useSigner, useAccount, useConnect } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import { ethers } from "ethers";
 import api from "../../lib/api";
@@ -30,11 +30,19 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ItemActivity from "../ui/ItemActivity";
 import { useIsMounted } from "../hooks";
 import axios from "axios";
-
+import authService from "../../services/auth.service";
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
 const SetPrice: FC<ViewNFTProps> = (props) => {
+  const {
+    activeConnector,
+    connect,
+    connectors,
+    error,
+    isConnecting,
+    pendingConnector,
+  } = useConnect();
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const { data: account } = useAccount();
@@ -81,6 +89,12 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
             price: ethers.utils.parseEther(values.price), //TODO PRICE
           },
         });
+        let token;
+        if (activeConnector) {
+          token = authService.getUserToken();
+        } else {
+          throw new Error("User is not exist");
+        }
         if (props.salesOrder.id.length === 46) {
           const res1 = await axios.post("/api/addNFTToDB", {
             data: {
@@ -106,6 +120,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
               signature: signature,
               saleWay: alignment,
               endDate: timestampInMs,
+              token: token,
             },
           });
           setMsg(res1.status === 201 ? "Successful!" : "Try again!!");

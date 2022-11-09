@@ -61,6 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   category: ipfsData.data.category,
                   collection: ipfsData.data.collection,
                   price: "0",
+                  offerPrice: "0",
                   image: ipfsData.data.image,
                   listed: false,
                   tokenID: parseInt(data.ownedNfts[indexNo].id.tokenId, 16),
@@ -68,6 +69,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   endDate: "None",
                   listingtype: "None",
                   signature: "None",
+                  offerSignature: "None",
                   sold: false,
                   description: ipfsData.data.description,
                   name: ipfsData.data.name,
@@ -133,14 +135,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const creator = await prisma.user.findUnique({
               where: { walletAddress: ipfsData.data.creator },
             });
+
             let finalNFT: NFT_load[];
             if (activity) {
+              const offer = await prisma.bidding.findFirst({
+                where: {
+                  state: "ACCEPTED",
+                  isExpired: false,
+                  activityId: activity.id,
+                },
+              });
+              let offerPrice = "0";
+              if (offer) {
+                offerPrice = offer.price;
+              }
               finalNFT = [
                 {
                   id: nft.id,
                   category: ipfsData.data.category,
                   collection: ipfsData.data.collection,
                   price: activity.sellingprice,
+                  offerPrice: offerPrice,
                   image: ipfsData.data.image,
                   listed: true,
                   tokenID: nft.tokenID,
@@ -148,6 +163,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   listingtype: activity.listingtype,
                   endDate: activity.endDate.toString(),
                   signature: activity.signature,
+                  offerSignature: activity.biddingSignature,
                   sold: false,
                   description: ipfsData.data.description,
                   name: ipfsData.data.name,
@@ -169,6 +185,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   category: ipfsData.data.category,
                   collection: ipfsData.data.collection,
                   price: "0",
+                  offerPrice: "0",
                   image: ipfsData.data.image,
                   listed: false,
                   tokenID: nft.tokenID,
@@ -176,6 +193,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   endDate: "None",
                   listingtype: "None",
                   signature: "None",
+                  offerSignature: "None",
                   sold: false,
                   description: ipfsData.data.description,
                   name: ipfsData.data.name,

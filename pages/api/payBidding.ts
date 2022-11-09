@@ -6,14 +6,13 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     // Process a POST request
-    const { nftId, token, price, time } = req.body.data;
+    const { id, token, price, time } = req.body.data;
     await authToken.userAuthToken(token).then(async (address) => {
       if (ethers.utils.isAddress(address!) && typeof address == "string") {
         try {
           const user = await prisma.user.findUnique({
             where: { walletAddress: address },
           });
-
           if (user) {
             let owner = await prisma.owner.findUnique({
               where: { walletAddress: address },
@@ -23,10 +22,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: { walletAddress: address, userId: user.id },
               });
             }
-            const nft = await prisma.nFT.findUnique({ where: { id: nftId } });
+            const nft = await prisma.nFT.findUnique({ where: { id: id } });
             if (!nft) throw new Error("nft is not exist");
             const activity = await prisma.activity.findFirst({
-              where: { nftId: nftId, isPenddingPayment: true },
+              where: { nftId: id, isPenddingPayment: true },
             });
             if (!activity) throw new Error("activity is not exist");
             const bidding = await prisma.bidding.findFirst({
@@ -80,6 +79,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               },
             });
             await prisma.$disconnect();
+            console.log("aa");
             res
               .status(201)
               .json({ message: "Successfully done", success: true });

@@ -38,10 +38,10 @@ interface CollectionProps {
   collectionId: string;
 }
 const Collection: NextPage<CollectionProps> = ({
-  nftList,
-  collectionData,
-  collectionId,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      nftList,
+      collectionData,
+      collectionId,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -85,6 +85,7 @@ const Collection: NextPage<CollectionProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+  console.log(collectionData);
   return isMounted ? (
     <Box>
       {collectionData.bannerImage && (
@@ -157,7 +158,7 @@ const Collection: NextPage<CollectionProps> = ({
                   src={"/ethereum1.png"}
                   alt={"logo"}
                   loading="lazy"
-                />{" "}
+                />
                 {collectionData.totalVolume}
                 {"K"}
                 <br />
