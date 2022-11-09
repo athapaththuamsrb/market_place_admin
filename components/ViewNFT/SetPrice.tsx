@@ -313,9 +313,11 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
         <Grid container columnSpacing={2}>
           <Grid alignSelf={"center"} item xs={6}>
             <FurtherDetails
-              creator={props.salesOrder?.creatorWalletAddress}
+              creatorUserID={props.salesOrder?.creatorUserID}
+              creatorUserName={props.salesOrder?.creatorUsername}
               tokenID={props.salesOrder?.tokenID}
-              collection={props.salesOrder?.collection}
+              collectionID={props.salesOrder?.collectionID}
+              collectionName={props.salesOrder?.collectionName}
               uri={props.salesOrder?.uri}
             />
           </Grid>

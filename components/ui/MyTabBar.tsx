@@ -27,7 +27,7 @@ const MyTabBar: FC<CategoryNavProps> = ({
       item === "Collected" ? collectedNFTCard : createdNFTCard;
     const nftEls = filternfts.map((salesOrder) => {
       return (
-        <Grid key={salesOrder.id} item xs={3}>
+        <Grid key={salesOrder.id} item md={12}>
           <NFTCard
             id={salesOrder.id}
             listed={salesOrder.listed}
@@ -51,7 +51,7 @@ const MyTabBar: FC<CategoryNavProps> = ({
     return (
       <Tab
         key={item}
-        sx={{ fontSize: 20, fontWeight: 900 }}
+        sx={{ fontSize: 20, marginX: "50px", fontWeight: 900 }}
         label={item}
         value={item}
       />

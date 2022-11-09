@@ -31,7 +31,7 @@ const UserTabBar: FC<CategoryNavProps> = ({
         item === "Collected" ? collectedNFTCards : createdNFTCards;
       const nftEls = filternfts.map((salesOrder: NFT_Card) => {
         return (
-          <Grid key={salesOrder.id} item xs={3}>
+          <Grid key={salesOrder.id} item md={12}>
             <NFTCard
               id={salesOrder.id}
               listed={salesOrder.listed}
@@ -53,7 +53,7 @@ const UserTabBar: FC<CategoryNavProps> = ({
       const collectionEls = collectionCards.map(
         (salesOrder: Collection_Card) => {
           return (
-            <Grid key={salesOrder.id} item xs={3}>
+            <Grid key={salesOrder.id} item xs={12}>
               <CollectionCard
                 id={salesOrder.id}
                 collectionName={salesOrder.collectionName}

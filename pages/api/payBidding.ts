@@ -54,6 +54,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 buyingTimestamp: time,
               },
             });
+            //set collection volume
+            const pre_volume = await prisma.collection.findUnique({
+              where: {
+                id: nft.collectionId,
+              },
+            });
+            await prisma.collection.update({
+              where: {
+                id: nft.collectionId,
+              },
+              data: {
+                totalVolume: pre_volume + price,
+              },
+            });
+
             //update nft table
             await prisma.nFT.update({
               where: {

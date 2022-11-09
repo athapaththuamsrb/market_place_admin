@@ -71,12 +71,12 @@ model Activity {
   isExpired         Boolean              @default(false)
   sellingprice      String
   buyingprice       String?
-  biddingSignature  String?
-  isPenddingPayment Boolean              @default(false)
   signature         String
   listingTimestamp  DateTime             @default(now())
   buyingTimestamp   BigInt?
   userId            String
+  biddingSignature  String?
+  isPenddingPayment Boolean              @default(false)
 }
 
 model Bidding {
@@ -86,9 +86,9 @@ model Bidding {
   listingtype LISTINGTYPE
   price       String
   endDate     BigInt
-  state       BIDDING_STATE @default(PENDDING)
   timestamp   DateTime      @default(now())
   isExpired   Boolean       @default(false)
+  state       BIDDING_STATE @default(PENDDING)
   isPaid      Boolean       @default(false)
 }
 

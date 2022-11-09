@@ -1,6 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import { Activity, NFT_load, Offer } from "../../src/interfaces";
-import { Typography, Button, Grid, Avatar, Stack, Chip } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Grid,
+  Avatar,
+  Stack,
+  Chip,
+  Tooltip,
+} from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
@@ -39,12 +47,17 @@ import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import FlagIcon from "@mui/icons-material/Flag";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import Link from "next/link";
+//import Link from "next/link";
+import Link from "@mui/material/Link";
 import theme from "../../src/theme";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
   saleNum: number;
+  ownerID: string;
 }
 
 const ViewNFT: FC<ViewNFTProps> = (props) => {
@@ -60,6 +73,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
+  const [isPendingPayment, setIsPendingPayment] = useState(false);
+  const [PendingPaymentBuyer, setPendingPaymentBuyer] = useState("");
+  const [PendingPaymentPrice, setPendingPaymentPrice] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const { data: account } = useAccount();
@@ -67,6 +83,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const open1 = Boolean(anchorEl);
   const [activity, setActivity] = useState<Activity[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
+  const [copyURL, setCopyURL] = useState(
+    "http://localhost:3000/view/nft/" +
+      props.ownerID +
+      "/" +
+      props.salesOrder.id
+  );
+  const [isURLCopied, setIsURLCopied] = useState(false);
   const {
     activeConnector,
     connect,
@@ -152,7 +175,14 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           id: props.salesOrder.id,
         },
       });
-      const arr2: Offer[] = data.data.reverse();
+      const arr2: Offer[] = data.data[0].reverse();
+      //if a payment in pending for an offer, set true
+      setIsPendingPayment(data.data[1]);
+      //if an offer is accepted by the owner
+      if (isPendingPayment === true) {
+        setPendingPaymentBuyer(data.data[2][0].walletAddress);
+        setPendingPaymentPrice(data.data[2][0].price);
+      }
       setOffers(arr2);
       setIsPending(false);
     } catch (error) {
@@ -220,7 +250,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     getSetActivity();
     getSetOffers();
     copy();
-  }, []);
+  }, [isPendingPayment, PendingPaymentBuyer, PendingPaymentPrice]);
 
   return isMounted ? (
     <Box>
@@ -238,7 +268,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         }
         secondWord="NFT"
       />
-      <Box sx={{ width: "70%", marginX: "auto" }}>
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "15px" }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid alignSelf={"center"} item xs={12} sm={12} md={5}>
             <Card sx={{ display: "flex", boxShadow: 0 }}>
@@ -259,7 +289,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
             <Card
               sx={{
                 [theme.breakpoints.up("md")]: {
-                  height: 400,
+                  minHeight: 400,
                 },
                 borderRadius: 2,
               }}
@@ -308,9 +338,12 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 subheader={
                   <div>
                     Owned by{" "}
-                    <Link href={`../../user/${props.salesOrder.ownerUserID}`}>
+                    <Link
+                      href={`../../user/${props.salesOrder.ownerUserID}`}
+                      color="secondary"
+                    >
                       {account?.address === props.salesOrder?.walletAddress
-                        ? "you"
+                        ? "me"
                         : props.salesOrder.ownerUsername}
                     </Link>
                   </div>
@@ -339,14 +372,17 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   >
                     <Chip
                       label={`${props.salesOrder?.price} ETH`}
-                      color="primary"
+                      //color="primary"
                       size="medium"
                       variant="outlined"
                       sx={{
+                        //backgroundColor:"#e7e4e7",
+                        //color:"black",
                         fontSize: 20,
                         height: "70px",
-                        width: "60%",
+                        minWidth: "60%",
                         marginTop: "10px",
+                        boxShadow: "2",
                       }}
                     />
                   </Box>
@@ -356,7 +392,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Remove sell */}
               {activeConnector &&
                 account?.address === props.salesOrder?.walletAddress &&
-                props.salesOrder?.listed && (
+                props.salesOrder?.listed &&
+                isPendingPayment !== true && (
                   <CardActions
                     sx={{ display: "flex", justifyContent: "space-evenly" }}
                   >
@@ -369,14 +406,17 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                       size="small"
                       color="secondary"
                       variant="contained"
-                      sx={{ width: "40%", height: "50px", borderRadius: 3 }}
+                      sx={{ minWidth: "40%", height: "50px", borderRadius: 3 }}
                     >
                       <RemoveShoppingCartIcon
                         sx={{ color: "white", marginX: "5px" }}
                       ></RemoveShoppingCartIcon>
                       <Typography
                         color="white"
-                        sx={{ fontWeight: 600, fontSize: 20 }}
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: 20,
+                        }}
                       >
                         REMOVE SELL
                       </Typography>
@@ -398,7 +438,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                       size="small"
                       color="secondary"
                       variant="contained"
-                      sx={{ width: "30%", height: "50px", borderRadius: 3 }}
+                      sx={{ minWidth: "40%", height: "50px", borderRadius: 3 }}
                     >
                       <LocalOfferIcon
                         sx={{ color: "white", marginX: "5px" }}
@@ -417,57 +457,87 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Buy , make offer, bid*/}
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
-                props.salesOrder?.listed && (
+                props.salesOrder?.listed &&
+                isPendingPayment === false && (
                   <CardContent>
                     <Box
-                      textAlign={"right"}
+                      textAlign={"center"}
                       display="flex"
                       justifyContent="space-evenly"
                     >
-                      {props.salesOrder?.listingtype === "FIXED_PRICE" && (
-                        <Button
-                          onClick={mintAndBuy}
-                          disabled={isPending}
-                          size="small"
-                          color="secondary"
-                          variant="contained"
-                          sx={{ width: "30%", height: "50px", borderRadius: 3 }}
-                        >
-                          <ShoppingCartIcon
-                            sx={{ color: "white", marginX: "5px" }}
-                          ></ShoppingCartIcon>
-                          <Typography
-                            color="white"
-                            sx={{ fontWeight: 600, fontSize: 20 }}
-                          >
-                            BUY NFT
-                          </Typography>
-                        </Button>
-                      )}
-
-                      {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
-                        props.salesOrder?.listingtype === "TIMED_AUCTION") && (
-                        <Button
-                          onClick={() => setOpenPopup(true)}
-                          size="small"
-                          disabled={isPending}
-                          color="secondary"
-                          variant="contained"
-                          sx={{ width: "30%", height: "50px", borderRadius: 3 }}
-                        >
-                          <LocalOfferIcon
-                            sx={{ color: "white", marginX: "5px" }}
-                          ></LocalOfferIcon>
-                          <Typography
-                            color="white"
-                            sx={{ fontWeight: 600, fontSize: 20 }}
-                          >
-                            {props.salesOrder?.listingtype === "FIXED_PRICE"
-                              ? "MAKE OFFER"
-                              : "BID"}
-                          </Typography>
-                        </Button>
-                      )}
+                      <Grid
+                        container
+                        rowSpacing={2}
+                        columnSpacing={{ xs: 1, sm: 1, md: 1 }}
+                        sx={{ maxWidth: "80%" }}
+                      >
+                        <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+                          {props.salesOrder?.listingtype === "FIXED_PRICE" && (
+                            <Button
+                              onClick={mintAndBuy}
+                              disabled={isPending}
+                              size="small"
+                              color="secondary"
+                              variant="contained"
+                              sx={{
+                                minWidth: "40%",
+                                height: "50px",
+                                borderRadius: 3,
+                              }}
+                            >
+                              <ShoppingCartIcon
+                                sx={{ color: "white", marginX: "5px" }}
+                              ></ShoppingCartIcon>
+                              <Typography
+                                color="white"
+                                sx={{
+                                  [theme.breakpoints.up("xs")]: {
+                                    fontWeight: 600,
+                                    fontSize: 20,
+                                  },
+                                }}
+                              >
+                                BUY NFT
+                              </Typography>
+                            </Button>
+                          )}
+                        </Grid>
+                        <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+                          {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
+                            props.salesOrder?.listingtype ===
+                              "TIMED_AUCTION") && (
+                            <Button
+                              onClick={() => setOpenPopup(true)}
+                              size="small"
+                              disabled={isPending}
+                              color="secondary"
+                              variant="contained"
+                              sx={{
+                                minWidth: "40%",
+                                height: "50px",
+                                borderRadius: 3,
+                              }}
+                            >
+                              <LocalOfferIcon
+                                sx={{ color: "white", marginX: "5px" }}
+                              ></LocalOfferIcon>
+                              <Typography
+                                color="white"
+                                sx={{
+                                  [theme.breakpoints.up("xs")]: {
+                                    fontWeight: 600,
+                                    fontSize: 20,
+                                  },
+                                }}
+                              >
+                                {props.salesOrder?.listingtype === "FIXED_PRICE"
+                                  ? "MAKE OFFER"
+                                  : "BID"}
+                              </Typography>
+                            </Button>
+                          )}
+                        </Grid>
+                      </Grid>
                       {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
                         props.salesOrder?.listingtype === "TIMED_AUCTION") && (
                         <OfferPopup
@@ -482,230 +552,129 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   </CardContent>
                 )}
 
-              {/* <CardContent>
-                <Typography paragraph>Method:</Typography>
-                <Typography paragraph>
-                  Heat 1/2 cup of the broth in a lot until simmering, add
-                  saffron and set aside for 10 minutes.
-                </Typography>
-              </CardContent> */}
+              {activeConnector &&
+                PendingPaymentBuyer === account?.address &&
+                account?.address !== props.salesOrder?.walletAddress &&
+                props.salesOrder?.listed && (
+                  <CardContent>
+                    {props.salesOrder?.listingtype === "FIXED_PRICE" && (
+                      <Box
+                        textAlign={"center"}
+                        display="flex"
+                        justifyContent="space-evenly"
+                      >
+                        <Grid
+                          container
+                          rowSpacing={3}
+                          columnSpacing={{ xs: 1, sm: 1, md: 1 }}
+                          sx={{ maxWidth: "80%" }}
+                        >
+                          <Grid
+                            alignSelf={"center"}
+                            item
+                            xs={12}
+                            sm={12}
+                            md={6}
+                          >
+                            <Button
+                              disabled={isPending}
+                              size="small"
+                              variant="contained"
+                              color="secondary"
+                              sx={{
+                                minWidth: "40%",
+                                height: "50px",
+                                borderRadius: 3,
+                                //backgroundColor: "#a080e1",
+                              }}
+                            >
+                              <ThumbUpAltIcon
+                                sx={{ color: "white", marginX: "5px" }}
+                              ></ThumbUpAltIcon>
+                              <Typography
+                                color="white"
+                                sx={{
+                                  [theme.breakpoints.up("xs")]: {
+                                    fontWeight: 600,
+                                    fontSize: 20,
+                                  },
+                                }}
+                              >
+                                Confirm Offer
+                              </Typography>
+                            </Button>
+                          </Grid>
+                          <Grid
+                            alignSelf={"center"}
+                            item
+                            xs={12}
+                            sm={12}
+                            md={6}
+                          >
+                            <Button
+                              disabled={isPending}
+                              size="small"
+                              variant="contained"
+                              sx={{
+                                minWidth: "40%",
+                                height: "50px",
+                                borderRadius: 3,
+                                backgroundColor: "#b7c2c6",
+                              }}
+                            >
+                              <ThumbDownIcon
+                                sx={{ color: "white", marginX: "5px" }}
+                              ></ThumbDownIcon>
+                              <Typography
+                                color="white"
+                                sx={{
+                                  [theme.breakpoints.up("xs")]: {
+                                    fontWeight: 600,
+                                    fontSize: 20,
+                                  },
+                                }}
+                              >
+                                Decline Offer
+                              </Typography>
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    )}
+                  </CardContent>
+                )}
               <CardActions disableSpacing>
                 <IconButton
                   aria-label="add to favorites"
                   sx={{ color: "black" }}
                 >
                   <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share" sx={{ color: "black" }}>
-                  <ShareIcon />
-                </IconButton>
-                {/* <CardActions>
-                  <Button size="small">Learn More</Button>
-                </CardActions>  */}
+                </IconButton>{" "}
+                <CopyToClipboard
+                  text={copyURL}
+                  onCopy={() => setIsURLCopied(true)}
+                >
+                  <Tooltip title="Copy URL" placement="right" arrow>
+                    <IconButton aria-label="share" sx={{ color: "black" }}>
+                      <ShareIcon />
+                    </IconButton>
+                  </Tooltip>
+                </CopyToClipboard>
               </CardActions>
             </Card>
           </Grid>
-          {/* <Grid item xs={7} sx={{ boxShadow: 1, borderRadius: 1 }}>
-            <Box sx={{ width: "90%", marginX: "auto" }}> */}
-          {/* Report option */}
-          {/* {activeConnector &&
-                account?.address !== props.salesOrder?.walletAddress && (
-                  <Box textAlign={"right"} marginTop={"10px"}>
-                    <IconButton id="long-button" onClick={handleClick}>
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                      id="long-menu"
-                      anchorEl={anchorEl}
-                      open={open1}
-                      onClose={handleClose}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          setOpenReportPopup(true), setAnchorEl(null);
-                        }}
-                        sx={{ fontWeight: 500, fontSize: 14 }}
-                      >
-                        Report NFT
-                      </MenuItem>
-                    </Menu>
-                    <ReportPopup
-                      openReportPopup={openReportPopup}
-                      setOpenReportPopup={setOpenReportPopup}
-                    ></ReportPopup>
-                  </Box>
-                )} */}
-
-          {/* <Typography
-                variant="h2"
-                align="left"
-                sx={{ marginTop: "10px", marginBottom: "5px" }}
-              >
-                {props.salesOrder?.name}
-              </Typography>
-
-              <Typography
-                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 14 }}
-                color="gray"
-                align="left"
-              >
-                {"Contract Address: " + props.salesOrder?.walletAddress}
-              </Typography>
-
-              <Typography
-                sx={{ marginBottom: "10px" }}
-                variant="h4"
-                align="left"
-              >
-                Description :
-              </Typography>
-
-              <Typography
-                sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
-                color="gray"
-                align="left"
-              >
-                {props.salesOrder?.description}
-              </Typography> */}
-
-          {/* Price */}
-          {/* {props.salesOrder?.price !== "0" && (
-                <div>
-                  <Typography
-                    sx={{ marginBottom: "10px" }}
-                    variant="h4"
-                    align="left"
-                  >
-                    Price :
-                  </Typography>
-                  <Typography
-                    sx={{ marginBottom: "20px" }}
-                    variant="h3"
-                    align="left"
-                    color={"primary"}
-                  >
-                    {`${props.salesOrder?.price} ETH`}
-                  </Typography>
-                </div>
-              )} */}
-
-          {/* Remove sell */}
-          {/* {activeConnector &&
-                account?.address === props.salesOrder?.walletAddress &&
-                props.salesOrder?.listed && (
-                  <Box textAlign={"right"}>
-                    <Button
-                      onClick={() => {
-                        setStateNFT("listed", false, "0");
-                        props.salesOrder.price = "0";
-                      }}
-                      disabled={isPending}
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                    >
-                      <Typography
-                        color="white"
-                        sx={{ fontWeight: 600, fontSize: 20 }}
-                      >
-                        REMOVE SELL
-                      </Typography>
-                    </Button>
-                  </Box>
-                )} */}
-
-          {/* Sell */}
-          {/* {activeConnector &&
-                account?.address === props.salesOrder?.walletAddress &&
-                !props.salesOrder?.listed && (
-                  <Box textAlign={"right"}>
-                    <Button
-                      onClick={() => {
-                        router.push(`${router.asPath}/set-sell-value`);
-                      }}
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                    >
-                      <Typography
-                        color="white"
-                        variant="h2"
-                        sx={{ fontSize: 20 }}
-                      >
-                        SELL
-                      </Typography>
-                    </Button>
-                  </Box>
-                )} */}
-
-          {/* Buy , make offer, bid*/}
-          {/* {activeConnector &&
-                account?.address !== props.salesOrder?.walletAddress &&
-                props.salesOrder?.listed && (
-                  <Box
-                    textAlign={"right"}
-                    display="flex"
-                    justifyContent="space-evenly"
-                  >
-                    {props.salesOrder?.listingtype === "FIXED_PRICE" && (
-                      <Button
-                        onClick={mintAndBuy}
-                        disabled={isPending}
-                        size="small"
-                        color="secondary"
-                        variant="contained"
-                      >
-                        <Typography
-                          color="white"
-                          sx={{ fontWeight: 600, fontSize: 20 }}
-                        >
-                          BUY NFT
-                        </Typography>
-                      </Button>
-                    )}
-
-                    {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
-                      props.salesOrder?.listingtype === "TIMED_AUCTION") && (
-                      <Button
-                        onClick={() => setOpenPopup(true)}
-                        size="small"
-                        color="secondary"
-                        variant="contained"
-                      >
-                        <Typography
-                          color="white"
-                          sx={{ fontWeight: 600, fontSize: 20 }}
-                        >
-                          {props.salesOrder?.listingtype === "FIXED_PRICE"
-                            ? "MAKE OFFER"
-                            : "BID"}
-                        </Typography>
-                      </Button>
-                    )}
-                    {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
-                      props.salesOrder?.listingtype === "TIMED_AUCTION") && (
-                      <OfferPopup
-                        openPopup={openPopup}
-                        setOpenPopup={setOpenPopup}
-                        nftId={props.salesOrder.id}
-                        activity={props.salesOrder.listingtype}
-                        endDate={props.salesOrder.endDate}
-                      />
-                    )}
-                  </Box>
-                )} */}
-          {/* </Box>
-          </Grid> */}
         </Grid>
       </Box>
-      <br />
-      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "25px" }}>
+
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "15px" }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid alignSelf={"left"} item xs={12} sm={12} md={5}>
             <FurtherDetails
-              creator={props.salesOrder?.creatorWalletAddress}
+              creatorUserID={props.salesOrder?.creatorUserID}
+              creatorUserName={props.salesOrder?.creatorUsername}
               tokenID={props.salesOrder?.tokenID}
-              collection={props.salesOrder?.collection}
+              collectionID={props.salesOrder?.collectionID}
+              collectionName={props.salesOrder?.collectionName}
               uri={props.salesOrder?.uri}
             />
           </Grid>
@@ -730,7 +699,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "25px" }}>
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "50px" }}>
         <Grid container columnSpacing={2}>
           <Grid alignSelf={"center"} item xs={12}>
             <Accordion>
@@ -751,6 +720,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 <Offers
                   offers={offers}
                   user_id={props.salesOrder.walletAddress}
+                  getSetOffers={getSetOffers}
                 />
               </AccordionDetails>
             </Accordion>

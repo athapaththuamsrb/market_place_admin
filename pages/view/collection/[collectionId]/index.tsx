@@ -49,7 +49,7 @@ const Collection: NextPage<CollectionProps> = ({
   const { data: account } = useAccount();
   const nftEls = nftList.map((nft: NFT_Card) => {
     return (
-      <Grid key={nft.id} item xs={3}>
+      <Grid key={nft.id} item xs={12}>
         <NFTCard
           id={nft.id}
           price={nft.price}

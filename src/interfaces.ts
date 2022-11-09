@@ -47,6 +47,10 @@ export type NFT_load = {
   creatorWalletAddress: string;
   ownerUsername: string;
   ownerUserID: string;
+  creatorUsername: string;
+  creatorUserID: string;
+  collectionName: string;
+  collectionID: string;
 };
 export type NFT_Card = {
   id: string;
@@ -175,4 +179,7 @@ export type Offer = {
   floor_diff: string;
   expiration: string;
   from: string;
+  isExpired: boolean;
+  state: "ACCEPTED" | "REJECTED" | "PENDDING";
+  isPaid: boolean;
 };

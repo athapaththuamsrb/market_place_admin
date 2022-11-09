@@ -90,6 +90,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
+      //get NFTs in particular collection
+      const nfts = await prisma.nFT.findMany({
+        where: {
+          collectionId: collection,
+        },
+      });
+      let buyings: number[] = [];
+      var floor_price: number = 0;
+      //find floor  price from all nfts in the updated collection
+      for (let nft of nfts) {
+        await prisma.activity
+          .findFirst({
+            where: {
+              nftId: nft.id,
+              isExpired: false,
+            },
+          })
+          .then((data) => {
+            if (data?.sellingprice) {
+              buyings.push(Number(data?.sellingprice));
+            }
+            floor_price = Math.min.apply(null, buyings);
+          });
+      }
+      //update floor price
+      await prisma.collection.update({
+        where: {
+          id: collection,
+        },
+        data: {
+          floorPrice: String(floor_price),
+        },
+      });
+
       await prisma.$disconnect();
       res.status(204).json({ message: "Update successfully", success: true });
     } catch (error) {
