@@ -105,9 +105,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     setAnchorEl(null);
   };
 
-  const copy = () => {
-    console.log(window.location.href);
-  };
+  // const copy = () => {
+  //   console.log(window.location.href);
+  // };
 
   const setStateNFT = async (
     key: string,
@@ -277,7 +277,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   useEffect(() => {
     getSetActivity();
     getSetOffers();
-    copy();
+    // copy();
   }, [isPendingPayment, PendingPaymentBuyer, PendingPaymentPrice]);
   return isMounted ? (
     <Box>
