@@ -85,7 +85,7 @@ const Collection: NextPage<CollectionProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(collectionData);
+  //console.log(collectionData);
   return isMounted ? (
     <Box>
       {collectionData.bannerImage && (
