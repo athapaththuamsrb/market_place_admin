@@ -32,9 +32,11 @@ export type NFT_load = {
   category: string;
   collection: string;
   price: string;
+  offerPrice: string;
   tokenID: number;
   uri: string;
   signature: string;
+  offerSignature: string | null;
   sold: boolean;
   description: string;
   image: string;

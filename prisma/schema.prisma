@@ -131,7 +131,8 @@ enum CATERGORY_NAME {
   Cards
   Nature
   Utility
-  VirtualWorlds
+  Virtual
+  Worlds
 }
 
 enum Collection_status {

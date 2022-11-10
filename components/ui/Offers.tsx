@@ -1,4 +1,3 @@
-import { NextPage } from "next";
 import { DataGrid, GridRowParams } from "@mui/x-data-grid";
 import {
   Box,
@@ -9,18 +8,25 @@ import {
   Typography,
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import { Offer, User } from "../../src/interfaces";
+import { Offer, User, NFT_load } from "../../src/interfaces";
 import { useAccount } from "wagmi";
 import axios from "axios";
-import api from "../../lib/api";
-
+import { useSignTypedData } from "wagmi";
+import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
+import { ethers } from "ethers";
 type OffersProps = {
+  salesOrder: NFT_load;
   offers: Offer[];
   user_id: string;
   getSetOffers: () => Promise<void>;
 };
 
-const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
+const Offers: FC<OffersProps> = ({
+  offers,
+  user_id,
+  getSetOffers,
+  salesOrder,
+}) => {
   const ownerColumns = [
     {
       field: "price",
@@ -63,7 +69,7 @@ const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
           variant="contained"
           // color="primary"
           key={params.row.id}
-          sx={{ backgroundColor: "green",color:"whitesmoke" }}
+          sx={{ backgroundColor: "green", color: "whitesmoke" }}
           onClick={() => handleClickOpenAccept(params.row.id)}
         >
           <a>Accept</a>
@@ -113,7 +119,24 @@ const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
       width: 200,
     },
   ];
-
+  const { signTypedDataAsync } = useSignTypedData();
+  const types = {
+    SignedNFTData: [
+      { name: "tokenID", type: "uint256" },
+      { name: "price", type: "uint256" },
+      { name: "uri", type: "string" },
+      { name: "creator", type: "address" },
+      { name: "category", type: "string" },
+      { name: "collection", type: "address" },
+      { name: "royality", type: "uint256" },
+    ],
+  };
+  const domain = {
+    name: "Lazy Marketplace",
+    version: "1.0",
+    chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
+    verifyingContract: MarketplaceAddress.address,
+  };
   const [rows, setRows] = useState<Offer[]>([]);
   const [openAccept, setOpenAccept] = useState(false);
   const [openDecline, setOpenDecline] = useState(false);
@@ -130,14 +153,29 @@ const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
     setRowId(id);
   };
 
-  const handleCloseAccept = (result: string, id: string) => () => {
+  const handleCloseAccept = async (result: string, id: string) => {
     setOpenAccept(false);
     if (result == "Yes") {
       try {
         const offer: Offer = offers.find((offer) => offer.id == id)!;
-        axios.post("../../../api/acceptOffer", {
+        const biddingSignature = await signTypedDataAsync({
+          domain,
+          types,
+          value: {
+            tokenID: salesOrder.tokenID,
+            uri: salesOrder.uri,
+            creator: salesOrder.creatorWalletAddress,
+            category: salesOrder.category,
+            collection: salesOrder.collection,
+            royality: salesOrder.royality,
+            price: ethers.utils.parseEther(offer.price), //TODO PRICE
+          },
+        });
+
+        axios.post("/api/acceptOffer", {
           data: {
             id: offer.id,
+            biddingSignature: biddingSignature,
           },
         });
         getSetOffers();
@@ -153,26 +191,25 @@ const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
     setRowId(id);
   };
 
-  const handleCloseDecline = (result: string, id: string) => () => {
+  const handleCloseDecline = (result: string, id: string) => {
     setOpenDecline(false);
     if (result == "Yes") {
       const offer: Offer = offers.find((offer) => offer.id == id)!;
-      setTimeout(() => {
-        axios
-          .post("../../api/declineOffer", {
-            data: {
-              id: offer.id,
-            },
-          })
-          .then(() => {
-            setIsPending(false);
-            setError(null);
-          })
-          .catch((error) => {
-            setIsPending(false);
-            setError(error.message);
-          });
-      });
+
+      axios
+        .post("/api/declineOffer", {
+          data: {
+            id: offer.id,
+          },
+        })
+        .then(() => {
+          setIsPending(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setError(error.message);
+        });
     }
   };
 
@@ -210,12 +247,10 @@ const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
           </Typography>
         </DialogTitle>
         <DialogActions>
-          <Button autoFocus onClick={handleCloseAccept("Yes", rowId)}>
+          <Button autoFocus onClick={() => handleCloseAccept("Yes", rowId)}>
             Yes
           </Button>
-          <Button onClick={handleCloseAccept("No", rowId)} autoFocus>
-            No
-          </Button>
+          <Button onClick={() => handleCloseAccept("No", rowId)}>No</Button>
         </DialogActions>
       </Dialog>
       <Dialog
@@ -230,12 +265,10 @@ const Offers: FC<OffersProps> = ({ offers, user_id, getSetOffers }) => {
           </Typography>
         </DialogTitle>
         <DialogActions>
-          <Button autoFocus onClick={handleCloseDecline("Yes", rowId)}>
+          <Button autoFocus onClick={() => handleCloseDecline("Yes", rowId)}>
             Yes
           </Button>
-          <Button onClick={handleCloseDecline("No", rowId)} autoFocus>
-            No
-          </Button>
+          <Button onClick={() => handleCloseDecline("No", rowId)}>No</Button>
         </DialogActions>
       </Dialog>
     </div>

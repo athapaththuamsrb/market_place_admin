@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { Activity, NFT_load } from "../../src/interfaces";
+import { Activity } from "../../src/interfaces";
 import axios from "axios";
 const prisma = new PrismaClient();
 

@@ -34,7 +34,6 @@ import OfferPopup from "../OfferPopup";
 import ReportPopup from "../ReportPopup";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import React from "react";
-import axios from "axios";
 import Offers from "../ui/Offers";
 import ItemActivity from "../ui/ItemActivity";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -47,12 +46,12 @@ import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import FlagIcon from "@mui/icons-material/Flag";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-//import Link from "next/link";
 import Link from "@mui/material/Link";
 import theme from "../../src/theme";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import CopyToClipboard from "react-copy-to-clipboard";
+import authService from "../../services/auth.service";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -110,10 +109,20 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     console.log(window.location.href);
   };
 
-  const setStateNFT = async (key: string, value: boolean, price: string) => {
+  const setStateNFT = async (
+    key: string,
+    value: boolean,
+    price: string,
+    type: string
+  ) => {
     try {
       setIsPending(true);
-
+      let token;
+      if (activeConnector) {
+        token = authService.getUserToken();
+      } else {
+        throw new Error("User is not exist");
+      }
       switch (key) {
         case "listed":
           await api.post("/api/setStateNFT", {
@@ -121,6 +130,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               action: key,
               value,
               id: props.salesOrder.id,
+              token: token,
             },
           });
           props.salesOrder.listed = value;
@@ -129,16 +139,27 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         case "sold":
           const date = new Date();
           const timestampInMs = date.getTime();
-          await api.post("/api/setStateNFT", {
-            data: {
-              action: key,
-              value,
-              id: props.salesOrder.id,
-              buyerWalletAddress: account?.address,
-              time: timestampInMs,
-              price: price,
-            },
-          });
+          if (type === "FIXED") {
+            await api.post("/api/setStateNFT", {
+              data: {
+                action: key,
+                value,
+                id: props.salesOrder.id,
+                token: token,
+                time: timestampInMs,
+                price: price,
+              },
+            });
+          } else {
+            await api.post("/api/payBidding", {
+              data: {
+                id: props.salesOrder.id,
+                token: token,
+                time: timestampInMs,
+                price: price,
+              },
+            });
+          }
           props.salesOrder.sold = value;
           break;
         default:
@@ -190,10 +211,17 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       setIsPending(false);
     }
   };
-  const mintAndBuy = async () => {
+  const mintAndBuy = async (type: string) => {
     //TODO adding data to blockchain
     setIsPending(true);
     setMsg("processing.....");
+    const price =
+      type === "FIXED" ? props.salesOrder.price : props.salesOrder.offerPrice;
+    const signature =
+      type === "FIXED"
+        ? props.salesOrder.signature
+        : props.salesOrder.offerSignature;
+
     if (
       props.salesOrder.walletAddress ===
         props.salesOrder.creatorWalletAddress &&
@@ -209,11 +237,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           category: props.salesOrder.category,
           collection: props.salesOrder.collection,
           royality: props.salesOrder.royality,
-          price: ethers.utils.parseEther(props.salesOrder.price),
+          price: ethers.utils.parseEther(price),
         },
-        props.salesOrder.signature,
+        signature,
         {
-          value: ethers.utils.parseEther(props.salesOrder.price),
+          value: ethers.utils.parseEther(price),
           gasLimit: 1000000,
         }
       );
@@ -230,11 +258,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           collection: props.salesOrder.collection,
           owner: props.salesOrder.walletAddress,
           royality: props.salesOrder.royality,
-          price: ethers.utils.parseEther(props.salesOrder.price),
+          price: ethers.utils.parseEther(price),
         },
-        props.salesOrder.signature,
+        signature,
         {
-          value: ethers.utils.parseEther(props.salesOrder.price),
+          value: ethers.utils.parseEther(price),
           gasLimit: 1000000,
         }
       );
@@ -242,7 +270,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     }
     setMsg("Successful!");
     setOpen(true);
-    setStateNFT("sold", true, props.salesOrder.price);
+    setStateNFT("sold", true, price, type);
     setIsPending(false);
   };
 
@@ -251,7 +279,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     getSetOffers();
     copy();
   }, [isPendingPayment, PendingPaymentBuyer, PendingPaymentPrice]);
-
   return isMounted ? (
     <Box>
       {isPending && (
@@ -392,14 +419,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Remove sell */}
               {activeConnector &&
                 account?.address === props.salesOrder?.walletAddress &&
-                props.salesOrder?.listed &&
-                isPendingPayment !== true && (
+                props.salesOrder?.listed && (
                   <CardActions
                     sx={{ display: "flex", justifyContent: "space-evenly" }}
                   >
                     <Button
                       onClick={() => {
-                        setStateNFT("listed", false, "0");
+                        setStateNFT("listed", false, "0", "");
                         props.salesOrder.price = "0";
                       }}
                       disabled={isPending}
@@ -474,7 +500,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
                           {props.salesOrder?.listingtype === "FIXED_PRICE" && (
                             <Button
-                              onClick={mintAndBuy}
+                              onClick={() => {
+                                mintAndBuy("FIXED");
+                              }}
                               disabled={isPending}
                               size="small"
                               color="secondary"
@@ -576,8 +604,12 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             sm={12}
                             md={6}
                           >
+                            {/* TODO HAVE TO CHAGE */}
                             <Button
                               disabled={isPending}
+                              onClick={() => {
+                                mintAndBuy("OFFER");
+                              }}
                               size="small"
                               variant="contained"
                               color="secondary"
@@ -718,6 +750,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               <AccordionDetails>
                 {/* <ListingHistoryTable activity={activity} /> */}
                 <Offers
+                  salesOrder={props.salesOrder}
                   offers={offers}
                   user_id={props.salesOrder.walletAddress}
                   getSetOffers={getSetOffers}
