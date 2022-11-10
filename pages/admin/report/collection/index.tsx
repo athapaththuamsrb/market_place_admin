@@ -101,7 +101,7 @@ const ViewReportedCollections: NextPage = (props) => {
           key={params.row.id}
         >
           <Link
-            href={`../../account/collections/${params.row.id}`}
+            href={`../../view/collection/${params.row.reportedId}`}
             underline="hover"
           >
             <a>View Collection</a>
@@ -137,8 +137,9 @@ const ViewReportedCollections: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("api/getReports")
+        .get("../../../api/getReports")
         .then((res) => {
+          console.log(res);
           setCollections(
             res.data.data.filter(
               (report: Report) => report.reportType === "Collection"
@@ -168,11 +169,12 @@ const ViewReportedCollections: NextPage = (props) => {
       setTimeout(() => {
         collection;
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: collection.reportedId,
             },
             action: "block",
+            type: "Collection",
           })
           .then(() => {
             setIsPending(false);
@@ -199,11 +201,12 @@ const ViewReportedCollections: NextPage = (props) => {
       )!;
       setTimeout(() => {
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: collection.reportedId,
             },
             action: "verify",
+            type: "Collection",
           })
           .then(() => {
             setIsPending(false);

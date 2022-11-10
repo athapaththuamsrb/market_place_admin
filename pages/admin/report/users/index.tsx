@@ -99,7 +99,10 @@ const ReportedUsers: NextPage = (props) => {
           key={params.row.id}
           sx={{ color: "black" }}
         >
-          <Link href={`../../view/user/${params.row.id}`} underline="hover">
+          <Link
+            href={`../../view/user/${params.row.reportedId}`}
+            underline="hover"
+          >
             <a>View Account</a>
           </Link>
         </Button>,
@@ -133,7 +136,7 @@ const ReportedUsers: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("api/getReports")
+        .get("../../../api/getReports")
         .then((res) => {
           setRows(
             res.data.data.filter(
@@ -161,11 +164,12 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: user.reportedId,
             },
             action: "block",
+            type: "User",
           })
           .then(() => {
             setIsPending(false);
@@ -190,11 +194,12 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("api/setBlock", {
+          .post("../../api/setBlock", {
             data: {
               id: user.reportedId,
             },
             action: "verify",
+            type: "User",
           })
           .then(() => {
             setIsPending(false);

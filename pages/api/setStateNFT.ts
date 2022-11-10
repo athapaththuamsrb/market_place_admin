@@ -185,7 +185,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                         id: nft?.collectionId,
                       },
                       data: {
-                        totalVolume: pre_volume + price,
+                        totalVolume: String(
+                          Number(pre_volume?.totalVolume) + Number(price)
+                        ),
                       },
                     });
 
