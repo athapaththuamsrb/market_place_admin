@@ -278,7 +278,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     getSetActivity();
     getSetOffers();
     // copy();
-  }, [isPendingPayment, PendingPaymentBuyer, PendingPaymentPrice]);
+  }, [isPendingPayment, PendingPaymentBuyer, openPopup]);
   return isMounted ? (
     <Box>
       {isPending && (
