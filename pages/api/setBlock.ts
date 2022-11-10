@@ -5,48 +5,93 @@ const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const userId = req.body.data;
+    const reportedId = req.body.data;
     const action = req.body.action;
-    const user = await prisma.report.findFirst({
+    const type = req.body.type;
+    const reported = await prisma.report.findFirst({
       where: {
-        reportedId: userId.id,
+        reportedId: reportedId.id,
       },
     });
     try {
       if (action == "block") {
         await prisma.report.update({
           where: {
-            id: user?.id,
+            id: reported?.id,
           },
           data: {
             STATUS: "BLOCKED",
           },
         });
-        await prisma.user.update({
-          where: {
-            id: userId.id,
-          },
-          data: {
-            status: "BLOCKED",
-          },
-        });
+        if (type == "NFT") {
+          await prisma.nFT.update({
+            where: {
+              id: reportedId.id,
+            },
+            data: {
+              status: "BLOCKED",
+            },
+          });
+        }
+        if (type == "Collection") {
+          await prisma.collection.update({
+            where: {
+              id: reportedId.id,
+            },
+            data: {
+              status: "BLOCKED",
+            },
+          });
+        }
+        if (type == "User") {
+          await prisma.user.update({
+            where: {
+              id: reportedId.id,
+            },
+            data: {
+              status: "BLOCKED",
+            },
+          });
+        }
       } else if (action == "verify") {
         await prisma.report.update({
           where: {
-            id: user?.id,
+            id: reported?.id,
           },
           data: {
             STATUS: "ACTIVE",
           },
         });
-        await prisma.user.update({
-          where: {
-            id: userId.id,
-          },
-          data: {
-            status: "ACTIVE",
-          },
-        });
+        if (type == "NFT") {
+          await prisma.nFT.update({
+            where: {
+              id: reportedId.id,
+            },
+            data: {
+              status: "ACTIVE",
+            },
+          });
+        }
+        if (type == "Collection") {
+          await prisma.collection.update({
+            where: {
+              id: reportedId.id,
+            },
+            data: {
+              status: "ACTIVE",
+            },
+          });
+        }
+        if (type == "User") {
+          await prisma.user.update({
+            where: {
+              id: reportedId.id,
+            },
+            data: {
+              status: "ACTIVE",
+            },
+          });
+        }
       }
     } catch (error) {
       console.log(error);

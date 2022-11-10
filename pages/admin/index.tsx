@@ -39,7 +39,7 @@ const AllUsers: NextPage = (props) => {
       field: "User_ID",
       headerName: "Wallet Address",
       type: "string",
-      width: 300,
+      width: 500,
     },
     {
       field: "Name",
@@ -47,7 +47,7 @@ const AllUsers: NextPage = (props) => {
       type: "string",
       width: 200,
     },
-    {
+    /*{
       field: "Total",
       headerName: "Total NFTs",
       type: "string",
@@ -64,7 +64,7 @@ const AllUsers: NextPage = (props) => {
       headerName: "Created Collections",
       type: "string",
       width: 150,
-    },
+    },*/
     {
       field: "Status",
       headerName: "Status",
@@ -192,7 +192,7 @@ const AllUsers: NextPage = (props) => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "70%",
+          width: "60%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",

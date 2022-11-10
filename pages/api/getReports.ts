@@ -20,9 +20,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             id: report_data.reporterId,
           },
         });
+        const owner = await prisma.nFT.findFirst({
+          where: {
+            id: report_data.reportedId,
+          },
+        });
         results.push({
           id: report_data.id,
           reportedId: report_data.reportedId,
+          reportedOwner: owner?.ownerId,
           reportType: report_data.reportType,
           reporterId: report_data.reporterId,
           reporter: reporter_name?.userName,
@@ -47,7 +53,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await prisma.$disconnect();
       res.status(401).json({ message: error, success: false, data: [] });
     }
-    res.status(200).json({ message: "success", success: true, data: [] });
+    //res.status(200).json({ message: "success", success: true, data: [] });
   } else {
     res
       .status(405)

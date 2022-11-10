@@ -63,7 +63,7 @@ const ViewAdmins: NextPage = (props) => {
       field: "User_ID",
       headerName: "Wallet Address",
       type: "string",
-      width: 400,
+      width: 500,
     },
     {
       field: "Name",
@@ -71,7 +71,7 @@ const ViewAdmins: NextPage = (props) => {
       type: "string",
       width: 200,
     },
-    {
+    /*{
       field: "Total",
       headerName: "Total NFTs",
       type: "string",
@@ -88,12 +88,12 @@ const ViewAdmins: NextPage = (props) => {
       headerName: "Created Collections",
       type: "string",
       width: 150,
-    },
+    },*/
     {
       field: "Status",
       headerName: "Status",
       type: "string",
-      width: 100,
+      width: 150,
     },
     {
       field: "actions",
@@ -244,7 +244,7 @@ const ViewAdmins: NextPage = (props) => {
                 size="small"
                 //color="primary"
                 variant="contained"
-                endIcon={<AddCircleIcon/>}
+                endIcon={<AddCircleIcon />}
                 sx={{
                   minWidth: "40%",
                   height: "50px",
@@ -272,7 +272,7 @@ const ViewAdmins: NextPage = (props) => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "90%",
+          width: "60%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",

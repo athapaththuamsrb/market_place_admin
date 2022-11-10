@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const user = await prisma.user.findMany({});
       let results: User[] = [];
       for (const user_data of user) {
-        const allCollections = await prisma.collection.findMany({
+        /*const allCollections = await prisma.collection.findMany({
           where: { creatorId: user_data.id },
         });
         var collection_count: number = 0;
@@ -27,6 +27,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         var created_count: number = 0;
         var collected_count: number = 0;
+        collected_count = await prisma.nFT.count({
+          where: {
+            ownerId: user_data.id,
+          },
+        });
+        console.log(user_data.id, collected_count);
         const nfts = await prisma.nFT.findMany();
         for await (const nft of nfts) {
           const ipfsData = await axios.get(nft.uri);
@@ -36,15 +42,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           if (nft.ownerId === user_data.id) {
             collected_count += 1;
           }
-        }
+        }*/
 
         results.push({
           id: user_data.id,
           User_ID: user_data.walletAddress,
           Name: user_data.userName,
-          Total: created_count + collected_count,
-          Created: created_count,
-          Collections: collection_count,
+          //Total: created_count + collected_count,
+          //Created: created_count,
+          //Collections: collection_count,
           Status: user_data.status,
           Type: user_data.type,
           reportType: "",
@@ -61,7 +67,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await prisma.$disconnect();
       res.status(401).json({ message: error, success: false, data: [] });
     }
-    res.status(200).json({ message: "success", success: true, data: [] });
+    //res.status(200).json({ message: "success", success: true, data: [] });
   } else {
     res
       .status(405)

@@ -85,9 +85,9 @@ export type User = {
   User_ID: string;
   Name: string;
   //Date: Date;
-  Total: number;
-  Created: number;
-  Collections: number;
+  //Total: number;
+  //Created: number;
+  //Collections: number;
   Status: string;
   Type: string;
   reportType: string;
@@ -153,6 +153,7 @@ export type NFT_Report = {
 export type Report = {
   id: string;
   reportedId: string; // id of nft, user or collection
+  reportedOwner: string | undefined; // owner id of reported nft
   reportType: string; //nft, user or collection
   reporter: string | undefined; // who reported
   reporterId: string; // reported person's ID

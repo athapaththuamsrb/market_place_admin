@@ -46,12 +46,12 @@ interface UserProfileProps {
   userId: string;
 }
 const UserProfile: NextPage<UserProfileProps> = ({
-  collectedNFTCards,
-  createdNFTCards,
-  collectionCards,
-  userProfile,
-  userId,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      collectedNFTCards,
+      createdNFTCards,
+      collectionCards,
+      userProfile,
+      userId,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
