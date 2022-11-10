@@ -56,7 +56,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               };
               activityList.push(act1);
               act2 = {
-                id: activity.id,
+                id: activity.id+"Transfer",
                 event: "Transfer",
                 price: "",
                 from: seller?.userName!,

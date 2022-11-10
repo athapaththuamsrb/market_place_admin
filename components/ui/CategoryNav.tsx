@@ -75,7 +75,7 @@ const CategoryNav: FC<CategoryNavProps> = ({ collections }) => {
               // indicatorColor="secondary"
               // aria-label="secondary tabs example"
               // sx={{ borderBottom: "1px solid #808080", marginX: "auto" }}
-              centered
+              // centered
               variant="scrollable"
               scrollButtons={false}
               //allowScrollButtonsMobile={true}
