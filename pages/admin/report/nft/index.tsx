@@ -168,7 +168,7 @@ const ViewReportedNFTs: NextPage = (props) => {
               id: nft.reportedId,
             },
             action: "block",
-            type: "NFT"
+            type: "NFT",
           })
           .then(() => {
             setIsPending(false);
@@ -198,7 +198,7 @@ const ViewReportedNFTs: NextPage = (props) => {
               id: nft.reportedId,
             },
             action: "verify",
-            type: "NFT"
+            type: "NFT",
           })
           .then(() => {
             setIsPending(false);
@@ -245,7 +245,7 @@ const ViewReportedNFTs: NextPage = (props) => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "90%",
+          width: "70%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",
