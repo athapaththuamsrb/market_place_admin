@@ -75,16 +75,15 @@ const Navbar: FC = () => {
                 flexShrink: 0,
               }}
             >
-              <Box marginRight="5px">
-                <Image
-                  height={30}
-                  width={30}
-                  src={"/logo-background.png"}
-                  alt={"logo"}
-                  loading="lazy"
-                  layout="fixed"
-                />
-              </Box>
+              <Image
+                height={50}
+                width={50}
+                src={"/d.ico"}
+                alt={"logo"}
+                loading="lazy"
+                layout="fixed"
+              />
+
               <Typography
                 variant="h6"
                 noWrap
@@ -92,6 +91,7 @@ const Navbar: FC = () => {
                 sx={{
                   display: { xs: "none", sm: "block" },
                   color: theme.palette.primary.main,
+                  marginY: "auto",
                 }}
               >
                 Exclusives
