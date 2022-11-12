@@ -39,11 +39,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 uri: data.ownedNfts[indexNo].tokenUri.raw,
               },
             });
-            if (lazyNfts) {
+            if (
+              lazyNfts &&
+              (lazyNfts.status === "ACTIVE" || lazyNfts.status === "REPORTED")
+            ) {
               let royality = 0;
-              if (ipfsData.data.royality) {
-                royality = ipfsData.data.royality;
-              }
+              if (ipfsData.data.royality) royality = ipfsData.data.royality;
               const creator = await prisma.user.findUnique({
                 where: { walletAddress: ipfsData.data.creator },
               });
@@ -84,18 +85,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   collectionID: collection.id,
                 },
               ];
-              const activityList = await prisma.activity.findMany({
-                where: { nftId: lazyNfts.id, isExpired: true },
+              const activitCount = await prisma.activity.count({
+                where: {
+                  nftId: lazyNfts.id,
+                  isExpired: true,
+                  NOT: { buyingprice: null },
+                },
               });
-              let count = 0;
-              for (let index = 0; index < activityList.length; index++) {
-                const element = activityList[index];
-                if (element.buyingprice !== null) count++;
-              }
+              console.log(activitCount);
               res.status(201).json({
                 message: "Successfully received",
                 success: true,
-                data: { nft: list, saleNum: count },
+                data: { nft: list, saleNum: activitCount },
               });
             } else {
               res.status(201).json({
@@ -118,7 +119,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               id: id,
             },
           });
-          if (nft) {
+          if (nft && (nft.status === "ACTIVE" || nft.status === "REPORTED")) {
             const activity = await prisma.activity.findFirst({
               where: { nftId: nft.id, isExpired: false },
             });
@@ -209,19 +210,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
               ];
             }
-            const activityList = await prisma.activity.findMany({
-              where: { nftId: nft.id, isExpired: true },
+            const activitCount = await prisma.activity.count({
+              where: {
+                nftId: nft.id,
+                isExpired: true,
+                NOT: { buyingprice: null },
+              },
             });
-            let count = 0;
-            for (let index = 0; index < activityList.length; index++) {
-              const element = activityList[index];
-              if (element.buyingprice !== null) count++;
-            }
+            console.log(activitCount);
             await prisma.$disconnect();
             res.status(201).json({
               message: "Successfully get",
               success: true,
-              data: { nft: finalNFT, saleNum: count },
+              data: { nft: finalNFT, saleNum: activitCount },
             });
           } else {
             throw new Error("nft is not exit");

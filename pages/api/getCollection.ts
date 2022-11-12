@@ -31,12 +31,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           ownerWalletAddress: user1?.walletAddress!,
         };
         const nfts = await prisma.nFT.findMany({
-          where: { collectionId: collection.id },
+          where: { collectionId: collection.id, NOT: { status: "BLOCKED" } },
         });
         const finslNFT: NFT_Card[] = [];
         if (nfts.length !== 0) {
           for await (const nft of nfts) {
             const ipfsData = await axios.get(nft.uri);
+            if (nft.status === "BLOCKED") {
+              continue;
+            }
             const activity = await prisma.activity.findFirst({
               where: {
                 nftId: nft.id,
