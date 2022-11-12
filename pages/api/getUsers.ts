@@ -11,46 +11,34 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const user = await prisma.user.findMany({});
       let results: User[] = [];
       for (const user_data of user) {
-        /*const allCollections = await prisma.collection.findMany({
-          where: { creatorId: user_data.id },
+        const owner = await prisma.owner.findFirst({
+          where: {
+            userId: user_data.id,
+          },
         });
-        var collection_count: number = 0;
-        if (allCollections) {
-          for (const result of allCollections) {
-            if (result.status === "BLOCKED") {
-              continue;
-            } else {
-              collection_count = collection_count + 1;
-            }
-          }
-        }
+        const collection_count = await prisma.collection.count({
+          where: {
+            creatorId: user_data.id,
+            NOT: {
+              status: "BLOCKED",
+            },
+          },
+        });
 
-        var created_count: number = 0;
         var collected_count: number = 0;
         collected_count = await prisma.nFT.count({
           where: {
-            ownerId: user_data.id,
+            ownerId: owner?.id,
           },
         });
-        console.log(user_data.id, collected_count);
-        const nfts = await prisma.nFT.findMany();
-        for await (const nft of nfts) {
-          const ipfsData = await axios.get(nft.uri);
-          if (ipfsData.data.creator === user_data.walletAddress) {
-            created_count += 1;
-          }
-          if (nft.ownerId === user_data.id) {
-            collected_count += 1;
-          }
-        }*/
 
         results.push({
           id: user_data.id,
           User_ID: user_data.walletAddress,
           Name: user_data.userName,
           //Total: created_count + collected_count,
-          //Created: created_count,
-          //Collections: collection_count,
+          Owned: collected_count,
+          Collections: collection_count,
           Status: user_data.status,
           Type: user_data.type,
           reportType: "",

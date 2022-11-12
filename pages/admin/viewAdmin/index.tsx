@@ -76,19 +76,19 @@ const ViewAdmins: NextPage = (props) => {
       headerName: "Total NFTs",
       type: "string",
       width: 100,
-    },
+    },*/
     {
-      field: "Created",
-      headerName: "Created NFTs",
+      field: "Owned",
+      headerName: "Owned NFT count",
       type: "string",
-      width: 100,
+      width: 160,
     },
     {
       field: "Collections",
-      headerName: "Created Collections",
+      headerName: "Collection count",
       type: "string",
       width: 150,
-    },*/
+    },
     {
       field: "Status",
       headerName: "Status",
@@ -272,7 +272,7 @@ const ViewAdmins: NextPage = (props) => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "60%",
+          width: "75%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",
