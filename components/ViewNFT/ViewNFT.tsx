@@ -177,6 +177,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       const { data } = await api.post("/api/getNFTActivity", {
         data: {
           id: props.salesOrder.id,
+          creatorUserId: props.salesOrder?.creatorUserID,
         },
       });
       const arr1: Activity[] = data.data.reverse();

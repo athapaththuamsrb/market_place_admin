@@ -171,7 +171,9 @@ export type Activity = {
   event: string;
   price: string;
   from: string;
+  fromID: string;
   to: string;
+  toID: string;
   date: string;
 };
 
@@ -182,7 +184,8 @@ export type Offer = {
   floor_diff: string;
   expiration: string;
   from: string;
+  fromID: string;
   isExpired: boolean;
-  state: "ACCEPTED" | "REJECTED" | "PENDDING";
+  state: "ACCEPTED" | "REJECTED" | "PENDING";
   isPaid: boolean;
 };

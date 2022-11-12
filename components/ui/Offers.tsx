@@ -46,13 +46,6 @@ const Offers: FC<OffersProps> = ({
       type: "string",
       width: 150,
     },
-
-    {
-      field: "floor_diff",
-      headerName: "Floor Difference",
-      type: "string",
-      width: 150,
-    },
     {
       field: "from",
       headerName: "From",
@@ -94,6 +87,12 @@ const Offers: FC<OffersProps> = ({
       width: 200,
     },
     {
+      field: "state",
+      headerName: "Status",
+      type: "string",
+      width: 150,
+    },
+    {
       field: "usd_price",
       headerName: "USD Price",
       type: "string",
@@ -102,13 +101,6 @@ const Offers: FC<OffersProps> = ({
     {
       field: "expiration",
       headerName: "Expiration",
-      type: "string",
-      width: 200,
-    },
-
-    {
-      field: "floor_diff",
-      headerName: "Floor Difference",
       type: "string",
       width: 200,
     },
