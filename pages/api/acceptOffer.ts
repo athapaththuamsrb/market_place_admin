@@ -20,8 +20,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             id: offer.activityId,
           },
         });
-        if (!activity?.isPenddingPayment) {
-          await prisma.bidding.update({
+        if (activity && !activity.isPenddingPayment) {
+          await prisma.bidding.updateMany({
+            where: { activityId: activity.id },
+            data: { state: "REJECTED" },
+          });
+          await prisma.bidding.updateMany({
             where: { id: id },
             data: { state: "ACCEPTED" },
           });

@@ -91,7 +91,8 @@ const MyNFTs: NextPage = (props) => {
             src={"/ethereum1.png"}
             alt={"logo"}
             loading="lazy"
-          />{"   "}
+          />
+          {"   "}
           <CopyToClipboard
             text={copyValue ? copyValue : ""}
             onCopy={() => setIsCopied(true)}
@@ -112,13 +113,13 @@ const MyNFTs: NextPage = (props) => {
           </CopyToClipboard>
         </Typography>
 
-        <Typography
+        {/*<Typography
           variant="h4"
           sx={{ mt: 1, mb: 3, fontWeight: 500 }}
           gutterBottom
         >
           Account balance: {data?.formatted} {data?.symbol}
-        </Typography>
+        </Typography>*/}
 
         <Button
           variant="contained"

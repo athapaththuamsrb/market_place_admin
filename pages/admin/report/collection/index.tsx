@@ -273,7 +273,7 @@ const ViewReportedCollections: NextPage = (props) => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "90%",
+          width: "75%",
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",

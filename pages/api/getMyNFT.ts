@@ -35,7 +35,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           }
           const createdNFTCard: NFT_Card[] = [];
           const collectedNFTCard: NFT_Card[] = [];
-          const nfts = await prisma.nFT.findMany();
+          const nfts = await prisma.nFT.findMany({
+            where: { NOT: { status: "BLOCKED" } },
+          });
           if (nfts.length !== 0) {
             for await (const nft of nfts) {
               const ipfsData = await axios.get(nft.uri);
@@ -104,7 +106,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
               });
               if (!lazyNfts) continue;
-
+              if (lazyNfts.status === "BLOCKED") {
+                continue;
+              }
               const ipfsData = await axios.get(nft.tokenUri.raw);
 
               let nftCreater = await prisma.user.findUnique({

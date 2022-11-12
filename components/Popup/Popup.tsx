@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Title from "../ui/Title";
 import Link from "next/link";
-import { Grid } from "@mui/material";
+import { Card, CardMedia, Grid } from "@mui/material";
 
 const style = {
   position: "absolute" as "absolute",
@@ -30,6 +30,17 @@ export default function BasicModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <Card sx={{ display: "flex", boxShadow: 0 }}>
+            <CardMedia
+              component="img"
+              image={"public/../../../exclusives_logo.png"}
+              alt="avatar"
+              sx={{
+                height: 200,
+                borderRadius: 2,
+              }}
+            />
+          </Card>
           <Title firstWord="Welcome to" secondWord="Exclusives" />
           <Grid
             container
