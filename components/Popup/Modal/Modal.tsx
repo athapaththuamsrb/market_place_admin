@@ -20,66 +20,64 @@ type AlertDialogProps = {
   setOpen: (openModal: boolean) => void;
   setMsg: (msg: string) => void;
 };
-const AlertDialog: FC<AlertDialogProps> = (props) => {
+const AlertDialog: FC<AlertDialogProps> = ({ msg, open, setOpen, setMsg }) => {
   const router = useRouter();
   const handleClose = () => {
-    props.setOpen(false);
-    props.setMsg("");
+    setOpen(false);
+    setMsg("");
     router.push("/explore-collections");
   };
 
   return (
-    <div>
-      <Dialog
-        open={props.open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle
+        sx={{
+          backgroundColor: "#CA82FF",
+          color: "white",
+        }}
+        id="alert-dialog-title"
       >
-        <DialogTitle
-          sx={{
-            backgroundColor: "#CA82FF",
-            color: "white",
-          }}
-          id="alert-dialog-title"
+        {/* {"Status"} */}
+        <Typography
+          variant="h5"
+          component="div"
+          style={{ flexGrow: 1, fontWeight: 600 }}
         >
-          {/* {"Status"} */}
+          Status
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          fontWeight: 100,
+          width: "400px",
+        }}
+      >
+        <DialogContentText
+          id="alert-dialog-description"
+          sx={{ fontSize: 18, fontWeight: 500 }}
+        >
+          {msg}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} autoFocus>
           <Typography
-            variant="h5"
-            component="div"
-            style={{ flexGrow: 1, fontWeight: 600 }}
-          >
-            Status
-          </Typography>
-        </DialogTitle>
-        <DialogContent
-          dividers
-          sx={{
-            fontWeight: 100,
-            width: "400px",
-          }}
-        >
-          <DialogContentText
-            id="alert-dialog-description"
+            variant="button"
+            display="block"
             sx={{ fontSize: 18, fontWeight: 500 }}
+            gutterBottom
           >
-            {props.msg}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} autoFocus>
-            <Typography
-              variant="button"
-              display="block"
-              sx={{ fontSize: 18, fontWeight: 500 }}
-              gutterBottom
-            >
-              OK
-            </Typography>
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+            OK
+          </Typography>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 export default AlertDialog;

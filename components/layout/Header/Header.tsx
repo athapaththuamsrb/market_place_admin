@@ -27,7 +27,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Logout from "@mui/icons-material/Logout";
-
+import ConnectPopup from "./../../Popup/ConnectPopup";
 const Navbar: FC = () => {
   const { connect, connectors, activeConnector } = useConnect();
   const { data: ethereumAccount } = useAccount();
@@ -35,6 +35,7 @@ const Navbar: FC = () => {
   const theme = useTheme();
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openConnect, setOpenConnect] = useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
   const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =
@@ -151,7 +152,7 @@ const Navbar: FC = () => {
             </Button>
             {isMounted && connectors[0].ready && !ethereumAccount && (
               <Button
-                onClick={() => connect(connectors[0])}
+                onClick={() => setOpenConnect(true)}
                 size="small"
                 color="primary"
                 variant="outlined"
@@ -246,6 +247,10 @@ const Navbar: FC = () => {
           </Box>
         </Toolbar>
       </AppBar>
+      <ConnectPopup
+        setOpenConnect={setOpenConnect}
+        openConnect={openConnect}
+      ></ConnectPopup>
     </Box>
   );
 };
