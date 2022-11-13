@@ -15,6 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       let user = await prisma.user.findUnique({
         where: userData,
       });
+
       if (user) {
         const userProfile: Profile = {
           walletAddress: user.walletAddress,
@@ -112,6 +113,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getNFTs?owner=${user.walletAddress}`
           );
           if (data.ownedNfts.length !== 0) {
+            let ipfsArray: string[] = [];
             for await (const nft of data.ownedNfts) {
               const lazyNfts = await prisma.nFT.findUnique({
                 where: {
@@ -121,7 +123,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               if (!lazyNfts) {
                 continue;
               }
+              if (lazyNfts.status === "BLOCKED") {
+                continue;
+              }
               const ipfsData = await axios.get(nft.tokenUri.raw);
+              if (ipfsArray.includes(nft.tokenUri.raw)) continue;
+              ipfsArray.push(nft.tokenUri.raw);
               //TODO get block chain collection
               const { data: collectionMetaData } = await axios.get(
                 `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getContractMetadata?contractAddress=${ipfsData.data.collection}`

@@ -100,6 +100,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
           if (data.ownedNfts.length !== 0) {
             for await (const nft of data.ownedNfts) {
+              let ipfsArray: string[] = [];
               const lazyNfts = await prisma.nFT.findUnique({
                 where: {
                   uri: nft.tokenUri.raw,
@@ -110,6 +111,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 continue;
               }
               const ipfsData = await axios.get(nft.tokenUri.raw);
+              if (ipfsArray.includes(nft.tokenUri.raw)) continue;
+              ipfsArray.push(nft.tokenUri.raw);
 
               let nftCreater = await prisma.user.findUnique({
                 where: { walletAddress: ipfsData.data.creator },

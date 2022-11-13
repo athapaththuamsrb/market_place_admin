@@ -60,14 +60,14 @@ const UserProfile: NextPage<UserProfileProps> = ({
   const open1 = Boolean(anchorEl);
   const { data: account } = useAccount();
 
-  const {
-    data: balance,
-    isError,
-    isLoading,
-  } = useBalance({
-    addressOrName: userProfile.walletAddress,
-    chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
-  });
+  // const {
+  //   data: balance,
+  //   isError,
+  //   isLoading,
+  // } = useBalance({
+  //   addressOrName: userProfile.walletAddress,
+  //   chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
+  // });
   function srcset(
     image: string,
     width: number,
