@@ -80,7 +80,7 @@ const ItemActivity: FC<ActivityProps> = ({ activity }) => {
         sx={{
           flexGrow: 1,
           width: "100%",
-          height: 300,
+          height: 400,
         }}
       >
         <DataGrid

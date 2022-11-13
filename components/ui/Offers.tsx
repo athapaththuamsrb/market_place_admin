@@ -1,10 +1,16 @@
-import { DataGrid, GridRowParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowParams,
+} from "@mui/x-data-grid";
 import {
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogTitle,
+  Link,
   Typography,
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
@@ -19,6 +25,11 @@ type OffersProps = {
   offers: Offer[];
   user_id: string;
   getSetOffers: () => Promise<void>;
+  isPendingPayment: boolean;
+  openDecline: boolean;
+  setOpenDecline: React.Dispatch<React.SetStateAction<boolean>>;
+  openAccept: boolean;
+  setOpenAccept: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Offers: FC<OffersProps> = ({
@@ -26,7 +37,20 @@ const Offers: FC<OffersProps> = ({
   user_id,
   getSetOffers,
   salesOrder,
+  isPendingPayment,
+  openAccept,
+  setOpenAccept,
+  openDecline,
+  setOpenDecline,
 }) => {
+  function getFromID(params: GridRenderCellParams) {
+    return [`${params.row.fromID}`, `${params.row.from}`];
+  }
+
+  function isRejected(params: GridRenderCellParams) {
+    return params.row.state === "REJECTED";
+  }
+
   const ownerColumns = [
     {
       field: "price",
@@ -47,39 +71,82 @@ const Offers: FC<OffersProps> = ({
       width: 150,
     },
     {
-      field: "from",
+      field: "actions1",
       headerName: "From",
-      type: "string",
+      //type: "string",
       width: 150,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>
+          {getFromID(params)[0] !== "" ? (
+            <Link href={`../../user/${getFromID(params)[0]}`}>
+              {getFromID(params)[1]}
+            </Link>
+          ) : (
+            <div>{getFromID(params)[1]}</div>
+          )}
+        </div>
+      ),
     },
     {
       field: "actions",
-      type: "actions",
+      //type: "actions",
       width: 200,
       headerName: "Review",
-      getActions: (params: GridRowParams) => [
-        <Button
-          variant="contained"
-          // color="primary"
-          key={params.row.id}
-          sx={{ backgroundColor: "green", color: "whitesmoke" }}
-          onClick={() => handleClickOpenAccept(params.row.id)}
-        >
-          <a>Accept</a>
-        </Button>,
-        <Button
-          variant="contained"
-          color="primary"
-          key={params.row.id}
-          sx={{ backgroundColor: "red", color: "whitesmoke" }}
-          onClick={() => handleClickOpenDecline(params.row.id)}
-        >
-          <a>Decline</a>
-        </Button>,
-      ],
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>
+          {isPendingPayment === false && isRejected(params) === false ? (
+            <Box>
+              <Button
+                variant="contained"
+                // color="primary"
+                key={params.row.id}
+                sx={{
+                  backgroundColor: "green",
+                  color: "whitesmoke",
+                  marginInline: "15px",
+                }}
+                onClick={() => handleClickOpenAccept(params.row.id)}
+              >
+                <a>Accept</a>
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                //key={params.row.id}
+                sx={{ backgroundColor: "red", color: "whitesmoke" }}
+                onClick={() => handleClickOpenDecline(params.row.id)}
+              >
+                <a>Decline</a>
+              </Button>
+            </Box>
+          ) : (
+            <Box>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "green",
+                  color: "whitesmoke",
+                  marginInline: "15px",
+                }}
+                disabled
+              >
+                <a>Accept</a>
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ backgroundColor: "red", color: "whitesmoke" }}
+                disabled
+              >
+                <a>Decline</a>
+              </Button>
+            </Box>
+          )}
+        </div>
+      ),
     },
   ];
-  const columns = [
+  const columns: GridColDef[] = [
     {
       field: "price",
       headerName: "Price",
@@ -105,10 +172,21 @@ const Offers: FC<OffersProps> = ({
       width: 200,
     },
     {
-      field: "from",
+      field: "actions1",
       headerName: "From",
-      type: "string",
-      width: 200,
+      //type: "string",
+      width: 150,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>
+          {getFromID(params)[0] !== "" ? (
+            <Link href={`../../user/${getFromID(params)[0]}`}>
+              {getFromID(params)[1]}
+            </Link>
+          ) : (
+            <div>{getFromID(params)[1]}</div>
+          )}
+        </div>
+      ),
     },
   ];
   const { signTypedDataAsync } = useSignTypedData();
@@ -130,15 +208,13 @@ const Offers: FC<OffersProps> = ({
     verifyingContract: MarketplaceAddress.address,
   };
   const [rows, setRows] = useState<Offer[]>([]);
-  const [openAccept, setOpenAccept] = useState(false);
-  const [openDecline, setOpenDecline] = useState(false);
+  // const [openAccept, setOpenAccept] = useState(false);
+  // const [openDecline, setOpenDecline] = useState(false);
   const [rowId, setRowId] = useState("");
   const [status, setStatus] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
   const { data: account } = useAccount();
-
-  useEffect(() => {}, [openAccept, openDecline]);
 
   const handleClickOpenAccept = (id: string) => {
     setOpenAccept(true);
@@ -146,7 +222,6 @@ const Offers: FC<OffersProps> = ({
   };
 
   const handleCloseAccept = async (result: string, id: string) => {
-    setOpenAccept(false);
     if (result == "Yes") {
       try {
         const offer: Offer = offers.find((offer) => offer.id == id)!;
@@ -164,7 +239,7 @@ const Offers: FC<OffersProps> = ({
           },
         });
 
-        axios.post("/api/acceptOffer", {
+        await axios.post("/api/acceptOffer", {
           data: {
             id: offer.id,
             biddingSignature: biddingSignature,
@@ -172,9 +247,12 @@ const Offers: FC<OffersProps> = ({
         });
         getSetOffers();
         setError(null);
+        setOpenAccept(false);
       } catch (error) {
         console.log("Offer Accepting error!");
       }
+    } else {
+      setOpenAccept(false);
     }
   };
 
@@ -183,12 +261,11 @@ const Offers: FC<OffersProps> = ({
     setRowId(id);
   };
 
-  const handleCloseDecline = (result: string, id: string) => {
-    setOpenDecline(false);
+  const handleCloseDecline = async (result: string, id: string) => {
     if (result == "Yes") {
       const offer: Offer = offers.find((offer) => offer.id == id)!;
 
-      axios
+      await axios
         .post("/api/declineOffer", {
           data: {
             id: offer.id,
@@ -197,11 +274,14 @@ const Offers: FC<OffersProps> = ({
         .then(() => {
           setIsPending(false);
           setError(null);
+          setOpenDecline(false);
         })
         .catch((error) => {
           setIsPending(false);
           setError(error.message);
         });
+    } else {
+      setOpenDecline(false);
     }
   };
 
@@ -234,7 +314,7 @@ const Offers: FC<OffersProps> = ({
       >
         <DialogTitle id="responsive-dialog-title">
           {"Are you sure?"}
-          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
+          <Typography sx={{ fontSize: 14, fontWeight: 400 }}>
             {"Are you sure that you want to accept this offer?"}
           </Typography>
         </DialogTitle>
@@ -252,7 +332,7 @@ const Offers: FC<OffersProps> = ({
       >
         <DialogTitle id="responsive-dialog-title">
           {"Are you sure?"}
-          <Typography variant="h6" sx={{ fontSize: 14, fontWeight: 400 }}>
+          <Typography sx={{ fontSize: 14, fontWeight: 400 }}>
             {"Are you sure that you want to decline this offer?"}
           </Typography>
         </DialogTitle>

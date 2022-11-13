@@ -82,13 +82,15 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const open1 = Boolean(anchorEl);
   const [activity, setActivity] = useState<Activity[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
+  const [isURLCopied, setIsURLCopied] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openDecline, setOpenDecline] = useState(false);
   const [copyURL, setCopyURL] = useState(
     "http://localhost:3000/view/nft/" +
       props.ownerID +
       "/" +
       props.salesOrder.id
   );
-  const [isURLCopied, setIsURLCopied] = useState(false);
   const {
     activeConnector,
     connect,
@@ -97,6 +99,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     isConnecting,
     pendingConnector,
   } = useConnect();
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -279,7 +282,13 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     getSetActivity();
     getSetOffers();
     // copy();
-  }, [isPendingPayment, PendingPaymentBuyer, openPopup]);
+  }, [
+    isPendingPayment,
+    PendingPaymentBuyer,
+    openPopup,
+    openAccept,
+    openDecline,
+  ]);
   return isMounted ? (
     <Box>
       {isPending && (
@@ -755,6 +764,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   offers={offers}
                   user_id={props.salesOrder.walletAddress}
                   getSetOffers={getSetOffers}
+                  isPendingPayment={isPendingPayment}
+                  openAccept={openAccept}
+                  setOpenAccept={setOpenAccept}
+                  openDecline={openDecline}
+                  setOpenDecline={setOpenDecline}
                 />
               </AccordionDetails>
             </Accordion>
