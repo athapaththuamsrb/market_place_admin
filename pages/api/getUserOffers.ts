@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { OfferToAccept } from "../../src/interfaces";
 import authToken from "../../services/auth.token";
 import { ethers } from "ethers";
+import axios from "axios";
 
 const prisma = new PrismaClient();
 
@@ -44,37 +45,45 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               });
               if (offer) {
                 if (offer.userId === user.id) {
-                  let nft;
-                  nft = await prisma.nFT.findUnique({
+                  const id = activity.nftId;
+                  const nft = await prisma.nFT.findUnique({
                     where: {
-                      id: activity.nftId,
+                      id: id,
                     },
                   });
-                  //   if (id.length === 46) {
-                  //     const uri = `https://exclusives.infura-ipfs.io/ipfs/${id}`;
-                  //     nft = await prisma.nFT.findUnique({
-                  //       where: {
-                  //         uri: uri,
-                  //       },
-                  //     });
-                  //   } else {
-                  //     nft = await prisma.nFT.findUnique({
-                  //       where: {
-                  //         id: id,
-                  //       },
-                  //     });
-                  //   }
-                  let off: OfferToAccept = {
-                    id: offer.id,
-                    price: offer.price,
-                    nftId: activity.nftId,
-                    owner: nft?.ownerId!,
-                    expiration: offer.timestamp.toLocaleDateString(),
-                    isExpired: offer.isExpired,
-                    state: offer.state === "PENDDING" ? "PENDING" : offer.state,
-                    isPaid: offer.isPaid,
-                  };
-                  offersList.push(off);
+                  console.log("efweg");
+                  const ipfsData = await axios.get(nft?.uri!);
+                  console.log("evewg");
+                  if (nft) {
+                    let off: OfferToAccept = {
+                      id: offer.id,
+                      price: offer.price,
+                      nftId: id,
+                      nftName: ipfsData.data.name,
+                      nftUrl: nft.isMinted ? nft.uri.split("/")[4] : id,
+                      owner: nft?.ownerId!,
+                      expiration: offer.timestamp.toLocaleDateString(),
+                      isExpired: offer.isExpired,
+                      state:
+                        offer.state === "PENDDING" ? "PENDING" : offer.state,
+                      isPaid: offer.isPaid,
+                      tokenID: parseInt(ipfsData.data.tokenId),
+                      uri: nft?.uri!,
+                      creator: ipfsData.data.creator,
+                      category: ipfsData.data.category,
+                      collection: ipfsData.data.collection,
+                      royality: ipfsData.data.royality,
+                    };
+                    // } else {
+                    //   const nft = await prisma.nFT.findUnique({
+                    //     where: {
+                    //       id: id,
+                    //     },
+                    //   });
+                    // }
+                    console.log(off);
+                    offersList.push(off);
+                  }
                 } else {
                   continue;
                 }
