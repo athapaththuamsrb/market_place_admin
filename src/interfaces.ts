@@ -86,8 +86,8 @@ export type User = {
   Name: string;
   //Date: Date;
   //Total: number;
-  //Created: number;
-  //Collections: number;
+  Owned: number;
+  Collections: number;
   Status: string;
   Type: string;
   reportType: string;

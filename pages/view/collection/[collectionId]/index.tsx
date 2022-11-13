@@ -17,6 +17,8 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Card,
+  CardMedia,
 } from "@mui/material";
 import NFTCardGrid from "../../../../components/ui/NFT/NFTCardGrid";
 import NFTCard from "../../../../components/ui/NFT/NFTCard";
@@ -38,10 +40,10 @@ interface CollectionProps {
   collectionId: string;
 }
 const Collection: NextPage<CollectionProps> = ({
-      nftList,
-      collectionData,
-      collectionId,
-    }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  nftList,
+  collectionData,
+  collectionId,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -90,17 +92,28 @@ const Collection: NextPage<CollectionProps> = ({
     <Box>
       {collectionData.bannerImage && (
         <ImageListItem>
-          <img
+          {/* <img
             {...srcset(collectionData.bannerImage, 250, 200, 3, 9)}
             alt="banner"
             loading="lazy"
-          />
+          /> */}
+          <Card sx={{ display: "flex", boxShadow: 0 }}>
+            <CardMedia
+              component="img"
+              image={collectionData.bannerImage}
+              alt="Banner image"
+              sx={{
+                height: 400,
+                width: 1850,
+              }}
+            />
+          </Card>
 
           <Stack direction="row" spacing={2}>
             <Avatar
               alt="Remy Sharp"
               src={collectionData?.logoImage}
-              sx={{ width: 150, height: 150, boxShadow: 3, mt: "-7%", ml: 10 }}
+              sx={{ width: 150, height: 150, boxShadow: 3, mt: "-5%", ml: 10 }}
               variant="rounded"
             />
           </Stack>
