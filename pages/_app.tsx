@@ -61,7 +61,7 @@ if (typeof window !== "undefined") {
   console.log("You are on the server");
 }
 
-export default function MyApp(props) {
+export default function MyApp(props: { Component: any; emotionCache?: EmotionCache | undefined; pageProps: any; }) {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker

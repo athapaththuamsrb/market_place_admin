@@ -64,34 +64,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   },
                 });
                 if (!collection) {
-                  let collectionUser = await prisma.user.findUnique({
-                    where: { walletAddress: ipfsData.data.creator },
-                  });
-                  if (!collectionUser) {
-                    collectionUser = await prisma.user.create({
-                      data: { walletAddress: ipfsData.data.creator },
-                    });
-                  }
-                  collection = await prisma.collection.create({
-                    data: {
-                      creatorId: collectionUser.id,
-                      collectionCategory: ipfsData.data.category,
-                      collectionName: collectionMetaData.contractMetadata.name,
-                      collectionAddress: ipfsData.data.collection,
-                      collectionDescription: ipfsData.data.description,
-                    },
-                  });
+                  throw new Error("Collection is not exist!!!");
                 }
                 console.log(collection);
                 console.log(collection.id, reportedId[2], uri, owner.id);
-                let nft1 = await prisma.nFT.create({
-                  data: {
-                    collectionId: collection.id,
-                    tokenID: reportedId[2],
-                    uri: uri,
-                    ownerId: owner.id,
-                  },
-                });
+                let nft1 = await prisma.nFT.findUnique({ where: { uri: uri } });
+                if (!nft1) throw new Error("NFT is not exist");
                 console.log(nft1);
                 await prisma.nFT.update({
                   where: {
