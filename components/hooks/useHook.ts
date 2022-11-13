@@ -5,6 +5,7 @@ import {
   Profile,
   Collection_Card,
   Collection_Item,
+  OfferToAccept,
 } from "../../src/interfaces";
 import { useAccount } from "wagmi";
 import jwt_decode from "jwt-decode";
@@ -153,4 +154,33 @@ export const useGetMyCollectionItem = () => {
     }, 3000);
   }, [account?.address]);
   return { collectionItem, isPendingCollectionItem, errorCollectionItem };
+};
+
+export const useGetMyOffers = () => {
+  const { data: account } = useAccount();
+  const [offers, setOffers] = useState<OfferToAccept[]>([]);
+  const [isPendingOffers, setIsPendingOffers] = useState(true);
+  const [errorOffers, setErrorOffers] = useState(null);
+  useEffect(() => {
+    setTimeout(() => {
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getUserOffers", {
+            data: {
+              token: authService.getUserToken(),
+            },
+          })
+          .then((res) => {
+            setOffers(res.data.data);
+            setIsPendingOffers(false);
+            setErrorOffers(null);
+          })
+          .catch((error) => {
+            setIsPendingOffers(false);
+            setErrorOffers(error.message);
+          });
+      }
+    }, 3000);
+  }, [account?.address]);
+  return { offers, isPendingOffers, errorOffers };
 };

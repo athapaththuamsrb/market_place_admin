@@ -13,6 +13,10 @@ import Image from "next/image";
 import Button from "@mui/material/Button";
 import RenderMobileMenu from "./RenderMobileMenu";
 import { useConnect, useDisconnect, useAccount } from "wagmi";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
+import { useGetMyOffers } from "../../hooks/useHook";
+
 import React, {
   useState,
   useRef,
@@ -36,6 +40,7 @@ const Navbar: FC = () => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [openConnect, setOpenConnect] = useState(false);
+  const { offers, isPendingOffers, errorOffers } = useGetMyOffers();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
   const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =
@@ -169,6 +174,18 @@ const Navbar: FC = () => {
             )}
             {isMounted && ethereumAccount && (
               <div>
+                <Button
+                  href={"/../account/view-offers"}
+                  //onClick={handleClickNotification}
+                >
+                  <Badge
+                    color="secondary"
+                    badgeContent={offers.length}
+                    max={99}
+                  >
+                    <MailIcon color="action" />
+                  </Badge>
+                </Button>
                 <Button
                   id="demo-positioned-button"
                   aria-controls={open ? "demo-positioned-menu" : undefined}

@@ -189,3 +189,14 @@ export type Offer = {
   state: "ACCEPTED" | "REJECTED" | "PENDING";
   isPaid: boolean;
 };
+
+export type OfferToAccept = {
+  id: string;
+  price: string;
+  nftId: string;
+  expiration: string;
+  owner: string;
+  isExpired: boolean;
+  state: "ACCEPTED" | "REJECTED" | "PENDING";
+  isPaid: boolean;
+};
