@@ -40,7 +40,7 @@ const BidOffers: NextPage = (props) => {
   const { activeConnector } = useConnect();
 
   function getNFT(params: GridRenderCellParams) {
-    return [`${params.row.nftid}`, `${params.row.owner}`];
+    return [ `${params.row.owner}`,`${params.row.nftUrl}`,`${params.row.nftName}`];
   }
 
   function isRejected(params: GridRenderCellParams) {
@@ -55,8 +55,8 @@ const BidOffers: NextPage = (props) => {
       width: 150,
       renderCell: (params: GridRenderCellParams<String>) => (
         <div>
-          <Link href={`../../${getNFT(params)[0]}/${getNFT(params)[0]}`}>
-            {getNFT(params)[1]}
+          <Link href={`../view/nft/${getNFT(params)[0]}/${getNFT(params)[1]}`}>
+            {getNFT(params)[2]}
           </Link>
         </div>
       ),
@@ -82,7 +82,7 @@ const BidOffers: NextPage = (props) => {
     {
       field: "actions",
       //type: "actions",
-      width: 300,
+      width: 400,
       headerName: "Action",
       renderCell: (params: GridRenderCellParams<String>) => (
         <Box>
