@@ -52,61 +52,60 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           });
         }
         if (owner) {
-          const nfts = await prisma.nFT.findMany();
+          const nfts = await prisma.nFT.findMany({
+            where: { NOT: { status: "BLOCKED" }, creatorId: user.id },
+          });
           if (nfts.length !== 0) {
             for await (const nft of nfts) {
               const ipfsData = await axios.get(nft.uri);
-
-              if (ipfsData.data.creator === user.walletAddress) {
-                const creatorData = { walletAddress: ipfsData.data.creator };
-                let userCreator = await prisma.user.findUnique({
-                  where: creatorData,
+              const creatorData = { walletAddress: ipfsData.data.creator };
+              let userCreator = await prisma.user.findUnique({
+                where: creatorData,
+              });
+              if (!userCreator) {
+                userCreator = await prisma.user.create({
+                  data: creatorData,
                 });
-                if (!userCreator) {
-                  userCreator = await prisma.user.create({
-                    data: creatorData,
-                  });
-                }
-                let ownerCreator = await prisma.owner.findUnique({
-                  where: creatorData,
-                });
-                if (!ownerCreator) {
-                  ownerCreator = await prisma.owner.create({
-                    data: { ...creatorData, userId: userCreator.id },
-                  });
-                }
-                const activity = await prisma.activity.findFirst({
-                  where: {
-                    nftId: nft.id,
-                    isExpired: false,
-                  },
-                });
-                let list: NFT_Card;
-                if (activity) {
-                  list = {
-                    id: nft.id,
-                    price: activity.sellingprice,
-                    image: ipfsData.data.image,
-                    name: ipfsData.data.name,
-                    listed: true,
-                    category: ipfsData.data.category,
-                    ownerId: nft.ownerId,
-                    ownerWalletAddress: ownerCreator.walletAddress,
-                  };
-                } else {
-                  list = {
-                    id: nft.id,
-                    price: "0",
-                    image: ipfsData.data.image,
-                    name: ipfsData.data.name,
-                    listed: false,
-                    category: ipfsData.data.category,
-                    ownerId: nft.ownerId,
-                    ownerWalletAddress: ownerCreator.walletAddress,
-                  };
-                }
-                createdNFTCards.push(list);
               }
+              let ownerCreator = await prisma.owner.findUnique({
+                where: creatorData,
+              });
+              if (!ownerCreator) {
+                ownerCreator = await prisma.owner.create({
+                  data: { ...creatorData, userId: userCreator.id },
+                });
+              }
+              const activity = await prisma.activity.findFirst({
+                where: {
+                  nftId: nft.id,
+                  isExpired: false,
+                },
+              });
+              let list: NFT_Card;
+              if (activity) {
+                list = {
+                  id: nft.id,
+                  price: activity.sellingprice,
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: true,
+                  category: ipfsData.data.category,
+                  ownerId: nft.ownerId,
+                  ownerWalletAddress: ownerCreator.walletAddress,
+                };
+              } else {
+                list = {
+                  id: nft.id,
+                  price: "0",
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: false,
+                  category: ipfsData.data.category,
+                  ownerId: nft.ownerId,
+                  ownerWalletAddress: ownerCreator.walletAddress,
+                };
+              }
+              createdNFTCards.push(list);
             }
           }
           const { data } = await axios.get(

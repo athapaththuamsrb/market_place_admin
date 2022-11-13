@@ -59,6 +59,7 @@ model NFT {
   uri          String     @unique
   timestamp    DateTime   @default(now())
   ownerId      String
+  creatorId    String
   isMinted     Boolean    @default(false)
 }
 
