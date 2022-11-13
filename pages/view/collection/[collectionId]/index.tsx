@@ -28,7 +28,7 @@ import api from "../../../../lib/api";
 import { Collection_Profile, NFT_Card } from "../../../../src/interfaces";
 import Image from "next/image";
 import Paper from "@mui/material/Paper";
-import ReportPopup from "../../../../components/ReportPopup";
+import ReportPopup from "../../../../components/Popup/ReportPopup";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FlagIcon from "@mui/icons-material/Flag";
 import React, { useState } from "react";
@@ -40,10 +40,10 @@ interface CollectionProps {
   collectionId: string;
 }
 const Collection: NextPage<CollectionProps> = ({
-  nftList,
-  collectionData,
-  collectionId,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      nftList,
+      collectionData,
+      collectionId,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

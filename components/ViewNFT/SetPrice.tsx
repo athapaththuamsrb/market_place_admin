@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
 import { useFormik, Field } from "formik";
 import * as yup from "yup";
 import { useSignTypedData } from "wagmi";
-import ModalPopUp from "../Modal";
+import ModalPopUp from "../Popup/Modal";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ItemActivity from "../ui/ItemActivity";

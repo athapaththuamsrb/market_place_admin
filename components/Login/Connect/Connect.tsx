@@ -1,4 +1,4 @@
-import { useConnect, useDisconnect } from "wagmi";
+import { useConnect, useDisconnect, useAccount } from "wagmi";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
@@ -13,29 +13,17 @@ import Title from "../../../components/ui/Title";
 export default function Connect() {
   const isMounted = useIsMounted();
   const {
-    activeConnector,
     connect,
     connectors,
     error,
-    isConnecting,
     pendingConnector,
+    activeConnector,
+    isConnected,
   } = useConnect();
   const { disconnect } = useDisconnect();
 
   return (
     <Box>
-      {/* <Typography
-        variant="h3"
-        gutterBottom
-        component="div"
-        sx={{
-          flexGrow: 1,
-          textAlign: "center",
-          p: 5,
-        }}
-      >
-        Connect your wallet
-      </Typography> */}
       <Title firstWord="Connect" secondWord="your wallet" />
       <Typography
         variant="h6"
@@ -53,34 +41,66 @@ export default function Connect() {
       </Typography>
       <Container maxWidth="sm">
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            component="div"
+            sx={{
+              flexGrow: 1,
+              textAlign: "center",
+              p: 5,
+            }}
+          >
+            {isConnected && activeConnector && (
+              <div>Connected to {activeConnector.name}</div>
+            )}
+          </Typography>
+
           <List
             component="nav"
             aria-label="main mailbox folders"
             sx={{ borderColor: "primary.main" }}
           >
             {isMounted &&
-              connectors
-                .filter((x) => x.ready && x.id !== activeConnector?.id)
-                .map((x) => (
-                  <ListItemButton
-                    key={x.id}
-                    onClick={(event) => connect(x)}
-                    sx={{
-                      backgroundColor: "#fafafa",
-                      borderRadius: "16px",
-                      borderColor: "primary.main",
-                    }}
-                  >
-                    <ListItemIcon>
-                      <InboxIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={x.name} />
-                  </ListItemButton>
-                ))}
+              connectors.map((connector) => (
+                <ListItemButton
+                  disabled={!connector.ready}
+                  key={connector.id}
+                  onClick={() => connect({ connector })}
+                  sx={{
+                    backgroundColor: "#fafafa",
+                    borderRadius: "16px",
+                    borderColor: "primary.main",
+                  }}
+                >
+                  <ListItemIcon>
+                    <InboxIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={connector.name} />
+                  {/* <ListItemText
+                    primary={
+                      isLoading &&
+                      pendingConnector?.id === connector.id &&
+                      " (connecting)"
+                    }
+                  /> */}
+                </ListItemButton>
+              ))}
           </List>
+          <Typography
+            variant="h6"
+            gutterBottom
+            component="div"
+            sx={{
+              flexGrow: 1,
+              textAlign: "center",
+              p: 5,
+            }}
+          >
+            {error && <div>{error.message}</div>}
+          </Typography>
         </Box>
       </Container>
-      {/* {error && <div>{error.message}</div>} */}
     </Box>
   );
 }

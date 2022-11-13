@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import theme from "../../../src/theme";
-import ModalPopUp from "../../Modal";
+import ModalPopUp from "../../Popup/Modal";
 import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import * as Yup from "yup";
 import FactoryAddress from "../../../contractsData/Factory-address.json";

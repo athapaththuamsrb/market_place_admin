@@ -10,7 +10,7 @@ import {
   Box,
   Grid,
 } from "@mui/material";
-import ModalPopUp from "../../Modal";
+import ModalPopUp from "../../Popup/Modal";
 import axios from "axios";
 import { useAccount } from "wagmi";
 import * as Yup from "yup";
