@@ -137,37 +137,37 @@ const BidOffers: NextPage = (props) => {
   };
 
   const handleCloseAccept = async (result: string, id: string) => {
-    // if (result == "Yes") {
-    //   try {
-    //     const offer: Offer = offers.find((offer) => offer.id == id)!;
-    //     const biddingSignature = await signTypedDataAsync({
-    //       domain,
-    //       types,
-    //       value: {
-    //         tokenID: salesOrder.tokenID,
-    //         uri: salesOrder.uri,
-    //         creator: salesOrder.creatorWalletAddress,
-    //         category: salesOrder.category,
-    //         collection: salesOrder.collection,
-    //         royality: salesOrder.royality,
-    //         price: ethers.utils.parseEther(offer.price), //TODO PRICE
-    //       },
-    //     });
-    //     await axios.post("/api/acceptOffer", {
-    //       data: {
-    //         id: offer.id,
-    //         biddingSignature: biddingSignature,
-    //       },
-    //     });
-    //     getSetOffers();
-    //     setError(null);
-    //     setOpenAccept(false);
-    //   } catch (error) {
-    //     console.log("Offer Accepting error!");
-    //   }
-    // } else {
-    //   setOpenAccept(false);
-    // }
+    if (result == "Yes") {
+      // try {
+      //   const offer: Offer = offers.find((offer) => offer.id == id)!;
+      //   const biddingSignature = await signTypedDataAsync({
+      //     domain,
+      //     types,
+      //     value: {
+      //       tokenID: salesOrder.tokenID,
+      //       uri: salesOrder.uri,
+      //       creator: salesOrder.creatorWalletAddress,
+      //       category: salesOrder.category,
+      //       collection: salesOrder.collection,
+      //       royality: salesOrder.royality,
+      //       price: ethers.utils.parseEther(offer.price), //TODO PRICE
+      //     },
+      //   });
+      //   await axios.post("/api/acceptOffer", {
+      //     data: {
+      //       id: offer.id,
+      //       biddingSignature: biddingSignature,
+      //     },
+      //   });
+      //   getSetOffers();
+      //   setError(null);
+      //   setOpenAccept(false);
+      // } catch (error) {
+      //   console.log("Offer Accepting error!");
+      // }
+    } else {
+      setOpenAccept(false);
+    }
   };
 
   const handleClickOpenDecline = (id: string) => {
@@ -177,23 +177,23 @@ const BidOffers: NextPage = (props) => {
 
   const handleCloseDecline = async (result: string, id: string) => {
     if (result == "Yes") {
-      const offer: OfferToAccept = offers.find((offer) => offer.id == id)!;
+      // const offer: OfferToAccept = offers.find((offer) => offer.id == id)!;
 
-      await axios
-        .post("/api/declineOffer", {
-          data: {
-            id: offer.id,
-          },
-        })
-        .then(() => {
-          setIsPending(false);
-          setError(null);
-          setOpenDecline(false);
-        })
-        .catch((error) => {
-          setIsPending(false);
-          setError(error.message);
-        });
+      // await axios
+      //   .post("/api/declineOffer", {
+      //     data: {
+      //       id: offer.id,
+      //     },
+      //   })
+      //   .then(() => {
+      //     setIsPending(false);
+      //     setError(null);
+      //     setOpenDecline(false);
+      //   })
+      //   .catch((error) => {
+      //     setIsPending(false);
+      //     setError(error.message);
+      //   });
     } else {
       setOpenDecline(false);
     }

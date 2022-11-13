@@ -207,4 +207,5 @@ export type OfferToAccept = {
   category: string;
   collection: string;
   royality: string;
+  activityType: string;
 };

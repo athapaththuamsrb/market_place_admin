@@ -73,6 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                       category: ipfsData.data.category,
                       collection: ipfsData.data.collection,
                       royality: ipfsData.data.royality,
+                      activityType: activity.listingtype,
                     };
                     // } else {
                     //   const nft = await prisma.nFT.findUnique({
