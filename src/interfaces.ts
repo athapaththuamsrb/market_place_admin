@@ -186,3 +186,8 @@ export type Offer = {
   state: "ACCEPTED" | "REJECTED" | "PENDDING";
   isPaid: boolean;
 };
+
+export type CountData = {
+  status: string;
+  count: number;
+};
