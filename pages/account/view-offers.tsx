@@ -155,7 +155,6 @@ const BidOffers: NextPage = (props) => {
 
       try {
         const offer: OfferToAccept = offers.find((offer) => offer.id == id)!;
-        console.log(offer);
         let token;
         if (activeConnector) {
           token = authService.getUserToken();
