@@ -12,15 +12,37 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           id: id,
         },
       });
-      console.log("dcnjh")
+      console.log("dcnjh");
       if (offer) {
-        await prisma.bidding.update({
-          where: { id: id },
-          data: { state: "REJECTED" },
-        });
-        console.log(offer);
-        await prisma.$disconnect();
-        res.status(201).json({ message: "Successfully done!", success: true });
+        if (offer.state === "PENDDING") {
+          await prisma.bidding.update({
+            where: { id: id },
+            data: { state: "REJECTED" },
+          });
+          console.log(offer);
+          await prisma.$disconnect();
+          res
+            .status(201)
+            .json({ message: "Successfully done!", success: true });
+        } else if (offer.state === "ACCEPTED") {
+          await prisma.bidding.update({
+            where: { id: id },
+            data: { state: "REJECTED" },
+          });
+          await prisma.activity.update({
+            where: { id: offer.activityId },
+            data: {
+              isPenddingPayment: false,
+              //biddingSignature: null,
+              isExpired: true,
+            },
+          });
+          console.log(offer);
+          await prisma.$disconnect();
+          res
+            .status(201)
+            .json({ message: "Successfully done!", success: true });
+        }
       } else {
         await prisma.$disconnect();
         res.status(403).json({
