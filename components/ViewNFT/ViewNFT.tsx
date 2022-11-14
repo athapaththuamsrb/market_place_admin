@@ -154,7 +154,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               },
             });
           } else {
-            await api.post("/api/payBidding", {
+            const res1 = await api.post("/api/payBidding", {
               data: {
                 id: props.salesOrder.id,
                 token: token,
@@ -162,6 +162,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 price: price,
               },
             });
+            console.log(res1);
           }
           props.salesOrder.sold = value;
           break;
@@ -225,53 +226,29 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       type === "FIXED"
         ? props.salesOrder.signature
         : props.salesOrder.offerSignature;
+    const tokenID = await marketplace_.mintNFT(
+      //TODO add blockchain
+      {
+        tokenID: props.salesOrder.tokenID,
+        uri: props.salesOrder.uri,
+        creator: props.salesOrder.creatorWalletAddress,
+        category: props.salesOrder.category,
+        collection: props.salesOrder.collection,
+        owner: props.salesOrder.walletAddress,
+        royality: props.salesOrder.royality,
+        price: ethers.utils.parseEther(price),
+        buyer: account?.address,
+        payType: 0,
+        saleNum: props.saleNum,
+      },
+      signature,
+      {
+        value: ethers.utils.parseEther(price),
+        gasLimit: 1000000,
+      }
+    );
+    const output = await tokenID.wait();
 
-    if (
-      props.salesOrder.walletAddress ===
-        props.salesOrder.creatorWalletAddress &&
-      props.saleNum === 0
-    ) {
-      console.log("came lazymint");
-      const tokenID = await marketplace_.lazyMintNFT(
-        //TODO add blockchain
-        {
-          tokenID: props.salesOrder.tokenID,
-          uri: props.salesOrder.uri,
-          creator: props.salesOrder.creatorWalletAddress,
-          category: props.salesOrder.category,
-          collection: props.salesOrder.collection,
-          royality: props.salesOrder.royality,
-          price: ethers.utils.parseEther(price),
-        },
-        signature,
-        {
-          value: ethers.utils.parseEther(price),
-          gasLimit: 1000000,
-        }
-      );
-      const output = await tokenID.wait();
-    } else {
-      console.log("came mint");
-      const tokenID = await marketplace_.mintNFT(
-        //TODO add blockchain
-        {
-          tokenID: props.salesOrder.tokenID,
-          uri: props.salesOrder.uri,
-          creator: props.salesOrder.creatorWalletAddress,
-          category: props.salesOrder.category,
-          collection: props.salesOrder.collection,
-          owner: props.salesOrder.walletAddress,
-          royality: props.salesOrder.royality,
-          price: ethers.utils.parseEther(price),
-        },
-        signature,
-        {
-          value: ethers.utils.parseEther(price),
-          gasLimit: 1000000,
-        }
-      );
-      const output = await tokenID.wait();
-    }
     setMsg("Successful!");
     setOpen(true);
     setStateNFT("sold", true, price, type);
@@ -493,6 +470,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Buy , make offer, bid*/}
               {activeConnector &&
                 account?.address !== props.salesOrder?.walletAddress &&
+                !PendingPaymentBuyer &&
                 props.salesOrder?.listed &&
                 isPendingPayment === false && (
                   <CardContent>

@@ -16,11 +16,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { OfferToAccept } from "../../src/interfaces";
-import { useAccount, useConnect } from "wagmi";
+import { Offer, OfferToAccept } from "../../src/interfaces";
+import { useAccount, useConnect, useSigner } from "wagmi";
 import axios from "axios";
-import { useSignTypedData } from "wagmi";
+import { useSignTypedData, useContract } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
+import MarketplaceAbi from "../../contractsData/Marketplace.json";
 import { ethers } from "ethers";
 import { useIsMounted } from "../../components/hooks";
 import api from "../../lib/api";
@@ -40,7 +41,11 @@ const BidOffers: NextPage = (props) => {
   const { activeConnector } = useConnect();
 
   function getNFT(params: GridRenderCellParams) {
-    return [ `${params.row.owner}`,`${params.row.nftUrl}`,`${params.row.nftName}`];
+    return [
+      `${params.row.owner}`,
+      `${params.row.nftUrl}`,
+      `${params.row.nftName}`,
+    ];
   }
 
   function isRejected(params: GridRenderCellParams) {
@@ -112,24 +117,31 @@ const BidOffers: NextPage = (props) => {
       ),
     },
   ];
-  // const { signTypedDataAsync } = useSignTypedData();
-  // const types = {
-  //   SignedNFTData: [
-  //     { name: "tokenID", type: "uint256" },
-  //     { name: "price", type: "uint256" },
-  //     { name: "uri", type: "string" },
-  //     { name: "creator", type: "address" },
-  //     { name: "category", type: "string" },
-  //     { name: "collection", type: "address" },
-  //     { name: "royality", type: "uint256" },
-  //   ],
-  // };
-  // const domain = {
-  //   name: "Lazy Marketplace",
-  //   version: "1.0",
-  //   chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
-  //   verifyingContract: MarketplaceAddress.address,
-  // };
+  const { data: signer, isError, isLoading } = useSigner();
+  const marketplace_ = useContract({
+    //TODO create connection with marketplace
+    addressOrName: MarketplaceAddress.address,
+    contractInterface: MarketplaceAbi.abi,
+    signerOrProvider: signer,
+  });
+  const { signTypedDataAsync } = useSignTypedData();
+  const types = {
+    SignedNFTData: [
+      { name: "tokenID", type: "uint256" },
+      { name: "price", type: "uint256" },
+      { name: "uri", type: "string" },
+      { name: "creator", type: "address" },
+      { name: "category", type: "string" },
+      { name: "collection", type: "address" },
+      { name: "royality", type: "uint256" },
+    ],
+  };
+  const domain = {
+    name: "Lazy Marketplace",
+    version: "1.0",
+    chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
+    verifyingContract: MarketplaceAddress.address,
+  };
 
   const handleClickOpenAccept = (id: string) => {
     setOpenAccept(true);
@@ -137,37 +149,73 @@ const BidOffers: NextPage = (props) => {
   };
 
   const handleCloseAccept = async (result: string, id: string) => {
+    setIsPending(true);
     if (result == "Yes") {
-      // try {
-      //   const offer: Offer = offers.find((offer) => offer.id == id)!;
-      //   const biddingSignature = await signTypedDataAsync({
-      //     domain,
-      //     types,
-      //     value: {
-      //       tokenID: salesOrder.tokenID,
-      //       uri: salesOrder.uri,
-      //       creator: salesOrder.creatorWalletAddress,
-      //       category: salesOrder.category,
-      //       collection: salesOrder.collection,
-      //       royality: salesOrder.royality,
-      //       price: ethers.utils.parseEther(offer.price), //TODO PRICE
-      //     },
-      //   });
-      //   await axios.post("/api/acceptOffer", {
-      //     data: {
-      //       id: offer.id,
-      //       biddingSignature: biddingSignature,
-      //     },
-      //   });
-      //   getSetOffers();
-      //   setError(null);
-      //   setOpenAccept(false);
-      // } catch (error) {
-      //   console.log("Offer Accepting error!");
-      // }
+      setOpenAccept(false);
+
+      try {
+        const offer: OfferToAccept = offers.find((offer) => offer.id == id)!;
+        console.log(offer);
+        let token;
+        if (activeConnector) {
+          token = authService.getUserToken();
+        } else {
+          throw new Error("User is not exist");
+        }
+        const biddingSignature = await signTypedDataAsync({
+          domain,
+          types,
+          value: {
+            tokenID: offer.tokenID,
+            uri: offer.uri,
+            creator: offer.creator,
+            category: offer.category,
+            collection: offer.collection,
+            royality: offer.royality,
+            price: ethers.utils.parseEther(offer.price), //TODO PRICE
+          },
+        });
+
+        const tokenID = await marketplace_.mintNFT(
+          //TODO add blockchain
+          {
+            tokenID: offer.tokenID,
+            uri: offer.uri,
+            creator: offer.creator,
+            category: offer.category,
+            collection: offer.collection,
+            owner: offer.owner,
+            royality: offer.royality,
+            price: ethers.utils.parseEther(offer.price),
+            buyer: account?.address,
+            payType: 1,
+            saleNum: offer.saleNum,
+          },
+          biddingSignature,
+          {
+            value: ethers.utils.parseEther(offer.price),
+            gasLimit: 1000000,
+          }
+        );
+        const output = await tokenID.wait();
+        const date = new Date();
+        const timestampInMs = date.getTime();
+        await api.post("/api/payBidding", {
+          data: {
+            id: offer.nftId,
+            token: token,
+            time: timestampInMs,
+            price: offer.price,
+          },
+        });
+        setError(null);
+      } catch (error) {
+        console.log("Offer Accepting error!");
+      }
     } else {
       setOpenAccept(false);
     }
+    setIsPending(false);
   };
 
   const handleClickOpenDecline = (id: string) => {
@@ -178,7 +226,6 @@ const BidOffers: NextPage = (props) => {
   const handleCloseDecline = async (result: string, id: string) => {
     if (result == "Yes") {
       // const offer: OfferToAccept = offers.find((offer) => offer.id == id)!;
-
       // await axios
       //   .post("/api/declineOffer", {
       //     data: {
@@ -199,7 +246,7 @@ const BidOffers: NextPage = (props) => {
     }
   };
 
-  return isMounted && activeConnector ? (
+  return isMounted && activeConnector && !isPendingOffers ? (
     <div>
       {isPending && (
         <Box sx={{ width: "100%" }}>
