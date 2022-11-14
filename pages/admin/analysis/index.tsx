@@ -222,27 +222,31 @@ const Charts: NextPage = (props) => {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{ width: "100%", typography: "body1", marginX: 20, marginY: 5 }}>
+      <Box sx={{ width: "90%", typography: "body1", margin: 10, marginY: 5 }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <TabList
+              onChange={handleChange}
+              aria-label="lab API tabs example"
+              centered
+            >
               <Tab label="Users" value="1" />
               <Tab label="Collections" value="2" />
               <Tab label="NFTs" value="3" />
             </TabList>
           </Box>
           <TabPanel value="1">
-            <Paper sx={{ width: "30%", padding: 2, marginX: "20%" }}>
+            <Paper sx={{ width: "30%", padding: 2, marginX: "auto" }}>
               <Pie data={userData} />
             </Paper>
           </TabPanel>
           <TabPanel value="2">
-            <Paper sx={{ width: "30%", padding: 2, marginX: "20%" }}>
+            <Paper sx={{ width: "30%", padding: 2, marginX: "auto" }}>
               <Pie data={collectionData} />
             </Paper>
           </TabPanel>
           <TabPanel value="3">
-            <Paper sx={{ width: "30%", padding: 2, marginX: "20%" }}>
+            <Paper sx={{ width: "30%", padding: 2, marginX: "auto" }}>
               <Pie data={NFTData} />
             </Paper>
           </TabPanel>
