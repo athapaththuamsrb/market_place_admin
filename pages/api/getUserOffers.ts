@@ -33,6 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               listingtype: "TIMED_AUCTION",
             },
           });
+          console.log(activities);
           if (activities.length !== 0) {
             const offersList: OfferToAccept[] = [];
             for await (const activity of activities) {
@@ -40,6 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 where: {
                   activityId: activity.id,
                   isPaid: false,
+                  userId: user.id,
                   state: "ACCEPTED",
                 },
               });
@@ -51,29 +53,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                       id: id,
                     },
                   });
-                  console.log("efweg");
-                  const ipfsData = await axios.get(nft?.uri!);
-                  console.log("evewg");
+
                   if (nft) {
+                    const nftOwner = await prisma.owner.findFirst({
+                      where: { id: nft.ownerId },
+                    });
+                    const ipfsData = await axios.get(nft.uri!);
+                    if (!nftOwner) throw new Error("Owner is not exist");
+                    const activitCount = await prisma.activity.count({
+                      where: {
+                        nftId: nft.id,
+                        isExpired: true,
+                        NOT: { buyingprice: null },
+                      },
+                    });
                     let off: OfferToAccept = {
                       id: offer.id,
                       price: offer.price,
                       nftId: id,
                       nftName: ipfsData.data.name,
                       nftUrl: nft.isMinted ? nft.uri.split("/")[4] : id,
-                      owner: nft?.ownerId!,
+                      owner: nftOwner?.walletAddress,
                       expiration: offer.timestamp.toLocaleDateString(),
                       isExpired: offer.isExpired,
                       state:
                         offer.state === "PENDDING" ? "PENDING" : offer.state,
                       isPaid: offer.isPaid,
-                      tokenID: parseInt(ipfsData.data.tokenId),
-                      uri: nft?.uri!,
+                      tokenID: nft.tokenID,
+                      uri: nft.uri!,
                       creator: ipfsData.data.creator,
                       category: ipfsData.data.category,
                       collection: ipfsData.data.collection,
                       royality: ipfsData.data.royality,
                       activityType: activity.listingtype,
+                      saleNum: activitCount,
                     };
                     // } else {
                     //   const nft = await prisma.nFT.findUnique({
@@ -90,6 +103,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
               }
             }
+            // console.log(offersList);
             await prisma.$disconnect();
             res.status(201).json({
               message: "Successfully received",
