@@ -406,6 +406,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Remove sell */}
               {activeConnector &&
                 account?.address === props.salesOrder?.walletAddress &&
+                !PendingPaymentBuyer &&
                 props.salesOrder?.listed && (
                   <CardActions
                     sx={{ display: "flex", justifyContent: "space-evenly" }}
