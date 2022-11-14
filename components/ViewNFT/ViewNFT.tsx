@@ -75,6 +75,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [isPendingPayment, setIsPendingPayment] = useState(false);
   const [PendingPaymentBuyer, setPendingPaymentBuyer] = useState("");
   const [PendingPaymentPrice, setPendingPaymentPrice] = useState("");
+  const [PendingPaymentOffer, setPendingPaymentOffer] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const { data: account } = useAccount();
@@ -85,6 +86,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [isURLCopied, setIsURLCopied] = useState(false);
   const [openAccept, setOpenAccept] = useState(false);
   const [openDecline, setOpenDecline] = useState(false);
+
   const [copyURL, setCopyURL] = useState(
     "http://localhost:3000/view/nft/" +
       props.ownerID +
@@ -208,6 +210,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       if (isPendingPayment === true) {
         setPendingPaymentBuyer(data.data[2][0].walletAddress);
         setPendingPaymentPrice(data.data[2][0].price);
+        setPendingPaymentOffer(data.data[2][0].id);
       }
       setOffers(arr2);
       setIsPending(false);
@@ -216,6 +219,23 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       setIsPending(false);
     }
   };
+
+  const declineOffer = async () => {
+    try {
+      setIsPending(true);
+      await api.post("/api/declineOffer", {
+        data: {
+          id: PendingPaymentOffer,
+        },
+      });
+      setPendingPaymentOffer("");
+      setIsPending(false);
+    } catch {
+      console.log("Offer Declining error!");
+      setIsPending(false);
+    }
+  };
+
   const mintAndBuy = async (type: string) => {
     //TODO adding data to blockchain
     setIsPending(true);
@@ -262,6 +282,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   }, [
     isPendingPayment,
     PendingPaymentBuyer,
+    PendingPaymentOffer,
     openPopup,
     openAccept,
     openDecline,
@@ -635,6 +656,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             <Button
                               disabled={isPending}
                               size="small"
+                              onClick={() => {
+                                declineOffer();
+                              }}
                               variant="contained"
                               sx={{
                                 minWidth: "40%",

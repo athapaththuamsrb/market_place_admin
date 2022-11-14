@@ -19,6 +19,7 @@ import {
   MenuItem,
   Card,
   CardMedia,
+  Tooltip,
 } from "@mui/material";
 import NFTCardGrid from "../../../../components/ui/NFT/NFTCardGrid";
 import NFTCard from "../../../../components/ui/NFT/NFTCard";
@@ -33,6 +34,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FlagIcon from "@mui/icons-material/Flag";
 import React, { useState } from "react";
 import { useAccount } from "wagmi";
+import CopyToClipboard from "react-copy-to-clipboard";
+import ShareIcon from "@mui/icons-material/Share";
 
 interface CollectionProps {
   nftList: NFT_Card[];
@@ -40,15 +43,19 @@ interface CollectionProps {
   collectionId: string;
 }
 const Collection: NextPage<CollectionProps> = ({
-      nftList,
-      collectionData,
-      collectionId,
-    }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  nftList,
+  collectionData,
+  collectionId,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open1 = Boolean(anchorEl);
   const { data: account } = useAccount();
+  const [isURLCopied, setIsURLCopied] = useState(false);
+  const [copyURL, setCopyURL] = useState(
+    "http://localhost:3000/view/collection/" + collectionData.id
+  );
   const nftEls = nftList.map((nft: NFT_Card) => {
     return (
       <Grid key={nft.id} item xs={12}>
@@ -148,6 +155,20 @@ const Collection: NextPage<CollectionProps> = ({
                       <FlagIcon sx={{ marginRight: "5px" }}></FlagIcon>
                       Report Collection
                     </MenuItem>
+                    <Divider></Divider>
+                    <MenuItem sx={{ fontWeight: 500, fontSize: 14 }}>
+                      <CopyToClipboard
+                        text={copyURL}
+                        onCopy={() => setIsURLCopied(true)}
+                      >
+                        <div>
+                          <ShareIcon
+                            sx={{ marginRight: "5px", marginBottom: "-7px" }}
+                          ></ShareIcon>
+                          Share URL
+                        </div>
+                      </CopyToClipboard>
+                    </MenuItem>
                   </Menu>
                   <ReportPopup
                     reportedId={[collectionId]}
@@ -175,7 +196,7 @@ const Collection: NextPage<CollectionProps> = ({
                 {collectionData.totalVolume}
                 {"K"}
                 <br />
-                {"total volume"}
+                {"Total volume"}
               </Paper>
             </Grid>
             <Grid item xs={2}>
@@ -189,7 +210,7 @@ const Collection: NextPage<CollectionProps> = ({
                 />{" "}
                 {collectionData.floorPrice}
                 <br />
-                {"floor price"}
+                {"Floor price"}
               </Paper>
             </Grid>
             <Grid item xs={2}>
@@ -203,13 +224,15 @@ const Collection: NextPage<CollectionProps> = ({
                 />{" "}
                 {collectionData.NFTcount}
                 <br />
-                {"number of NFT"}
+                {"Number of NFT"}
               </Paper>
             </Grid>
           </Grid>
         </Box>
         <br />
+        <Divider />
         <br />
+
         <Box>
           <Box sx={{ marginBottom: "1%" }}>
             {nftList.length === 0 ? (
