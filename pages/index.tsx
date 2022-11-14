@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Stack } from "@mui/material";
-import Popup from "../components/Popup";
+import Popup from "../components/Popup/MainPopup";
 
 export default function Home() {
   return (

@@ -13,6 +13,10 @@ import Image from "next/image";
 import Button from "@mui/material/Button";
 import RenderMobileMenu from "./RenderMobileMenu";
 import { useConnect, useDisconnect, useAccount } from "wagmi";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
+import { useGetMyOffers } from "../../hooks/useHook";
+
 import React, {
   useState,
   useRef,
@@ -27,7 +31,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Logout from "@mui/icons-material/Logout";
-
+import ConnectPopup from "./../../Popup/ConnectPopup";
 const Navbar: FC = () => {
   const { connect, connectors, activeConnector } = useConnect();
   const { data: ethereumAccount } = useAccount();
@@ -35,6 +39,8 @@ const Navbar: FC = () => {
   const theme = useTheme();
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openConnect, setOpenConnect] = useState(false);
+  const { offers, isPendingOffers, errorOffers } = useGetMyOffers();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
   const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =
@@ -151,7 +157,7 @@ const Navbar: FC = () => {
             </Button>
             {isMounted && connectors[0].ready && !ethereumAccount && (
               <Button
-                onClick={() => connect(connectors[0])}
+                onClick={() => setOpenConnect(true)}
                 size="small"
                 color="primary"
                 variant="outlined"
@@ -168,6 +174,18 @@ const Navbar: FC = () => {
             )}
             {isMounted && ethereumAccount && (
               <div>
+                <Button
+                  href={"/../account/view-offers"}
+                  //onClick={handleClickNotification}
+                >
+                  <Badge
+                    color="secondary"
+                    badgeContent={offers.length}
+                    max={99}
+                  >
+                    <MailIcon color="action" />
+                  </Badge>
+                </Button>
                 <Button
                   id="demo-positioned-button"
                   aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -246,6 +264,10 @@ const Navbar: FC = () => {
           </Box>
         </Toolbar>
       </AppBar>
+      <ConnectPopup
+        setOpenConnect={setOpenConnect}
+        openConnect={openConnect}
+      ></ConnectPopup>
     </Box>
   );
 };

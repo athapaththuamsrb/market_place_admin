@@ -7,7 +7,7 @@ import { SalesOrder } from "../../src/interfaces";
 import { useSignTypedData } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import axios from "axios";
-import ModalPopUp from "../Modal";
+import ModalPopUp from "../Popup/Modal";
 import { ethers } from "ethers";
 
 interface ConfirmModalProps {

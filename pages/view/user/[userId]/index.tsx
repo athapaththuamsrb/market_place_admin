@@ -33,7 +33,7 @@ import UserTabBar from "../../../../components/ui/User/UserTabBar";
 import { Collection_Card, NFT_Card, Profile } from "../../../../src/interfaces";
 import { props } from "cypress/types/bluebird";
 import React, { useState } from "react";
-import ReportPopup from "../../../../components/ReportPopup";
+import ReportPopup from "../../../../components/Popup/ReportPopup";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FlagIcon from "@mui/icons-material/Flag";
 import CopyToClipboard from "react-copy-to-clipboard";
@@ -60,14 +60,14 @@ const UserProfile: NextPage<UserProfileProps> = ({
   const open1 = Boolean(anchorEl);
   const { data: account } = useAccount();
 
-  const {
-    data: balance,
-    isError,
-    isLoading,
-  } = useBalance({
-    addressOrName: userProfile.walletAddress,
-    chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
-  });
+  // const {
+  //   data: balance,
+  //   isError,
+  //   isLoading,
+  // } = useBalance({
+  //   addressOrName: userProfile.walletAddress,
+  //   chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
+  // });
   function srcset(
     image: string,
     width: number,

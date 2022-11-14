@@ -23,6 +23,7 @@ import {
 } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import Layout from "../components/layout";
 import { InjectedConnector } from "wagmi/connectors/injected";
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -39,14 +40,28 @@ const { chains, provider, webSocketProvider } = configureChains(defaultChains, [
   publicProvider(),
 ]);
 
+//Create client
 const client = createClient({
   autoConnect: true,
-  connectors: [new MetaMaskConnector({ chains })],
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      options: {
+        qrcode: true,
+      },
+    }),
+  ],
   provider,
   webSocketProvider,
 });
+if (typeof window !== "undefined") {
+  console.log("You are on the browser");
+  window.Buffer = window.Buffer || require("buffer").Buffer;
+} else {
+  console.log("You are on the server");
+}
 
-export default function MyApp(props) {
+export default function MyApp(props: { Component: any; emotionCache?: EmotionCache | undefined; pageProps: any; }) {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker

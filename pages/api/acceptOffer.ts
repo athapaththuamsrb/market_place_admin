@@ -25,7 +25,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             where: {
               activityId: activity.id,
               isExpired: false,
-              listingtype: "OFFER",
             },
             data: { state: "REJECTED" },
           });
@@ -38,6 +37,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             data: {
               isPenddingPayment: true,
               biddingSignature: biddingSignature,
+              endDate:
+                Number(activity.endDate) + Number(2 * 24 * 60 * 60 * 1000),
             },
           });
           console.log(offer);

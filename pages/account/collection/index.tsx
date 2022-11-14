@@ -1,5 +1,12 @@
 import type { NextPage } from "next";
-import { Container, Typography, Box, Button, Grid } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Box,
+  Button,
+  Grid,
+  Divider,
+} from "@mui/material";
 import CollectionCard from "../../../components/ui/Collection/CollectionCard";
 import CollectionCardGrid from "../../../components/ui/Collection/CollectionCardGrid";
 import { useAccount, useConnect } from "wagmi";
@@ -50,6 +57,8 @@ const Collection: NextPage = (props) => {
         </Button>
         <Box>
           <br />
+
+          <Divider variant="middle" />
           {isPendingCollectionCards && (
             <Box sx={{ width: "100%" }}>
               <LinearProgress />

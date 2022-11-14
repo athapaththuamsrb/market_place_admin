@@ -41,8 +41,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 floor_diff: "",
                 expiration: offer.timestamp.toLocaleDateString(),
                 from: user?.userName!,
+                fromID: offer.userId,
                 isExpired: offer.isExpired,
-                state: offer.state,
+                state: offer.state === "PENDDING" ? "PENDING" : offer.state,
                 isPaid: offer.isPaid,
               };
 
@@ -54,7 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     id: offer.id,
                     userId: user?.id,
                     walletAddress: user?.walletAddress,
-                    price:offer.price
+                    price: offer.price,
                   });
                 }
               }

@@ -42,6 +42,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               where: { id: bidding.id },
               data: { isPaid: true, isExpired: true },
             });
+            await prisma.bidding.updateMany({
+              where: { activityId: activity.id, NOT: { id: bidding.id } },
+              data: { isExpired: true },
+            });
             //update activity table
             await prisma.activity.update({
               where: { id: activity.id },
@@ -81,7 +85,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               },
             });
             await prisma.$disconnect();
-            console.log("aa");
             res
               .status(201)
               .json({ message: "Successfully done", success: true });

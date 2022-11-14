@@ -171,7 +171,9 @@ export type Activity = {
   event: string;
   price: string;
   from: string;
+  fromID: string;
   to: string;
+  toID: string;
   date: string;
 };
 
@@ -182,7 +184,29 @@ export type Offer = {
   floor_diff: string;
   expiration: string;
   from: string;
+  fromID: string;
   isExpired: boolean;
-  state: "ACCEPTED" | "REJECTED" | "PENDDING";
+  state: "ACCEPTED" | "REJECTED" | "PENDING";
   isPaid: boolean;
+};
+
+export type OfferToAccept = {
+  id: string;
+  price: string;
+  nftId: string;
+  nftName: string;
+  nftUrl: string;
+  expiration: string;
+  owner: string;
+  isExpired: boolean;
+  state: "ACCEPTED" | "REJECTED" | "PENDING";
+  isPaid: boolean;
+  tokenID: number;
+  uri: string;
+  creator: string;
+  category: string;
+  collection: string;
+  royality: string;
+  activityType: string;
+  saleNum: number;
 };
