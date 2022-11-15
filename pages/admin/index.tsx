@@ -26,6 +26,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import axios from "axios";
 import { User } from "../../src/interfaces";
 import theme from "../../src/theme";
+import PieChartIcon from "@mui/icons-material/PieChart";
 
 const AllUsers: NextPage = (props) => {
   const column = [
@@ -155,6 +156,8 @@ const AllUsers: NextPage = (props) => {
           rowSpacing={2}
           columnSpacing={{ xs: 1, sm: 1, md: 1 }}
           sx={{ maxWidth: "80%" }}
+          display="flex"
+          justifyContent={"center"}
         >
           <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
             <Link href="/admin/viewAdmin" underline="none">
@@ -180,6 +183,34 @@ const AllUsers: NextPage = (props) => {
                   }}
                 >
                   Admin Panel
+                </Typography>
+              </Button>
+            </Link>
+          </Grid>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <Link href="/admin/analysis" underline="none">
+              <Button
+                size="small"
+                color="secondary"
+                variant="contained"
+                endIcon={<PieChartIcon color="disabled" />}
+                sx={{
+                  minWidth: "40%",
+                  height: "50px",
+                  borderRadius: 3,
+                }}
+              >
+                <Typography
+                  color="white"
+                  variant="h6"
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      fontWeight: 600,
+                      fontSize: 15,
+                    },
+                  }}
+                >
+                  Data Analytics
                 </Typography>
               </Button>
             </Link>

@@ -210,3 +210,8 @@ export type OfferToAccept = {
   activityType: string;
   saleNum: number;
 };
+
+export type CountData = {
+  status: string;
+  count: number;
+};

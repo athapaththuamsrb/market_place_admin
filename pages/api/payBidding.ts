@@ -85,7 +85,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               },
             });
             await prisma.$disconnect();
-            console.log("aa");
             res
               .status(201)
               .json({ message: "Successfully done", success: true });
