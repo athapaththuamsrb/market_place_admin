@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import ModalPopUp from "../../components/Popup/Modal";
 import {
   DataGrid,
   GridColDef,
@@ -38,6 +39,8 @@ const BidOffers: NextPage = (props) => {
   const [openDecline, setOpenDecline] = useState(false);
   const [rowId, setRowId] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [open, setOpen] = useState(false);
   const [error, setError] = useState(null);
   const { activeConnector } = useConnect();
 
@@ -200,7 +203,7 @@ const BidOffers: NextPage = (props) => {
         const output = await tokenID.wait();
         const date = new Date();
         const timestampInMs = date.getTime();
-        await api.post("/api/payBidding", {
+        const res1 = await api.post("/api/payBidding", {
           data: {
             id: offer.nftId,
             token: token,
@@ -208,6 +211,8 @@ const BidOffers: NextPage = (props) => {
             price: offer.price,
           },
         });
+        setOpen(true);
+        setMsg(res1.status === 201 ? "Successful!" : "Try again later!");
         setError(null);
       } catch (error) {
         console.log("Offer Accepting error!");
@@ -225,22 +230,15 @@ const BidOffers: NextPage = (props) => {
 
   const handleCloseDecline = async (result: string, id: string) => {
     if (result == "Yes") {
-      // const offer: OfferToAccept = offers.find((offer) => offer.id == id)!;
-      // await axios
-      //   .post("/api/declineOffer", {
-      //     data: {
-      //       id: offer.id,
-      //     },
-      //   })
-      //   .then(() => {
-      //     setIsPending(false);
-      //     setError(null);
-      //     setOpenDecline(false);
-      //   })
-      //   .catch((error) => {
-      //     setIsPending(false);
-      //     setError(error.message);
-      //   });
+      const offer: OfferToAccept = offers.find((offer) => offer.id == id)!;
+      const res1 = await axios.post("/api/declineOffer", {
+        data: {
+          id: offer.id,
+        },
+      });
+      setOpen(true);
+      setMsg(res1.status === 201 ? "Successful!" : "Try again later!");
+      setError(null);
     } else {
       setOpenDecline(false);
     }
@@ -322,6 +320,7 @@ const BidOffers: NextPage = (props) => {
           <Button onClick={() => handleCloseDecline("No", rowId)}>No</Button>
         </DialogActions>
       </Dialog>
+      <ModalPopUp msg={msg} open={open} setOpen={setOpen} setMsg={setMsg} />
     </div>
   ) : (
     <Box sx={{ width: "100%" }}>

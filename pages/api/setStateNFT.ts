@@ -147,7 +147,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   isMinted: false,
                 },
               });
-              console.log(oldNFT1);
               if (oldNFT1 && value) {
                 const activity = await prisma.activity.findFirst({
                   where: { nftId: oldNFT1.id, isExpired: false },

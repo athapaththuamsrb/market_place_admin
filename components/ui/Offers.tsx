@@ -19,11 +19,13 @@ import { useAccount } from "wagmi";
 import axios from "axios";
 import { useSignTypedData } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
-import { ethers } from "ethers";
+import { ethers, Signature } from "ethers";
 type OffersProps = {
+  setOfferPrice: (price: string) => void;
   salesOrder: NFT_load;
   offers: Offer[];
   user_id: string;
+  setOfferSignature: (signature: string) => void;
   getSetOffers: () => Promise<void>;
   isPendingPayment: boolean;
   openDecline: boolean;
@@ -34,7 +36,9 @@ type OffersProps = {
 
 const Offers: FC<OffersProps> = ({
   offers,
+  setOfferPrice,
   user_id,
+  setOfferSignature,
   getSetOffers,
   salesOrder,
   isPendingPayment,
@@ -238,7 +242,8 @@ const Offers: FC<OffersProps> = ({
             price: ethers.utils.parseEther(offer.price), //TODO PRICE
           },
         });
-
+        setOfferPrice(offer.price);
+        setOfferSignature(biddingSignature);
         await axios.post("/api/acceptOffer", {
           data: {
             id: offer.id,

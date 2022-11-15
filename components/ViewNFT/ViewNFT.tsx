@@ -77,6 +77,10 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [PendingPaymentPrice, setPendingPaymentPrice] = useState("");
   const [PendingPaymentOffer, setPendingPaymentOffer] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
+  const [offerSignature, setOfferSignature] = useState(
+    props.salesOrder.offerSignature
+  );
+  const [offerPrice, setOfferPrice] = useState(props.salesOrder.offerPrice);
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const { data: account } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -145,7 +149,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           const date = new Date();
           const timestampInMs = date.getTime();
           if (type === "FIXED") {
-            await api.post("/api/setStateNFT", {
+            const res1 = await api.post("/api/setStateNFT", {
               data: {
                 action: key,
                 value,
@@ -155,6 +159,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 price: price,
               },
             });
+            setMsg(res1.status === 201 ? "Successful!" : "Try again later!");
           } else {
             const res1 = await api.post("/api/payBidding", {
               data: {
@@ -164,7 +169,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                 price: price,
               },
             });
-            console.log(res1);
+            setMsg(res1.status === 201 ? "Successful!" : "Try again later!");
           }
           props.salesOrder.sold = value;
           break;
@@ -240,12 +245,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     //TODO adding data to blockchain
     setIsPending(true);
     setMsg("processing.....");
-    const price =
-      type === "FIXED" ? props.salesOrder.price : props.salesOrder.offerPrice;
+    const price = type === "FIXED" ? props.salesOrder.price : offerPrice;
     const signature =
-      type === "FIXED"
-        ? props.salesOrder.signature
-        : props.salesOrder.offerSignature;
+      type === "FIXED" ? props.salesOrder.signature : offerSignature;
     const tokenID = await marketplace_.mintNFT(
       //TODO add blockchain
       {
@@ -269,7 +271,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     );
     const output = await tokenID.wait();
 
-    setMsg("Successful!");
     setOpen(true);
     setStateNFT("sold", true, price, type);
     setIsPending(false);
@@ -763,6 +764,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               <AccordionDetails>
                 {/* <ListingHistoryTable activity={activity} /> */}
                 <Offers
+                  setOfferPrice={setOfferPrice}
+                  setOfferSignature={setOfferSignature}
                   salesOrder={props.salesOrder}
                   offers={offers}
                   user_id={props.salesOrder.walletAddress}
