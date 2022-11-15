@@ -43,6 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   isPaid: false,
                   userId: user.id,
                   state: "ACCEPTED",
+                  isExpired:false,
                 },
               });
               if (offer) {
