@@ -94,7 +94,7 @@ const Navbar: FC = () => {
                 variant="h6"
                 noWrap
                 component="div"
-                sx={{marginLeft:"8px",
+                sx={{
                   display: { xs: "none", sm: "block" },
                   color: theme.palette.primary.main,
                   marginY: "auto",
