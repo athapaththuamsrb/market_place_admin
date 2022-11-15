@@ -74,7 +74,7 @@ const Navbar: FC = () => {
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                p: 1,
+                p: 0,
                 m: 1,
                 bgcolor: "background.paper",
                 borderRadius: 1,
@@ -84,7 +84,7 @@ const Navbar: FC = () => {
               <Image
                 height={50}
                 width={50}
-                src={"/d.ico"}
+                src={"/exclusives_new_logo.ico"}
                 alt={"logo"}
                 loading="lazy"
                 layout="fixed"
@@ -94,7 +94,7 @@ const Navbar: FC = () => {
                 variant="h6"
                 noWrap
                 component="div"
-                sx={{
+                sx={{marginLeft:"8px",
                   display: { xs: "none", sm: "block" },
                   color: theme.palette.primary.main,
                   marginY: "auto",

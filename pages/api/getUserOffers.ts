@@ -33,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               listingtype: "TIMED_AUCTION",
             },
           });
-          console.log(activities);
+          //console.log(activities);
           if (activities.length !== 0) {
             const offersList: OfferToAccept[] = [];
             for await (const activity of activities) {
@@ -96,7 +96,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     //     },
                     //   });
                     // }
-                    console.log(off);
+                    //console.log(off);
                     offersList.push(off);
                   }
                 } else {

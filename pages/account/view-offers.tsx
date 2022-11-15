@@ -28,6 +28,7 @@ import api from "../../lib/api";
 import authService from "../../services/auth.service";
 import { useGetMyOffers } from "../../components/hooks/useHook";
 import Title from "../../components/ui/Title";
+import theme from "../../src/theme";
 
 const BidOffers: NextPage = (props) => {
   const { data: account } = useAccount();
@@ -256,7 +257,13 @@ const BidOffers: NextPage = (props) => {
       <Box
         sx={{
           flexGrow: 1,
-          width: "75%",
+          [theme.breakpoints.down("md")]: {
+            minWidth: "90%",
+          },
+          [theme.breakpoints.up("md")]: {
+            width: "75%",
+          },
+
           marginX: "auto",
           marginTop: "10px",
           marginBottom: "50px",
