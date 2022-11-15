@@ -8,7 +8,10 @@ async function main() {
 
   const Marketplace = await ethers.getContractFactory("Marketplace");
   // deploy marketplace contracts
-  const marketplace = await Marketplace.deploy(1);
+  const marketplace = await Marketplace.deploy(
+    1,
+    "0xb99f0f30C834A7e7E5B42750935E7a32098f2519" //account 11
+  );
 
   // Get the ContractFactories and Signers here.
   const Factory = await ethers.getContractFactory("Factory");

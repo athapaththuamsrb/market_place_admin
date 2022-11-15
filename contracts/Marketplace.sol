@@ -19,6 +19,7 @@ contract Marketplace is ReentrancyGuard, EIP712 {
     address payable public immutable feeAccount; // the account that receives fees
     uint public immutable feePercent; // the fee percentage on sales 
     uint public itemCount; 
+    address public adminAccount;
     struct MintData {
         uint256 tokenID;
         uint256 price;
@@ -56,9 +57,10 @@ contract Marketplace is ReentrancyGuard, EIP712 {
         address indexed buyer
     );
 
-    constructor(uint _feePercent) EIP712("Lazy Marketplace", "1.0") {
+    constructor(uint _feePercent,address _adminAccount) EIP712("Lazy Marketplace", "1.0") {
         feeAccount = payable(msg.sender);
         feePercent = _feePercent;
+        adminAccount=_adminAccount;
     }
     function mintNFT(
       MintData calldata nft, bytes calldata signature
@@ -69,11 +71,11 @@ contract Marketplace is ReentrancyGuard, EIP712 {
             require(signer == nft.owner, 'invalid signature');//TODO  check the current owner and walletaddress are equal
             if(nft.owner==nft.creator && nft.saleNum == 0){
                 Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening
-                Address.sendValue(payable(nft.creator), msg.value);//TODO pay for creator
+                Address.sendValue(payable(nft.creator), msg.value*(100-feePercent)/100);//TODO pay for creator
             }
             else{
                 Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening        
-                Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality)/100);
+                Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality-feePercent)/100);
                 Address.sendValue(payable(nft.creator), msg.value*nft.royality/100);//TODO pay for creator
             } 
         }
@@ -81,14 +83,16 @@ contract Marketplace is ReentrancyGuard, EIP712 {
             require(signer == nft.buyer, 'invalid signature');//TODO  check the current owner and walletaddress are equal
             if(nft.owner==nft.creator && nft.saleNum == 0){
                 Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening
-                Address.sendValue(payable(nft.creator), msg.value);//TODO pay for creator
+                Address.sendValue(payable(nft.creator), msg.value*(100-feePercent)/100);//TODO pay for creator
             }
             else{
                 Collection(nft.collection).safeMint(msg.sender, nft.uri);//TODO actual minting happening        
-                Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality)/100);
+                Address.sendValue(payable(nft.owner), msg.value*(100-nft.royality-feePercent)/100);
                 Address.sendValue(payable(nft.creator), msg.value*nft.royality/100);//TODO pay for creator
             } 
         }
+        Address.sendValue(payable(adminAccount), msg.value*feePercent/100);
+
         return nft.tokenID;
     }
     function _hashMint(
