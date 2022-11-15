@@ -16,7 +16,7 @@ const style = {
   bgcolor: "background.paper",
   border: "0px solid #000",
   boxShadow: 24,
-  p: 14,
+  p: 10,
 };
 
 export default function BasicModal() {
@@ -33,15 +33,15 @@ export default function BasicModal() {
           <Card sx={{ display: "flex", boxShadow: 0 }}>
             <CardMedia
               component="img"
-              image={"public/../../../exclusives_logo.png"}
+              image={"public/../../../exclusives_new_logo.png"}
               alt="avatar"
               sx={{
-                height: 200,
+                height: 260,
                 borderRadius: 2,
               }}
             />
           </Card>
-          <Title firstWord="Welcome to" secondWord="Exclusives" />
+          <Title firstWord="Welcome to" secondWord="EXCLUSIVES" />
           <Grid
             container
             direction="row"

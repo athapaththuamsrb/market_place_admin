@@ -82,6 +82,11 @@ const renderMobileMenu: FC<RenderMobileMenuProps> = ({
               My Collection
             </Link>
           </MenuItem>
+          <MenuItem onClick={handleMobileMenuClose}>
+            <Link href={"/../account/view-offers"} underline="none">
+              My Offers
+            </Link>
+          </MenuItem>
           <MenuItem
             onClick={() => {
               disconnect();
