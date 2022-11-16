@@ -8,7 +8,7 @@ import { Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
 import { User } from "../../../src/interfaces";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../src/theme";
 
@@ -154,7 +154,7 @@ const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
           size="small"
           //color="secondary"
           variant="contained"
-          sx={{backgroundColor:"#b9b9b9"}}
+          sx={{ backgroundColor: "#b9b9b9" }}
         >
           <Typography
             color="white"
