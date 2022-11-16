@@ -134,7 +134,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       }
       switch (key) {
         case "listed":
-          await api.post("/api/setStateNFT", {
+          await axios.post("/api/setStateNFT", {
             data: {
               action: key,
               value,
@@ -149,7 +149,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           const date = new Date();
           const timestampInMs = date.getTime();
           if (type === "FIXED") {
-            const res1 = await api.post("/api/setStateNFT", {
+            const res1 = await axios.post("/api/setStateNFT", {
               data: {
                 action: key,
                 value,
@@ -161,7 +161,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
             });
             setMsg(res1.status === 201 ? "Successful!" : "Try again later!");
           } else {
-            const res1 = await api.post("/api/payBidding", {
+            const res1 = await axios.post("/api/payBidding", {
               data: {
                 id: props.salesOrder.id,
                 token: token,
@@ -185,7 +185,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const getSetActivity = async () => {
     try {
       setIsPending(true);
-      const { data } = await api.post("/api/getNFTActivity", {
+      const { data } = await axios.post("/api/getNFTActivity", {
         data: {
           id: props.salesOrder.id,
           creatorUserId: props.salesOrder?.creatorUserID,
@@ -203,7 +203,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const getSetOffers = async () => {
     try {
       setIsPending(true);
-      const { data } = await api.post("/api/getNFTOffers", {
+      const { data } = await axios.post("/api/getNFTOffers", {
         data: {
           id: props.salesOrder.id,
         },
@@ -228,7 +228,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const declineOffer = async () => {
     try {
       setIsPending(true);
-      await api.post("/api/declineOffer", {
+      await axios.post("/api/declineOffer", {
         data: {
           id: PendingPaymentOffer,
         },

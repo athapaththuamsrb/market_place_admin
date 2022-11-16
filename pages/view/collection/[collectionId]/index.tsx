@@ -43,10 +43,10 @@ interface CollectionProps {
   collectionId: string;
 }
 const Collection: NextPage<CollectionProps> = ({
-  nftList,
-  collectionData,
-  collectionId,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      nftList,
+      collectionData,
+      collectionId,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -269,7 +269,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
     const { params } = context;
-    const { data } = await api.post("/getCollection", {
+    const { data } = await axios.post("/getCollection", {
       data: { id: params?.collectionId },
     });
 

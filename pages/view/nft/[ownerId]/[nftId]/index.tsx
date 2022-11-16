@@ -44,7 +44,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   try {
-    const { data } = await api.post("/getNFT", {
+    const { data } = await axios.post("/getNFT", {
       data: { id: params?.nftId, ownerId: params?.ownerId },
     });
     if (data.data.nft.length === 0) {

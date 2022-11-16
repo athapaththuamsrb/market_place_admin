@@ -203,7 +203,7 @@ const BidOffers: NextPage = (props) => {
         const output = await tokenID.wait();
         const date = new Date();
         const timestampInMs = date.getTime();
-        const res1 = await api.post("/api/payBidding", {
+        const res1 = await axios.post("/api/payBidding", {
           data: {
             id: offer.nftId,
             token: token,

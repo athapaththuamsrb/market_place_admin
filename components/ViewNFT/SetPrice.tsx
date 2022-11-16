@@ -144,7 +144,7 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
   const getSetActivity = async () => {
     try {
       setIsPending(true);
-      const { data } = await api.post("/api/getNFTActivity", {
+      const { data } = await axios.post("/api/getNFTActivity", {
         data: {
           id: props.salesOrder.id,
           creatorUserId: props.salesOrder?.creatorUserID,
