@@ -6,14 +6,13 @@ import { Box } from "@mui/system";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useIsMounted } from "../components/hooks";
 import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
-import axios from "axios";
 import api from "../lib/api";
 interface ExploreProps {
   collectionList: Collection_Card[];
 }
 const Home: NextPage<ExploreProps> = ({
-      collectionList,
-    }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  collectionList,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   return isMounted ? (
     <Box>
