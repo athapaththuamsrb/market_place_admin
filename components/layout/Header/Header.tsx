@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,32 +8,46 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import { useTheme } from "@mui/material/styles";
 import SearchBar from "./Search";
-import Link from "next/link";
+import Link from "@mui/material/Link";
 import Image from "next/image";
 import Button from "@mui/material/Button";
 import RenderMobileMenu from "./RenderMobileMenu";
 import { useConnect, useDisconnect, useAccount } from "wagmi";
-import { useState, useRef } from "react";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
+import { useGetMyOffers } from "../../hooks/useHook";
+
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ChangeEvent,
+  FC,
+  SyntheticEvent,
+} from "react";
 import { useIsMounted, useGetMyProfile } from "../../hooks";
 import { useRouter } from "next/router";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Logout from "@mui/icons-material/Logout";
-
-export default function Navbar() {
-  const { connect, connectors } = useConnect();
+import ConnectPopup from "./../../Popup/ConnectPopup";
+const Navbar: FC = () => {
+  const { connect, connectors, activeConnector } = useConnect();
   const { data: ethereumAccount } = useAccount();
   const { disconnect } = useDisconnect();
   const theme = useTheme();
   const router = useRouter();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openConnect, setOpenConnect] = useState(false);
+  const { offers, isPendingOffers, errorOffers } = useGetMyOffers();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-  const { profile, isPendingProfile, errorProfile } = useGetMyProfile();
+    useState<null | HTMLElement>(null);
+  const { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin } =
+    useGetMyProfile();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const [anchorE2, setAnchorE2] = React.useState<null | HTMLElement>(null);
+  const [anchorE2, setAnchorE2] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorE2);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorE2(event.currentTarget);
@@ -46,48 +59,37 @@ export default function Navbar() {
     setMobileMoreAnchorEl(null);
   };
   const anchorRef = useRef();
-  // const handleMenuClose = () => {
-  //   setAnchorEl(null);
-  //   handleMobileMenuClose();
-  // };
-
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
-
-  //wagmi
   const isMounted = useIsMounted();
-
-  //console.log(connectors[0].ready);
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar sx={{ backgroundColor: "white" }}>
-          <Link href="/">
+          <Link href="/" underline="none">
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                p: 1,
+                p: 0,
                 m: 1,
                 bgcolor: "background.paper",
                 borderRadius: 1,
                 flexShrink: 0,
               }}
             >
-              <Box>
-                <Image
-                  height={30}
-                  width={30}
-                  src={"/android-chrome-512x512.png"}
-                  alt={"logo"}
-                  loading="lazy"
-                />
-              </Box>
+              <Image
+                height={50}
+                width={50}
+                src={"/exclusives_new_logo.ico"}
+                alt={"logo"}
+                loading="lazy"
+                layout="fixed"
+              />
+
               <Typography
                 variant="h6"
                 noWrap
@@ -95,6 +97,7 @@ export default function Navbar() {
                 sx={{
                   display: { xs: "none", sm: "block" },
                   color: theme.palette.primary.main,
+                  marginY: "auto",
                 }}
               >
                 Exclusives
@@ -104,41 +107,85 @@ export default function Navbar() {
           <SearchBar />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {(profile?.type === "ADMIN" || profile?.type === "SUPER_ADMIN") && (
+            {isAdmin && (
               <Button
+                size="small"
+                color="primary"
                 variant="outlined"
-                href="/explore-collections"
-                sx={{ mx: 1 }}
+                href="/admin"
+                sx={{ marginX: 1 }}
               >
-                Admin Dashboard
+                <Typography
+                  color="black"
+                  variant="h6"
+                  sx={{ fontWeight: 500, fontSize: "medium" }}
+                >
+                  Admin Dashboard
+                </Typography>
               </Button>
             )}
             <Button
-              variant="outlined"
               href="/explore-collections"
-              sx={{ mx: 1 }}
+              size="small"
+              color="primary"
+              variant="outlined"
+              sx={{ marginX: 1 }}
             >
-              Explore
+              <Typography
+                color="black"
+                variant="h6"
+                sx={{ fontWeight: 500, fontSize: "medium" }}
+              >
+                Explore
+              </Typography>
             </Button>
             <Button
-              variant="outlined"
               href="/create"
-              sx={{
-                mx: 1,
-                color: "white",
-                backgroundColor: "blue",
-              }}
+              type="submit"
+              size="small"
+              color="secondary"
+              variant="contained"
+              sx={{ marginX: 1 }}
             >
-              Create
+              <Typography
+                color="white"
+                variant="h6"
+                sx={{ fontWeight: 500, fontSize: "medium" }}
+              >
+                Create
+              </Typography>
             </Button>
-            {/* MetaMask Connect */}
             {isMounted && connectors[0].ready && !ethereumAccount && (
-              <Button variant="text" onClick={() => connect(connectors[0])}>
-                Connect Metamask
+              <Button
+                onClick={() => setOpenConnect(true)}
+                size="small"
+                color="primary"
+                variant="outlined"
+                sx={{ marginX: 1 }}
+              >
+                <Typography
+                  color="black"
+                  variant="h6"
+                  sx={{ fontWeight: 500, fontSize: "medium" }}
+                >
+                  Connect Metamask
+                </Typography>
               </Button>
             )}
             {isMounted && ethereumAccount && (
               <div>
+                <Button
+                  href={"/../account/view-offers"}
+                  //onClick={handleClickNotification}
+                >
+                  <Badge
+                    color="secondary"
+                    badgeContent={offers.length}
+                    max={99}
+                  >
+                    <MailIcon color="action" />
+                  </Badge>
+                </Button>
                 <Button
                   id="demo-positioned-button"
                   aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -165,12 +212,16 @@ export default function Navbar() {
                   }}
                 >
                   <MenuItem onClick={handleClose}>
-                    <AccountCircleOutlinedIcon />
-                    <Link href={"/account"}>Profile</Link>
+                    <AccountCircleOutlinedIcon sx={{ marginRight: 1 }} />
+                    <Link href={"/account"} underline="none">
+                      Profile
+                    </Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <CollectionsBookmarkIcon />
-                    <Link href={"/account/collection"}>My Collection</Link>
+                    <CollectionsBookmarkIcon sx={{ marginRight: 1 }} />
+                    <Link href={"/account/collection"} underline="none">
+                      My Collection
+                    </Link>
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
@@ -178,7 +229,7 @@ export default function Navbar() {
                       handleClose();
                     }}
                   >
-                    <Logout />
+                    <Logout sx={{ marginRight: 1 }} />
                     Disconnect
                   </MenuItem>
                 </Menu>
@@ -197,22 +248,27 @@ export default function Navbar() {
             >
               <MenuIcon />
             </IconButton>
+            <RenderMobileMenu
+              isMobileMenuOpen={isMobileMenuOpen}
+              mobileMenuId={mobileMenuId}
+              isMounted={isMounted}
+              handleMobileMenuClose={handleMobileMenuClose}
+              mobileMoreAnchorEl={mobileMoreAnchorEl}
+              connectors={connectors}
+              ethereumAccount={ethereumAccount}
+              connect={connect}
+              isAdmin={isAdmin}
+              disconnect={disconnect}
+              handleClose={handleClose}
+            />
           </Box>
         </Toolbar>
       </AppBar>
-      {/* <RenderMobileMenu
-        isMobileMenuOpen={isMobileMenuOpen}
-        mobileMenuId={mobileMenuId}
-        isMounted={isMounted}
-        activeConnector={activeConnector}
-        connect={connect}
-        connectors={connectors}
-        isConnecting={isConnecting}
-        disconnect={disconnect}
-        pendingConnector={pendingConnector}
-        handleMobileMenuClose={handleMobileMenuClose}
-        mobileMoreAnchorEl={mobileMoreAnchorEl}
-      /> */}
+      <ConnectPopup
+        setOpenConnect={setOpenConnect}
+        openConnect={openConnect}
+      ></ConnectPopup>
     </Box>
   );
-}
+};
+export default Navbar;

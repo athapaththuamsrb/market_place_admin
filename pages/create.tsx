@@ -36,22 +36,21 @@ const CreatePage: NextPage = (props) => {
       category: "",
       collection: "",
     },
-    signature: "",
     sold: false,
     name: "",
     description: "",
     image: "",
+    royality: 0,
   });
 
   return isMounted && activeConnector ? (
     <div>
-      <Title firstWord="Create" secondWord="NFT" />
       {msg === "processing....." && (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
       )}
-      <br />
+      <Title firstWord="Create" secondWord="NFT" />
       <br />
       <CreateForm
         setOpenModal={setOpenModal}

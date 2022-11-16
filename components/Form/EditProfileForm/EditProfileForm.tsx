@@ -10,10 +10,11 @@ import {
   Box,
   Grid,
 } from "@mui/material";
-import ModalPopUp from "../../Modal";
+import ModalPopUp from "../../Popup/Modal";
 import axios from "axios";
 import { useAccount } from "wagmi";
-import * as Yup from "Yup";
+import * as Yup from "yup";
+import authService from "../../../services/auth.service";
 
 type CreateFormProps = {
   setMsg: (msg: string) => void;
@@ -29,50 +30,57 @@ const Input = styled("input")({
 const CreateForm: FC<CreateFormProps> = (props) => {
   const { data: account } = useAccount();
   const [image, setImage] = useState<{
-    profileImage: string | ArrayBuffer | null;
-    bannerImage: string | ArrayBuffer | null;
+    profileImage: string;
+    bannerImage: string;
   }>({
     profileImage:
       "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg",
     bannerImage: "/db5dbf90c8c83d650e1022220b4d707e.jpg",
   });
-  const [imageSrc, setImageSrc] = useState<{
-    profileImage: File | null;
-    bannerImage: File | null;
-  }>({
-    profileImage: null,
-    bannerImage: null,
-  });
-  function handleOnChange(
+  const handleOnChange = async (
     e: React.FormEvent<HTMLInputElement | HTMLInputElement>,
     key: string
-  ) {
+  ) => {
     const target = e.target as HTMLInputElement;
     const file: File = (target.files as FileList)[0];
     switch (key) {
       case "profileImage":
-        setImageSrc({ ...imageSrc, profileImage: file });
+        const formDataProfile = new FormData();
+        formDataProfile.append("file", file);
+        formDataProfile.append("upload_preset", "my-upload-profile");
+        const res1 = await axios.post(
+          "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
+          formDataProfile
+        );
+        setImage({ ...image, profileImage: res1.data.secure_url });
         break;
       case "bannerImage":
-        setImageSrc({ ...imageSrc, bannerImage: file });
+        const formDataBanner = new FormData();
+        formDataBanner.append("file", file);
+        formDataBanner.append("upload_preset", "my-upload-profile");
+        const res2 = await axios.post(
+          "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
+          formDataBanner
+        );
+        setImage({ ...image, bannerImage: res2.data.secure_url });
         break;
     }
-    previewFiles(file, key);
-  }
-  function previewFiles(file: File, key: string) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      switch (key) {
-        case "profileImage":
-          setImage({ ...image, profileImage: reader.result });
-          break;
-        case "bannerImage":
-          setImage({ ...image, bannerImage: reader.result });
-          break;
-      }
-    };
-  }
+    //previewFiles(file, key);
+  };
+  // function previewFiles(file: File, key: string) {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onload = () => {
+  //     switch (key) {
+  //       case "profileImage":
+  //         setImage({ ...image, profileImage: reader.result });
+  //         break;
+  //       case "bannerImage":
+  //         setImage({ ...image, bannerImage: reader.result });
+  //         break;
+  //     }
+  //   };
+  // }
 
   const formik = useFormik({
     initialValues: {
@@ -90,35 +98,23 @@ const CreateForm: FC<CreateFormProps> = (props) => {
     onSubmit: async (values) => {
       try {
         if (
-          imageSrc["profileImage"] !== null &&
-          imageSrc["bannerImage"] !== null
+          image["profileImage"] !==
+            "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg" &&
+          image["bannerImage"] !== "/db5dbf90c8c83d650e1022220b4d707e.jpg"
         ) {
-          const formDataProfile = new FormData();
-          formDataProfile.append("file", imageSrc["profileImage"]);
-          formDataProfile.append("upload_preset", "my-upload-profile");
-          const res1 = await axios.post(
-            "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
-            formDataProfile
-          );
-          const formDataBanner = new FormData();
-          formDataBanner.append("file", imageSrc["bannerImage"]);
-          formDataBanner.append("upload_preset", "my-upload-profile");
-          const res2 = await axios.post(
-            "https://api.cloudinary.com/v1_1/dtrrkeb4a/image/upload",
-            formDataBanner
-          );
-
           props.setMsg("processing.....");
           const res = await axios.post("/api/uploadFile", {
             data: {
-              profileImageURL: res1.data.secure_url,
-              bannerImageURL: res2.data.secure_url,
+              profileImageURL: image["profileImage"],
+              bannerImageURL: image["bannerImage"],
               userName: values.userName,
               folder: "profile",
-              userwalletAddress: account?.address,
+              token: authService.getUserToken(),
             },
           });
-          props.setMsg(res.status === 201 ? "successfull!!" : "Try again!!");
+          props.setMsg(
+            res.status === 201 ? "Successfully updated!!" : "Try again!!"
+          );
           props.setOpen(true);
         }
       } catch (error) {
@@ -160,6 +156,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "profileImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="profileImage"
                 multiple
@@ -167,11 +164,16 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               />
               <Button
                 component="span"
-                size="large"
+                size="medium"
                 color="secondary"
+                disabled={props.msg === "processing....."}
                 variant="contained"
               >
-                <Typography color="white" variant="h3">
+                <Typography
+                  color="white"
+                  variant="h4"
+                  sx={{ fontWeight: 900, fontSize: 20 }}
+                >
                   Upload Profile Image
                 </Typography>
               </Button>
@@ -182,7 +184,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Typography variant="body2">
                 This image will appear at the top of your collection page. Avoid
                 including too much text in this banner image, as the dimensions
-                change on different devices. 1400 x 350 recommended.
+                change on different devices. 1536 x 350 recommended.
               </Typography>
               <br />
               {image["bannerImage"] && (
@@ -206,6 +208,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 onChange={(e) => {
                   handleOnChange(e, "bannerImage");
                 }}
+                disabled={props.msg === "processing....."}
                 accept="image/*"
                 id="bannerImage"
                 multiple
@@ -214,11 +217,16 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Button
                 component="span"
                 size="large"
+                disabled={props.msg === "processing....."}
                 color="secondary"
                 variant="contained"
               >
-                <Typography color="white" variant="h3">
-                  Upload Main Image
+                <Typography
+                  color="white"
+                  variant="h4"
+                  sx={{ fontWeight: 900, fontSize: 20 }}
+                >
+                  Upload Banner Image
                 </Typography>
               </Button>
             </label>
@@ -228,12 +236,13 @@ const CreateForm: FC<CreateFormProps> = (props) => {
             <br />
             <Box>
               <TextField
-                sx={{ marginBottom: "30px" }}
+                sx={{ marginBottom: "20px" }}
                 id="userName"
                 name="userName"
                 label="User Name"
                 variant="outlined"
                 fullWidth
+                disabled={props.msg === "processing....."}
                 value={formik.values.userName}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -247,23 +256,28 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           </Grid>
           <Grid item xs={2}></Grid>
         </Grid>
-        <Box textAlign={"center"} sx={{ marginTop: "70px" }}>
+        <Box
+          textAlign={"center"}
+          sx={{ marginTop: "40px", marginBottom: "40px" }}
+        >
           <Button
             type="submit"
             disabled={
               formik.errors.userName !== undefined ||
               image["profileImage"] ===
                 "/default-avatar-profile-icon-vector-default-avatar-profile-icon-vector-social-media-user-image-vector-illustration-227787227.jpg" ||
-              image["bannerImage"] === "/db5dbf90c8c83d650e1022220b4d707e.jpg"
+              image["bannerImage"] ===
+                "/db5dbf90c8c83d650e1022220b4d707e.jpg" ||
+              props.msg === "processing....."
                 ? true
                 : false
             }
             style={{ borderWidth: "3px" }}
             size="large"
             color="secondary"
-            variant="outlined"
+            variant="contained"
           >
-            <Typography variant="h2" color="secondary">
+            <Typography variant="h3" color="white" sx={{ fontSize: 30 }}>
               Update Profile
             </Typography>
           </Button>

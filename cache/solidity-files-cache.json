@@ -1,54 +1,12 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "F:\\web_design\\Nextjs\\exclusives-admin\\contracts\\Marketplace.sol": {
-      "lastModificationDate": 1664384316482,
-      "contentHash": "2f4415280efa4530f4fba3b725414fcf",
-      "sourceName": "contracts/Marketplace.sol",
+    "D:\\projects\\NFT\\market_place_admin\\contracts\\Collection.sol": {
+      "lastModificationDate": 1667716187958,
+      "contentHash": "94123eb3b3266c5ce8dfebc1733e5236",
+      "sourceName": "contracts/Collection.sol",
       "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
-        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
-        "@openzeppelin/contracts/utils/Address.sol",
-        "hardhat/console.sol",
-        "./NFT.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.4"
-      ],
-      "artifacts": [
-        "Marketplace"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\contracts\\NFT.sol": {
-      "lastModificationDate": 1664384316483,
-      "contentHash": "0872fced5704f911448554695865cff5",
-      "sourceName": "contracts/NFT.sol",
-      "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -77,197 +35,18 @@
         "@openzeppelin/contracts/utils/Counters.sol"
       ],
       "versionPragmas": [
-        "^0.8.4"
+        "^0.8.7"
       ],
       "artifacts": [
-        "NFT"
+        "Collection"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\hardhat\\console.sol": {
-      "lastModificationDate": 1664396650915,
-      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">= 0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\security\\ReentrancyGuard.sol": {
-      "lastModificationDate": 1664396677531,
-      "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
-      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ReentrancyGuard"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\Address.sol": {
-      "lastModificationDate": 1664396674871,
-      "contentHash": "ad714a6368ee7d43cded6bbe8af0b155",
-      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.1"
-      ],
-      "artifacts": [
-        "Address"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
-      "lastModificationDate": 1664396677450,
-      "contentHash": "cd8e72e5859bddd5fd26b2fb5c51c846",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../utils/introspection/IERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC721"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\draft-EIP712.sol": {
-      "lastModificationDate": 1664396675499,
-      "contentHash": "161aae4dc1450371d0f324488f66a9cf",
-      "sourceName": "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./ECDSA.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "EIP712"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\access\\AccessControl.sol": {
-      "lastModificationDate": 1664396674866,
-      "contentHash": "08101487003fda67e21e6d2cfe35bb2e",
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\access\\AccessControl.sol": {
+      "lastModificationDate": 1667716220146,
+      "contentHash": "e6ef731d275b1e7b2995f00fa56d9dab",
       "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -302,12 +81,12 @@
         "AccessControl"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\Counters.sol": {
-      "lastModificationDate": 1664396675466,
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\Counters.sol": {
+      "lastModificationDate": 1667716220231,
       "contentHash": "74654e3ae5d7f39555055dfe244dab7a",
       "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -337,12 +116,12 @@
         "Counters"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\ERC721.sol": {
-      "lastModificationDate": 1664396676369,
-      "contentHash": "21b9f3bdb3e60f56ea81361c37420136",
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\ERC721.sol": {
+      "lastModificationDate": 1667716220763,
+      "contentHash": "79ff1a7eb801a525aa315fb7a679eede",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -380,12 +159,12 @@
         "ERC721"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\ERC721URIStorage.sol": {
-      "lastModificationDate": 1664396676387,
-      "contentHash": "580a443491d9d70eb064b0130fc3cd01",
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\ERC721URIStorage.sol": {
+      "lastModificationDate": 1667716221042,
+      "contentHash": "8af32effd0536e2971ff8496812a5016",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -417,82 +196,12 @@
         "ERC721URIStorage"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\access\\IAccessControl.sol": {
-      "lastModificationDate": 1664396676671,
-      "contentHash": "57c84298234411cea19c7c284d86be8b",
-      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IAccessControl"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
-      "lastModificationDate": 1664396675464,
-      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
-      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Context"
-      ]
-    },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
-      "lastModificationDate": 1664396677558,
-      "contentHash": "9c54c6c065d9e590fdcdd72c451425b9",
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
+      "lastModificationDate": 1667716222146,
+      "contentHash": "cf46906c4035f51639a22265066a9e78",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -522,12 +231,82 @@
         "Strings"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\ERC165.sol": {
-      "lastModificationDate": 1664396675751,
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1667716220226,
+      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\access\\IAccessControl.sol": {
+      "lastModificationDate": 1667716221409,
+      "contentHash": "57c84298234411cea19c7c284d86be8b",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IAccessControl"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\ERC165.sol": {
+      "lastModificationDate": 1667716220461,
       "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -559,12 +338,12 @@
         "ERC165"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol": {
-      "lastModificationDate": 1664396676701,
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol": {
+      "lastModificationDate": 1667716221603,
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -594,12 +373,84 @@
         "IERC165"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
-      "lastModificationDate": 1664396677460,
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\Address.sol": {
+      "lastModificationDate": 1667716220166,
+      "contentHash": "c476b3895a94798b88a4bb97399e6dfe",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.1"
+      ],
+      "artifacts": [
+        "Address"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
+      "lastModificationDate": 1667716221730,
+      "contentHash": "ec99d946db3685a3630554aa6055bd7f",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
+      "lastModificationDate": 1667716221780,
       "contentHash": "c22d4395e33763de693fd440c6fd10e1",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -629,12 +480,12 @@
         "IERC721Receiver"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\IERC721Metadata.sol": {
-      "lastModificationDate": 1664396677455,
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\IERC721Metadata.sol": {
+      "lastModificationDate": 1667716221763,
       "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -666,12 +517,198 @@
         "IERC721Metadata"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\ECDSA.sol": {
-      "lastModificationDate": 1664396675524,
-      "contentHash": "482bcc512029ecf51ca4ae85cf4667c7",
+    "D:\\projects\\NFT\\market_place_admin\\contracts\\NFTCollection.sol": {
+      "lastModificationDate": 1667716187958,
+      "contentHash": "16464cb643a79c92da2a45767f2f522f",
+      "sourceName": "contracts/NFTCollection.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Collection.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "NFTCollection"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\contracts\\Marketplace.sol": {
+      "lastModificationDate": 1668486091546,
+      "contentHash": "fa4b67ce12cded7f4fe510e956bf7451",
+      "sourceName": "contracts/Marketplace.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
+        "@openzeppelin/contracts/utils/Address.sol",
+        "hardhat/console.sol",
+        "./Collection.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "Marketplace"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\hardhat\\console.sol": {
+      "lastModificationDate": 1667716084267,
+      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">= 0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\security\\ReentrancyGuard.sol": {
+      "lastModificationDate": 1667716222058,
+      "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
+      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\draft-EIP712.sol": {
+      "lastModificationDate": 1667716220299,
+      "contentHash": "161aae4dc1450371d0f324488f66a9cf",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ECDSA.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "EIP712"
+      ]
+    },
+    "D:\\projects\\NFT\\market_place_admin\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\ECDSA.sol": {
+      "lastModificationDate": 1667716220339,
+      "contentHash": "e240957102529c3ccf73bcf4527bcddc",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -703,12 +740,12 @@
         "ECDSA"
       ]
     },
-    "F:\\web_design\\Nextjs\\exclusives-admin\\contracts\\NFTCollection1.sol": {
-      "lastModificationDate": 1664384316484,
-      "contentHash": "a8e193573555a2107e9890c2d8bfb885",
-      "sourceName": "contracts/NFTCollection1.sol",
+    "D:\\projects\\NFT\\market_place_admin\\contracts\\Factory.sol": {
+      "lastModificationDate": 1667716187958,
+      "contentHash": "1bf5b33604ee05a6d1b90d5a8dfeb03e",
+      "sourceName": "contracts/Factory.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -731,13 +768,13 @@
         }
       },
       "imports": [
-        "./NFT.sol"
+        "./Collection.sol"
       ],
       "versionPragmas": [
-        "^0.8.4"
+        "^0.8.7"
       ],
       "artifacts": [
-        "NFTCollection1"
+        "Factory"
       ]
     }
   }

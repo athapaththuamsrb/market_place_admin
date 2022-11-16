@@ -7,90 +7,72 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, SyntheticEvent, useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { User } from "../../../src/interfaces";
+import axios from "axios";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../../../src/theme";
+
 type AdminPopupProps = {
   openPopup: boolean;
-  setOpenPopup: (open: boolean) => void;
-  users;
-  setUsers;
-  // users: { id: string; key: string }[];
-  // setMsg: (msg: string) => void;
-  // msg: string;
+  setOpenPopup: (openPopup: boolean) => void;
+  users: User[];
 };
-const Popup: FC<AdminPopupProps> = ({
-  openPopup,
-  setOpenPopup,
-  users,
-  setUsers,
-}) => {
+const Popup: FC<AdminPopupProps> = ({ openPopup, setOpenPopup, users }) => {
   const [Name, setName] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
   const [User_ID, setUser_ID] = useState("");
   const [NameError, setNameError] = useState(false);
-  const [emailAddressError, setEmailAddressError] = useState(false);
   const [User_IDError, setUser_IDError] = useState(false);
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLInputElement | HTMLInputElement>
-  ) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setUser_IDError(false);
     setNameError(false);
-    setEmailAddressError(false);
 
     if (Name == "") {
       setNameError(true);
-    }
-
-    if (emailAddress == "") {
-      setEmailAddressError(true);
     }
 
     if (User_ID == "") {
       setUser_IDError(true);
     }
 
-    if (Name && emailAddress && User_ID) {
-      //console.log(User_ID, Name, emailAddress);
-      // const response = await fetch("http://localhost:8000/users", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     User_ID,
-      //     Name,
-      //     Date: "2022/04/04",
-      //     Total: 6,
-      //     Created: 8,
-      //     Volume: 10,
-      //     Status: "active",
-      //     Type: "Admin",
-      //   }),
-      //   headers: { "Content-type": "application/json" },
-      // });
+    if (Name && User_ID) {
+      const newAdmin: User = users.find(
+        (user: User) => user.User_ID === User_ID
+      )!;
+      axios.put("api/addAdmin", { newAdmin }).then(() => {
+        //console.log(newAdmin);
+        setName("");
+        setUser_ID("");
+        setOpenPopup(false);
+      });
+      // const response = await fetch(
+      //   `http://localhost:8000/users/${newAdmin.id}`,
+      //   {
+      //     method: "PUT",
+      //     body: JSON.stringify(newAdmin),
+      //     headers: { "Content-type": "application/json" },
+      //   }
+      // );
       // const data = await response.json();
       // console.log(data);
-      // setOpenPopup(false);
-      const newAdmin = users.find((user) => user.User_ID === User_ID);
-      newAdmin.Type = "Admin";
-      //TODO fetch -> axios
-      const response = await fetch(
-        `http://localhost:8000/users/${newAdmin.id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(newAdmin),
-          headers: { "Content-type": "application/json" },
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-      setOpenPopup(false);
     }
   };
 
   return (
     <Dialog open={openPopup}>
-      <DialogTitle>
+      <DialogTitle
+        sx={{
+          //backgroundColor: "#CA82FF",
+          backgroundColor: "#b9b9b9",
+          color: "white",
+        }}
+      >
         <div style={{ display: "flex" }}>
-          <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+          <Typography
+            variant="h5"
+            component="div"
+            style={{ flexGrow: 1, fontWeight: 600 }}
+          >
             Admin Details Form
           </Typography>
 
@@ -98,25 +80,32 @@ const Popup: FC<AdminPopupProps> = ({
             onClick={() => {
               setName("");
               setUser_ID("");
-              setEmailAddress("");
               setUser_IDError(false);
               setNameError(false);
-              setEmailAddressError(false);
               setOpenPopup(false);
             }}
           >
-            <CloseIcon color="error" />
+            <CloseIcon
+              sx={{
+                color: "white",
+              }}
+            />
           </IconButton>
         </div>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent
+        dividers
+        sx={{
+          fontWeight: 100,
+        }}
+      >
         <TextField
           value={User_ID}
           onChange={(e) => setUser_ID(e.target.value)}
           autoFocus
           margin="dense"
           id="User_ID"
-          label="User_ID"
+          label="Wallet Address"
           type="text"
           fullWidth
           variant="outlined"
@@ -136,42 +125,44 @@ const Popup: FC<AdminPopupProps> = ({
           required
           error={NameError}
         />
-
-        <TextField
-          value={emailAddress}
-          onChange={(e) => setEmailAddress(e.target.value)}
-          autoFocus
-          margin="dense"
-          id="email address"
-          label="Email address"
-          type="email address"
-          fullWidth
-          variant="outlined"
-          required
-          error={emailAddressError}
-        />
       </DialogContent>
+
       <DialogActions>
         <Button
-          variant="outlined"
           onClick={() => {
             setName("");
             setUser_ID("");
-            setEmailAddress("");
             setUser_IDError(false);
             setNameError(false);
-            setEmailAddressError(false);
             setOpenPopup(false);
           }}
+          size="small"
+          color="primary"
+          variant="outlined"
         >
-          Cancel
+          <Typography
+            color="black"
+            variant="h6"
+            sx={{ fontWeight: 500, fontSize: "medium" }}
+          >
+            Cancel
+          </Typography>
         </Button>
         <Button
-          variant="contained"
+          onClick={() => handleSubmit()}
           type="submit"
-          onClick={(e) => handleSubmit(e)}
+          size="small"
+          //color="secondary"
+          variant="contained"
+          sx={{ backgroundColor: "#b9b9b9" }}
         >
-          Submit
+          <Typography
+            color="white"
+            variant="h6"
+            sx={{ fontWeight: 500, fontSize: "medium" }}
+          >
+            Submit
+          </Typography>
         </Button>
       </DialogActions>
     </Dialog>

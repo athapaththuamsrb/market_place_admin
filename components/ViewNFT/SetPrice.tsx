@@ -1,67 +1,85 @@
-import { FC, useState } from "react";
-import { NFT_load } from "../../src/interfaces";
+import React from "react";
+import { FC, useEffect, useState } from "react";
+import { Activity, NFT_load } from "../../src/interfaces";
 import {
   Typography,
   Button,
   Grid,
   TextField,
-  Avatar,
-  Stack,
+  Card,
+  CardMedia,
+  CardContent,
+  LinearProgress,
+  Accordion,
+  ToggleButton,
+  ToggleButtonGroup,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
-import { useSigner, useAccount } from "wagmi";
+import { useSigner, useAccount, useConnect } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import { ethers } from "ethers";
-import api from "../../lib/api";
-import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
 import { useFormik, Field } from "formik";
-import * as yup from "Yup";
+import * as yup from "yup";
 import { useSignTypedData } from "wagmi";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import ModalPopUp from "../Modal";
+import ModalPopUp from "../Popup/Modal";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ItemActivity from "../ui/ItemActivity";
+import { useIsMounted } from "../hooks";
+import axios from "axios";
+import authService from "../../services/auth.service";
+import theme from "../../src/theme";
+
 interface ViewNFTProps {
   salesOrder: NFT_load;
 }
 const SetPrice: FC<ViewNFTProps> = (props) => {
+  const {
+    activeConnector,
+    connect,
+    connectors,
+    error,
+    isConnecting,
+    pendingConnector,
+  } = useConnect();
   const router = useRouter();
-  const [isPending, setIsPendging] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const [alignment, setAlignment] = useState("FIXED_PRICE");
+  const [toggle, setToggle] = useState<string>("FIX");
+  const [activity, setActivity] = useState<Activity[]>([]);
+  const isMounted = useIsMounted();
   const { data: account } = useAccount();
-  const [royality, setRoyality] = useState(
-    props.salesOrder.creatorWalletAddress !== props.salesOrder.walletAddress
-      ? props.salesOrder.royality
-      : 0
-  );
-  const [isRoyality, setIsRoyality] = useState(false);
   const [msg, setMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
-  console.log("royality", props.salesOrder.royality);
-  // console.log(
-  //   "xxx",
-  //   props.salesOrder.creatorWalletAddress !== props.salesOrder.walletAddress
-  // );
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string
+  ) => {
+    if (newAlignment === "FIX") setAlignment("FIXED_PRICE");
+    else if (newAlignment === "BID") setAlignment("TIMED_AUCTION");
+  };
+
   const formik = useFormik({
     initialValues: {
       price: "",
-      royality: royality,
+      expireDate: "",
     },
     validationSchema: yup.object({
       price: yup.string().required("required field"),
-      royality: yup
-        .number()
-        .required("required field")
-        .positive()
-        .integer()
-        .max(100, "maximum value is 100%")
-        .min(0, "maximum value is 0%"),
+      expireDate: yup.string().length(16).required("required field"),
     }),
-    onSubmit: async (values: { price: string; royality: number }) => {
-      console.log("came-up", royality);
+    onSubmit: async (values: { price: string; expireDate: string }) => {
       try {
+        setIsPending(true);
+        setMsg("processing.....");
+        const date = new Date(values.expireDate);
+        //  timestamp in milliseconds(Unix timestamp)
+        const timestampInMs = date.getTime();
         const signature = await signTypedDataAsync({
           domain,
           types,
@@ -71,59 +89,79 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
             creator: props.salesOrder.creatorWalletAddress,
             category: props.salesOrder.category,
             collection: props.salesOrder.collection,
-            royality: values.royality,
+            royality: props.salesOrder.royality,
             price: ethers.utils.parseEther(values.price), //TODO PRICE
           },
         });
-        console.log("came-down");
-
-        setIsPendging(true);
-        setMsg("processing.....");
-        console.log("came-1");
+        let token;
+        if (activeConnector) {
+          token = authService.getUserToken();
+        } else {
+          throw new Error("User is not exist");
+        }
         if (props.salesOrder.id.length === 46) {
-          console.log("came-2");
-          const res1 = await api.post("/api/addNFTToDB", {
+          const res1 = await axios.post("/api/addNFTToDB", {
             data: {
-              category: props.salesOrder.category,
               collection: props.salesOrder.collection,
+              ownerWalletAddress: props.salesOrder.walletAddress,
               creatorWalletAddress: props.salesOrder.creatorWalletAddress,
-              ownerWalletAddress: props.salesOrder.walletAddress, //TODO?
-              price: formik.values.price,
-              tokenID: props.salesOrder.tokenID, //TODO??
+              price: values.price,
+              tokenID: props.salesOrder.tokenID,
               uri: props.salesOrder.uri,
+              endDate: timestampInMs,
               signature: signature,
-              description: props.salesOrder.description,
-              image: props.salesOrder.image,
-              name: props.salesOrder.name,
-              royality: values.royality,
+              saleWay: alignment,
+              token: token,
             },
           });
-          setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
+          setMsg(res1.status === 204 ? "Successful!" : "Try again!!");
         } else {
-          console.log("values.royality", values.royality);
-          const res1 = await api.post("/api/setStateNFT", {
+          const res1 = await axios.post("/api/setStateNFT", {
             data: {
-              filed: "listed",
+              action: "listed",
               value: true,
               id: props.salesOrder.id,
               price: values.price,
               signature: signature,
-              royality: values.royality,
+              saleWay: alignment,
+              endDate: timestampInMs,
+              token: token,
             },
           });
-          setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
+          setMsg(res1.status === 201 ? "Successful!" : "Try again!!");
         }
-        setIsPendging(false);
+        setIsPending(false);
         setOpen(true);
         formik.values.price = "";
-        formik.values.royality = 0;
-        router.push("/explore-collections");
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setMsg("Try again!!");
       }
     },
   });
+
+  const getSetActivity = async () => {
+    try {
+      setIsPending(true);
+      const { data } = await axios.post("/api/getNFTActivity", {
+        data: {
+          id: props.salesOrder.id,
+          creatorUserId: props.salesOrder?.creatorUserID,
+        },
+      });
+      const arr1: Activity[] = data.data.reverse();
+      setActivity(arr1);
+      setIsPending(false);
+    } catch (error) {
+      console.log("Item activity error!");
+      setIsPending(false);
+    }
+  };
+
+  useEffect(() => {
+    getSetActivity();
+  }, []);
+
   const domain = {
     name: "Lazy Marketplace",
     version: "1.0",
@@ -142,116 +180,204 @@ const SetPrice: FC<ViewNFTProps> = (props) => {
     ],
   };
   const { signTypedDataAsync } = useSignTypedData();
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsRoyality(event.target.checked);
-  };
   return (
-    <div>
-      <Title
-        firstWord={
-          account?.address === props.salesOrder?.walletAddress ||
-          !props.salesOrder?.listed
-            ? "View"
-            : "Buy"
-        }
-        secondWord="NFT"
-      />
+    <Box>
       {isPending && (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
       )}
-      <br />
-      <br />
-      <Box sx={{ width: "70%", marginX: "auto" }}>
-        <Grid container spacing={12}>
-          <Grid alignSelf={"center"} item xs={8}>
-            <Stack alignItems="center">
-              <Avatar
-                alt="Remy Sharp"
-                src={props.salesOrder?.image}
+      <Title
+        firstWord={
+          account?.address === props.salesOrder?.walletAddress ||
+          !props.salesOrder?.listed
+            ? "List"
+            : "Buy"
+        }
+        secondWord="NFT"
+      />
+
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "30px" }}>
+        <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={5}>
+            <Card sx={{ display: "flex", boxShadow: 0 }}>
+              <CardMedia
+                component="img"
+                image={props.salesOrder?.image}
+                alt="avatar"
                 sx={{
-                  width: 400,
                   height: 400,
-                  boxShadow: 3,
+                  borderRadius: 2,
                 }}
-                variant="square"
               />
-            </Stack>
-            <br />
-            <br />
+            </Card>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={7}
+            sx={{ boxShadow: 0, borderRadius: 2 }}
+          >
+            <Card
+              sx={{
+                [theme.breakpoints.up("md")]: {
+                  minHeight: 400,
+                },
+                borderRadius: 2,
+              }}
+            >
+              <CardContent>
+                <form onSubmit={formik.handleSubmit}>
+                  <ToggleButtonGroup
+                    color="secondary"
+                    value={toggle}
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
+                    fullWidth
+                    sx={{ marginY: "20px" }}
+                  >
+                    <ToggleButton
+                      value="FIX"
+                      onClick={() => {
+                        setToggle("FIX");
+                      }}
+                    >
+                      FIX
+                    </ToggleButton>
+                    <ToggleButton
+                      value="BID"
+                      onClick={() => {
+                        setToggle("BID");
+                      }}
+                    >
+                      BID
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                  <Typography
+                    variant="h2"
+                    align="left"
+                    sx={{ marginTop: "0px", marginBottom: "5px" }}
+                  >
+                    {props.salesOrder?.name}
+                  </Typography>
+
+                  <Typography
+                    sx={{ marginBottom: "10px" }}
+                    variant="h4"
+                    align="left"
+                  >
+                    Description:
+                  </Typography>
+                  <Typography
+                    sx={{ marginBottom: "20px", fontWeight: 400, fontSize: 15 }}
+                    color="gray"
+                    align="left"
+                  >
+                    {props.salesOrder?.description}
+                  </Typography>
+                  <Box>
+                    <TextField
+                      sx={{ marginBottom: "5px" }}
+                      id="price"
+                      label="Price"
+                      variant="outlined"
+                      disabled={isPending}
+                      fullWidth
+                      name="price"
+                      value={formik.values.price}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                    />
+                    {formik.touched.price && formik.errors.price ? (
+                      <Typography sx={{ color: "error.main" }}>
+                        {formik.errors.price}
+                      </Typography>
+                    ) : null}
+                  </Box>
+                  <Box>
+                    <TextField
+                      id="expireDate"
+                      variant="outlined"
+                      fullWidth
+                      type="datetime-local"
+                      disabled={isPending}
+                      value={formik.values.expireDate}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      inputProps={{
+                        min: new Date(Date.now() + 24 * 60 * 60 * 1000)
+                          .toISOString()
+                          .slice(0, 16),
+                      }}
+                    />
+                    {formik.touched.expireDate && formik.errors.expireDate ? (
+                      <Typography sx={{ color: "error.main" }}>
+                        {formik.errors.expireDate}
+                      </Typography>
+                    ) : null}
+                  </Box>
+                  <Box textAlign={"right"}>
+                    <Button
+                      type="submit"
+                      size="small"
+                      disabled={isPending}
+                      color="secondary"
+                      variant="contained"
+                      sx={{ marginTop: 2 }}
+                    >
+                      <Typography
+                        color="white"
+                        variant="h2"
+                        sx={{ fontSize: 20 }}
+                      >
+                        SELL ORDER
+                      </Typography>
+                    </Button>
+                  </Box>
+                </form>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Box sx={{ width: "70%", marginX: "auto", marginBottom: "50px" }}>
+        <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={5}>
             <FurtherDetails
-              creator={props.salesOrder?.creatorWalletAddress}
+              creatorUserID={props.salesOrder?.creatorUserID}
+              creatorUserName={props.salesOrder?.creatorUsername}
               tokenID={props.salesOrder?.tokenID}
-              collection={props.salesOrder?.collection}
+              collectionID={props.salesOrder?.collectionID}
+              collectionName={props.salesOrder?.collectionName}
               uri={props.salesOrder?.uri}
             />
           </Grid>
-          <Grid item xs={4}>
-            <Box sx={{ width: "90%", marginX: "auto" }}>
-              <form onSubmit={formik.handleSubmit}>
-                <TextField
-                  sx={{ marginBottom: "30px" }}
-                  id="price"
-                  label="Price"
-                  variant="outlined"
-                  fullWidth
-                  name="price"
-                  value={formik.values.price}
-                  onChange={formik.handleChange}
-                />
-                {formik.touched.price && formik.errors.price ? (
-                  <Typography sx={{ color: "error.main" }}>
-                    {formik.errors.price}
-                  </Typography>
-                ) : null}
-                {props.salesOrder.creatorWalletAddress ===
-                  props.salesOrder.walletAddress && (
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={isRoyality}
-                          onChange={handleChange}
-                        />
-                      }
-                      label="Do you need to get royality fee?"
-                    />
-                  </FormGroup>
-                )}
-                {props.salesOrder.creatorWalletAddress ===
-                  props.salesOrder.walletAddress &&
-                  isRoyality && (
-                    <TextField
-                      sx={{ marginBottom: "30px" }}
-                      id="royality"
-                      label="royality"
-                      variant="outlined"
-                      fullWidth
-                      name="royality"
-                      value={formik.values.royality}
-                      onChange={formik.handleChange}
-                    />
-                  )}
-                <Box textAlign={"center"}>
-                  <Button
-                    type="submit"
-                    size="small"
-                    color="secondary"
-                    variant="contained"
-                  >
-                    <Typography color="white" variant="h2">
-                      SELL ORDER
-                    </Typography>
-                  </Button>
-                </Box>
-              </form>
-            </Box>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={7}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <FormatListBulletedIcon
+                  sx={{
+                    marginRight: "10px",
+                  }}
+                ></FormatListBulletedIcon>
+                <Typography>Item Activity</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ItemActivity activity={activity} />
+              </AccordionDetails>
+            </Accordion>
           </Grid>
         </Grid>
       </Box>
       <ModalPopUp msg={msg} open={open} setOpen={setOpen} setMsg={setMsg} />
-    </div>
+    </Box>
   );
 };
 

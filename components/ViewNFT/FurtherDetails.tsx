@@ -1,138 +1,170 @@
-import { FC, useState } from "react";
-import { styled } from "@mui/material/styles";
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionSummary, {
-  AccordionSummaryProps,
-} from "@mui/material/AccordionSummary";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
+import * as React from "react";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Card,
+  Link,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoIcon from "@mui/icons-material/Info";
+import { FC } from "react";
 
 interface FurtherDetailsProps {
   tokenID: number;
-  collection: string;
+  creatorUserID: string;
+  creatorUserName: string;
+  collectionID: string;
+  collectionName: string;
   uri: string;
-  creator: string;
 }
-const Accordion = styled((props: AccordionProps) => (
-  <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  "&:not(:last-child)": {
-    borderBottom: 0,
-  },
-  "&:before": {
-    display: "none",
-  },
-}));
-
-const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
-    {...props}
-  />
-))(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === "dark"
-      ? "rgba(255, 255, 255, .05)"
-      : "rgba(0, 0, 0, .03)",
-  flexDirection: "row-reverse",
-  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-    transform: "rotate(90deg)",
-  },
-  "& .MuiAccordionSummary-content": {
-    marginLeft: theme.spacing(1),
-  },
-}));
-
-const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderTop: "1px solid rgba(0, 0, 0, .125)",
-}));
 
 const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
-  const [expanded, setExpanded] = useState<string | false>("panel1");
-
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-      setExpanded(newExpanded ? panel : false);
-    };
   return (
-    <Accordion
-      expanded={expanded === "panel1"}
-      onChange={handleChange("panel1")}
-    >
-      <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-        <Typography
-          sx={{ marginTop: "60px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
+    <div>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
         >
-          Further Details :
-        </Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography
-          sx={{ marginTop: "20px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
-        >
-          Token ID : {props.tokenID}
-        </Typography>
-        <Typography
-          sx={{ marginTop: "20px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
-        >
-          Creator : {props.creator}
-        </Typography>
-        <Typography
-          sx={{ marginTop: "20px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
-        >
-          Token Standard : ERC721
-        </Typography>
-        <Typography
-          sx={{ marginTop: "20px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
-        >
-          Contract Address : {props.collection}
-        </Typography>
-        <Typography
-          sx={{ marginTop: "20px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
-        >
-          Blockchain : Etheruem
-        </Typography>
-        <Typography
-          sx={{ marginTop: "20px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
-        >
-          Metadata : {props.uri}
-        </Typography>
+          <InfoIcon
+            sx={{
+              marginRight: "10px",
+            }}
+          ></InfoIcon>
+          <Typography>Further Details</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Card
+            sx={{
+              boxShadow: 0,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "10px",
+              }}
+            >
+              <Typography variant="h4">Token ID :</Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, fontSize: "15px" }}
+              >
+                {props.tokenID}
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "10px",
+              }}
+            >
+              <Typography variant="h4" sx={{ minWidth: "20%" }}>
+                Creator :
+              </Typography>
 
-        <Typography
-          sx={{ marginTop: "20px" }}
-          variant="h4"
-          align="center"
-          color={"primary"}
-        >
-          Creator Fee : 0%
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, fontSize: "15px" }}
+              >
+                <Link href={`../../user/${props.creatorUserID}`}>
+                  {props.creatorUserName}
+                </Link>
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "10px",
+              }}
+            >
+              <Typography variant="h4">Token Standard :</Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, fontSize: "15px" }}
+              >
+                ERC721
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "10px",
+              }}
+            >
+              <Typography variant="h4">Collection :</Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, fontSize: "15px" }}
+              >
+                <Link href={`../../collection/${props.collectionID}`}>
+                  {props.collectionName}
+                </Link>
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "10px",
+              }}
+            >
+              <Typography variant="h4">Blockchain :</Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, fontSize: "15px" }}
+              >
+                Ethereum
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "10px",
+              }}
+            >
+              <Typography variant="h4">Metadata :</Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, fontSize: "15px" }}
+              >
+                Centralized
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "10px",
+              }}
+            >
+              <Typography variant="h4">Creator Fee :</Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, fontSize: "15px" }}
+              >
+                0%
+              </Typography>
+            </div>
+          </Card>
+        </AccordionDetails>
+      </Accordion>
+    </div>
   );
 };
-
 export default FurtherDetails;

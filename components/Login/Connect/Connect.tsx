@@ -1,4 +1,4 @@
-import { useConnect, useDisconnect } from "wagmi";
+import { useConnect, useDisconnect, useAccount } from "wagmi";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
@@ -8,23 +8,25 @@ import ListItemText from "@mui/material/ListItemText";
 import Container from "@mui/material/Container";
 import InboxIcon from "@mui/icons-material/Inbox";
 import { useIsMounted } from "../../hooks";
+import Title from "../../../components/ui/Title";
 
 export default function Connect() {
   const isMounted = useIsMounted();
   const {
-    activeConnector,
     connect,
     connectors,
     error,
-    isConnecting,
     pendingConnector,
+    activeConnector,
+    isConnected,
   } = useConnect();
   const { disconnect } = useDisconnect();
 
   return (
     <Box>
+      <Title firstWord="Connect" secondWord="your wallet" />
       <Typography
-        variant="h3"
+        variant="h6"
         gutterBottom
         component="div"
         sx={{
@@ -33,49 +35,72 @@ export default function Connect() {
           p: 5,
         }}
       >
-        Connect your wallet
-      </Typography>
-      <Typography
-        variant="h5"
-        gutterBottom
-        component="div"
-        sx={{
-          flexGrow: 1,
-          textAlign: "center",
-          p: 5,
-        }}
-      >
-        Connect with one of our available wallet providers or create a new one.
+        Connect with your Metamask wallet. <br />
+        If you don{"'"}t have one, you can select the provider and create a new
+        one.
       </Typography>
       <Container maxWidth="sm">
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            component="div"
+            sx={{
+              flexGrow: 1,
+              textAlign: "center",
+              p: 5,
+            }}
+          >
+            {isConnected && activeConnector && (
+              <div>Connected to {activeConnector.name}</div>
+            )}
+          </Typography>
+
           <List
             component="nav"
             aria-label="main mailbox folders"
             sx={{ borderColor: "primary.main" }}
           >
             {isMounted &&
-              connectors
-                .filter((x) => x.ready && x.id !== activeConnector?.id)
-                .map((x) => (
-                  <ListItemButton
-                    key={x.id}
-                    onClick={(event) => connect(x)}
-                    sx={{
-                      borderRadius: "16px",
-                      borderColor: "primary.main",
-                    }}
-                  >
-                    <ListItemIcon>
-                      <InboxIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={x.name} />
-                  </ListItemButton>
-                ))}
+              connectors.map((connector) => (
+                <ListItemButton
+                  disabled={!connector.ready}
+                  key={connector.id}
+                  onClick={() => connect({ connector })}
+                  sx={{
+                    backgroundColor: "#fafafa",
+                    borderRadius: "16px",
+                    borderColor: "primary.main",
+                  }}
+                >
+                  <ListItemIcon>
+                    <InboxIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={connector.name} />
+                  {/* <ListItemText
+                    primary={
+                      isLoading &&
+                      pendingConnector?.id === connector.id &&
+                      " (connecting)"
+                    }
+                  /> */}
+                </ListItemButton>
+              ))}
           </List>
+          <Typography
+            variant="h6"
+            gutterBottom
+            component="div"
+            sx={{
+              flexGrow: 1,
+              textAlign: "center",
+              p: 5,
+            }}
+          >
+            {error && <div>{error.message}</div>}
+          </Typography>
         </Box>
       </Container>
-      {/* {error && <div>{error.message}</div>} */}
     </Box>
   );
 }

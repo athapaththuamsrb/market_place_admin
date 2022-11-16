@@ -1,3 +1,4 @@
+//TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
@@ -6,7 +7,6 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const body = req.body;
-
     const userData = {
       walletAddress: body.nftData.creator,
     };
@@ -19,14 +19,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: userData,
         });
       }
-      let creator = await prisma.creator.findUnique({
-        where: userData,
-      });
-      if (!creator) {
-        creator = await prisma.creator.create({
-          data: { ...userData, userId: user.id },
-        });
-      }
       let owner = await prisma.owner.findUnique({
         where: userData,
       });
@@ -35,37 +27,42 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: { ...userData, userId: user.id },
         });
       }
-      try {
-        const newEntry = await prisma.nFT.create({
+      let collection = await prisma.collection.findFirst({
+        where: {
+          collectionAddress: body.nftData.collection,
+          creatorId: user.id,
+        },
+      });
+      if (collection) {
+        await prisma.nFT.create({
           data: {
-            category: body.nftData.category,
-            collection: body.nftData.collection,
-            creatorId: creator.id,
-            ownerId: owner.id,
-            price: "0",
+            collectionId: collection.id,
             tokenID: body.nftData.tokenID,
             uri: body.nftData.uri,
-            signature: body.signature,
-            description: body.description,
-            image: body.image,
-            name: body.name,
+            ownerId: owner.id,
+            creatorId: user.id,
           },
         });
-        await prisma.$disconnect();
-        res.status(201).json({ message: "successfully add", success: true });
-      } catch (error) {
-        await prisma.$disconnect();
-        res
-          .status(400)
-          .json({ message: "Bad request adding nft", success: false });
+        await prisma.collection.update({
+          where: {
+            collectionAddress: body.nftData.collection,
+          },
+          data: {
+            nftCount: collection.nftCount + 1,
+          },
+        });
+      } else {
+        throw new Error("Collection address is not exit");
       }
+      await prisma.$disconnect();
+      res.status(201).json({ message: "Successfully added", success: true });
     } catch {
       await prisma.$disconnect();
       res.status(400).json({ message: "Bad request", success: false });
     }
   } else {
     await prisma.$disconnect();
-    res.status(405).json({ message: "Method not alloed", success: false });
+    res.status(405).json({ message: "Method not allowed", success: false });
   }
 };
 export default handler;

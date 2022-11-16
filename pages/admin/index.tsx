@@ -11,93 +11,66 @@
 import { NextPage } from "next";
 import {
   DataGrid,
-  GridActionsCellItem,
+  GridActionsColDef,
+  GridColDef,
   GridRowParams,
   GridToolbarContainer,
   GridToolbarExport,
-  GridColDef,
 } from "@mui/x-data-grid";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, LinearProgress, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import Title from "../../components/ui/Title";
+import AdminMenu from "../../components/Admin/AdminMenu";
+import Link from "@mui/material/Link";
+import GroupIcon from "@mui/icons-material/Group";
+import axios from "axios";
+import { User } from "../../src/interfaces";
+import theme from "../../src/theme";
+import PieChartIcon from "@mui/icons-material/PieChart";
 
-import BlockIcon from "@mui/icons-material/Block";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import { SetStateAction, useEffect, useState } from "react";
-import Tooltip from "@mui/material/Tooltip";
-import Link from "next/link";
-
-const reportedUsers: NextPage = (props) => {
-  // const col:{
-  //   field: string;
-  //   headerName: string;
-  //   type: string;
-  //   width: number;
-  //   align: string;
-  // }[]={}
-  const columns = [
+const AllUsers: NextPage = (props) => {
+  const column = [
     {
       field: "id",
       headerName: "ID",
-      type: "number",
-      width: 50,
-      align: "center",
+      type: "string",
+      width: 100,
     },
     {
       field: "User_ID",
-      headerName: "User_ID",
+      headerName: "Wallet Address",
       type: "string",
-      width: 300,
-      align: "center",
+      width: 500,
     },
     {
       field: "Name",
       headerName: "Name",
       type: "string",
-      width: 250,
-      align: "center",
+      width: 200,
     },
-    {
-      field: "Date",
-      headerName: "Joined Date",
-      type: "Date",
-      width: 150,
-      align: "center",
-    },
-    {
+    /*{
       field: "Total",
       headerName: "Total NFTs",
-      type: "Number",
-      width: 150,
-      align: "center",
+      type: "string",
+      width: 100,
+    }*/
+    {
+      field: "Owned",
+      headerName: "Owned NFT count",
+      type: "string",
+      width: 160,
     },
     {
-      field: "Created",
-      headerName: "Created NFTs",
-      type: "Number",
+      field: "Collections",
+      headerName: "Collection count",
+      type: "string",
       width: 150,
-      align: "center",
-    },
-    {
-      field: "Volume",
-      headerName: "Total volume",
-      type: "Number",
-      width: 150,
-      align: "center",
     },
     {
       field: "Status",
       headerName: "Status",
       type: "string",
-      width: 150,
-      align: "center",
+      width: 100,
     },
     {
       field: "actions",
@@ -105,8 +78,13 @@ const reportedUsers: NextPage = (props) => {
       width: 200,
       headerName: "View",
       getActions: (params: GridRowParams) => [
-        <Button variant="solid" color="primary">
-          <Link href={`/admin/users/${params.row.id}`}>
+        <Button
+          variant="outlined"
+          color="primary"
+          key={params.row.id}
+          sx={{ color: "black" }}
+        >
+          <Link href={`view/user/${params.row.id}`} underline="hover">
             <a>View Account</a>
           </Link>
         </Button>,
@@ -114,56 +92,157 @@ const reportedUsers: NextPage = (props) => {
     },
   ];
 
-  const [rows, setRows] = useState();
+  const [rows, setRows] = useState([]);
   const [id, setId] = useState("");
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/api/rows")
-      .then((res) => res.json())
-      .then((data) => setRows(data));
+    setTimeout(() => {
+      axios
+        .get("api/getUsers")
+        .then((res) => {
+          console.log(res.data.data);
+          setRows(res.data.data.filter((data: User) => data.Type === "USER"));
+          setIsPending(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setIsPending(false);
+          setError(error.message);
+        });
+    }, 300);
   }, []);
-
-  const onRowsSelectionHandler = (ids: { id: string }[]) => {
-    const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
-    console.log(selectedRowsData);
-  };
-  const handleRowClick = (params) => {
-    console.log(params.row.id);
-  };
-
-  const directPage = () => {
-    return <Link href="/admin/report/user"></Link>;
-  };
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
+      <GridToolbarContainer
+        sx={{
+          backgroundColor: "white",
+        }}
+      >
+        <GridToolbarExport
+          sx={{
+            mx: 1,
+            color: "white",
+            backgroundColor: "#c9c9c9",
+            marginY: 0.15,
+            fontSize: 16,
+          }}
+        />
       </GridToolbarContainer>
     );
   }
   return (
     <div>
+      {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
+
+      <Title firstWord="Admin" secondWord="Dashboard" />
+      <Typography variant="h2" align="center" marginBottom={3}>
+        Exclusives Users
+      </Typography>
+      <Box
+        marginTop={5}
+        textAlign={"center"}
+        display="flex"
+        justifyContent="space-evenly"
+      >
+        <Grid
+          container
+          rowSpacing={2}
+          columnSpacing={{ xs: 1, sm: 1, md: 1 }}
+          sx={{ maxWidth: "80%" }}
+          display="flex"
+          justifyContent={"center"}
+        >
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <Link href="/admin/viewAdmin" underline="none">
+              <Button
+                size="small"
+                color="secondary"
+                variant="contained"
+                endIcon={<GroupIcon color="disabled" />}
+                sx={{
+                  minWidth: "40%",
+                  height: "50px",
+                  borderRadius: 3,
+                }}
+              >
+                <Typography
+                  color="white"
+                  variant="h6"
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      fontWeight: 600,
+                      fontSize: 15,
+                    },
+                  }}
+                >
+                  Admin Panel
+                </Typography>
+              </Button>
+            </Link>
+          </Grid>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <Link href="/admin/analysis" underline="none">
+              <Button
+                size="small"
+                color="secondary"
+                variant="contained"
+                endIcon={<PieChartIcon color="disabled" />}
+                sx={{
+                  minWidth: "40%",
+                  height: "50px",
+                  borderRadius: 3,
+                }}
+              >
+                <Typography
+                  color="white"
+                  variant="h6"
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      fontWeight: 600,
+                      fontSize: 15,
+                    },
+                  }}
+                >
+                  Data Analytics
+                </Typography>
+              </Button>
+            </Link>
+          </Grid>
+          <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+            <AdminMenu />
+          </Grid>
+        </Grid>
+      </Box>
       <Box
         sx={{
           flexGrow: 1,
-          width: "85%",
+          width: "75%",
           marginX: "auto",
-          marginTop: "100px",
-          marginBottom: "100px",
-          height: 750,
+          marginTop: "10px",
+          marginBottom: "50px",
+          height: 600,
           backgroundColor: "white",
-          borderRadius: "5px",
+          borderRadius: "10px",
         }}
       >
         <DataGrid
-          sx={{ m: 0 }}
+          sx={{
+            m: 0,
+            fontWeight: 400,
+            align: "center",
+            backgroundColor: "#fcfcfc",
+            borderRadius: "10px",
+          }}
           rows={rows}
-          columns={columns}
-          pageSize={11}
-          rowsPerPageOptions={[5]}
-          onSelectionModelChange={(id) => setId(id)}
-          onRowClick={(id) => handleRowClick(id)}
+          columns={column}
+          //rowsPerPageOptions={[5]}
           components={{
             Toolbar: CustomToolbar,
           }}
@@ -173,4 +252,4 @@ const reportedUsers: NextPage = (props) => {
   );
 };
 
-export default reportedUsers;
+export default AllUsers;

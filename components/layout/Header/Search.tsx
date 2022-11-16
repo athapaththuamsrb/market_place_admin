@@ -62,7 +62,7 @@ export default function SearchBar() {
         //     setSearch(e.target.value);
         //   }
         // }}
-        placeholder="search items, collections , and accounts"
+        placeholder="Search items, collections, and accounts"
       />
     </Search>
   );

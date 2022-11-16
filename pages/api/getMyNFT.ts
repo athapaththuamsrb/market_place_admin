@@ -1,100 +1,189 @@
+//TODO DONE
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { NFT_card } from "./../../src/interfaces";
+import { NFT_Card } from "./../../src/interfaces";
 import axios from "axios";
+import { ethers } from "ethers";
+import authToken from "../../services/auth.token";
+
 const prisma = new PrismaClient();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const userData = {
-      walletAddress: req.body.data.address,
-    };
-    try {
-      let user = await prisma.user.findUnique({
-        where: userData,
-      });
-      if (!user) {
-        user = await prisma.user.create({
-          data: userData,
-        });
-      }
-      let owner = await prisma.owner.findUnique({
-        where: userData,
-      });
-      if (!owner) {
-        owner = await prisma.owner.create({
-          data: { ...userData, userId: user.id },
-        });
-      }
-
-      const nfts = await prisma.nFT.findMany({
-        where: {
-          ownerId: owner.id,
-          sold: false,
-          isDelete: false,
-        },
-      });
-      const finslNFT: NFT_card[] = [];
-      for await (const nft of nfts) {
-        const list: NFT_card = {
-          id: nft.id,
-          price: nft.price,
-          image: nft.image,
-          name: nft.name,
-          listed: nft.listed,
-          category: nft.category,
-          ownerWalletAddress: userData.walletAddress,
+    const token = req.body.data.token;
+    await authToken.userAuthToken(token).then(async (address) => {
+      if (ethers.utils.isAddress(address!) && typeof address == "string") {
+        const userData = {
+          walletAddress: address,
         };
-
-        finslNFT.push(list);
-      }
-
-      const { data } = await axios.get(
-        `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getNFTs?owner=${userData.walletAddress}`
-      );
-      // console.log(data);
-      if (data.ownedNfts.length !== 0) {
-        for await (const nft of data.ownedNfts) {
-          const lazyNfts = await prisma.nFT.findMany({
-            where: {
-              uri: nft.tokenUri.raw,
-              listed: true,
-              sold: false,
-              isDelete: false,
-            },
+        try {
+          let user = await prisma.user.findUnique({
+            where: userData,
           });
-          if (lazyNfts.length !== 0) {
-            continue;
+          if (!user) {
+            user = await prisma.user.create({
+              data: userData,
+            });
           }
-          const ipfsData = await axios.get(nft.tokenUri.raw);
-          const list: NFT_card = {
-            id: nft.tokenUri.raw.split("/")[4],
-            price: "0",
-            image: ipfsData.data.image,
-            name: ipfsData.data.name,
-            listed: false,
-            category: ipfsData.data.category,
-            ownerWalletAddress: owner.walletAddress,
-          };
-          console.log(list);
-          finslNFT.push(list);
-        }
-      }
+          let owner = await prisma.owner.findUnique({
+            where: userData,
+          });
+          if (!owner) {
+            owner = await prisma.owner.create({
+              data: { ...userData, userId: user.id },
+            });
+          }
+          const createdNFTCard: NFT_Card[] = [];
+          const collectedNFTCard: NFT_Card[] = [];
+          const nfts = await prisma.nFT.findMany({
+            where: { NOT: { status: "BLOCKED" }, creatorId: user.id },
+          });
+          if (nfts.length !== 0) {
+            for await (const nft of nfts) {
+              const ipfsData = await axios.get(nft.uri);
+              if (ipfsData.data.creator === userData.walletAddress) {
+                const creatorData = { walletAddress: ipfsData.data.creator };
+                let userCreator = await prisma.user.findUnique({
+                  where: creatorData,
+                });
+                if (!userCreator) {
+                  userCreator = await prisma.user.create({
+                    data: creatorData,
+                  });
+                }
+                let ownerCreator = await prisma.owner.findUnique({
+                  where: creatorData,
+                });
+                if (!ownerCreator) {
+                  ownerCreator = await prisma.owner.create({
+                    data: { ...creatorData, userId: userCreator.id },
+                  });
+                }
+                const activity = await prisma.activity.findFirst({
+                  where: {
+                    nftId: nft.id,
+                    isExpired: false,
+                  },
+                });
+                let list: NFT_Card;
+                if (activity) {
+                  list = {
+                    id: nft.id,
+                    price: activity.sellingprice,
+                    image: ipfsData.data.image,
+                    name: ipfsData.data.name,
+                    listed: true,
+                    category: ipfsData.data.category,
+                    ownerId: nft.ownerId,
+                    ownerWalletAddress: ownerCreator.walletAddress,
+                  };
+                } else {
+                  const id = nft.isMinted ? nft.uri.split("/")[4] : nft.id;
+                  list = {
+                    id: id,
+                    price: "0",
+                    image: ipfsData.data.image,
+                    name: ipfsData.data.name,
+                    listed: false,
+                    category: ipfsData.data.category,
+                    ownerId: nft.ownerId,
+                    ownerWalletAddress: ownerCreator.walletAddress,
+                  };
+                }
+                createdNFTCard.push(list);
+              }
+            }
+          }
+          const { data } = await axios.get(
+            `https://eth-goerli.g.alchemy.com/nft/v2/${process.env.API_KEY}/getNFTs?owner=${userData.walletAddress}`
+          );
 
-      res
-        .status(201)
-        .json({ message: "successfully get", success: true, data: finslNFT });
-    } catch (error) {
-      await prisma.$disconnect();
-      res
-        .status(400)
-        .json({ message: "Bad request", success: false, data: [] });
-    }
+          if (data.ownedNfts.length !== 0) {
+            for await (const nft of data.ownedNfts) {
+              let ipfsArray: string[] = [];
+              const lazyNfts = await prisma.nFT.findUnique({
+                where: {
+                  uri: nft.tokenUri.raw,
+                },
+              });
+              if (!lazyNfts) continue;
+              if (lazyNfts.status === "BLOCKED") {
+                continue;
+              }
+              const ipfsData = await axios.get(nft.tokenUri.raw);
+              if (ipfsArray.includes(nft.tokenUri.raw)) continue;
+              ipfsArray.push(nft.tokenUri.raw);
+
+              let nftCreater = await prisma.user.findUnique({
+                where: { walletAddress: ipfsData.data.creator },
+              });
+              if (!nftCreater) {
+                throw new Error("Creater is not exist");
+              }
+              let collection = await prisma.collection.findUnique({
+                where: {
+                  collectionAddress: ipfsData.data.collection,
+                },
+              });
+              if (!collection) {
+                throw new Error("Collection is not exist");
+              }
+              console.log(nft.tokenUri.raw);
+              const activity = await prisma.activity.findFirst({
+                where: {
+                  nftId: lazyNfts.id,
+                  isExpired: false,
+                },
+              });
+              let list: NFT_Card;
+              if (activity) {
+                list = {
+                  id: lazyNfts.id,
+                  price: activity.sellingprice,
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: true,
+                  category: ipfsData.data.category,
+                  ownerId: owner.id,
+                  ownerWalletAddress: owner.walletAddress,
+                };
+              } else {
+                list = {
+                  id: nft.tokenUri.raw.split("/")[4],
+                  price: "0",
+                  image: ipfsData.data.image,
+                  name: ipfsData.data.name,
+                  listed: false,
+                  category: ipfsData.data.category,
+                  ownerId: owner.id,
+                  ownerWalletAddress: owner.walletAddress,
+                };
+              }
+
+              collectedNFTCard.push(list);
+            }
+          }
+          res.status(201).json({
+            message: "Successfully received",
+            success: true,
+            data: [collectedNFTCard, createdNFTCard],
+          });
+        } catch (error) {
+          await prisma.$disconnect();
+          res
+            .status(400)
+            .json({ message: "Bad request", success: false, data: [] });
+        }
+      } else {
+        res
+          .status(401)
+          .json({ message: "Unauthorized", success: false, data: [] });
+      }
+    });
   } else {
-    await prisma.$disconnect();
     res
       .status(405)
-      .json({ message: "Method not alloed", success: false, data: [] });
+      .json({ message: "Method not allowed", success: false, data: [] });
   }
 };
 export default handler;

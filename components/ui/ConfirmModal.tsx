@@ -7,7 +7,7 @@ import { SalesOrder } from "../../src/interfaces";
 import { useSignTypedData } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import axios from "axios";
-import ModalPopUp from "../Modal";
+import ModalPopUp from "../Popup/Modal";
 import { ethers } from "ethers";
 
 interface ConfirmModalProps {
@@ -45,34 +45,36 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
   const { signTypedDataAsync } = useSignTypedData();
   const handleClose = () => {
     props.setOpenModal(false);
+    props.setMsg("");
   };
   //TODO  SIGNATURE IS VALIDATION AND UNIQCK VALUE TO THE NFT
 
   const addDB = async () => {
-    console.log(props.salesOrder);
-    const signature = await signTypedDataAsync({
-      domain,
-      types,
-      value: {
-        tokenID: props.salesOrder.nftData.tokenID,
-        uri: props.salesOrder.nftData.uri,
-        creator: props.salesOrder.nftData.creator,
-        category: props.salesOrder.nftData.category,
-        collection: props.salesOrder.nftData.collection,
-        royality: 0,
-        price: ethers.utils.parseEther("0"), //TODO PRICE
-      },
-    });
-    const newSalesOrder = { ...props.salesOrder, signature };
-    props.setSalesOrder(newSalesOrder);
-    //console.log(newSalesOrder);
+    //console.log(props.salesOrder);
     props.setMsg("processing.....");
+    // const signature = await signTypedDataAsync({
+    //   domain,
+    //   types,
+    //   value: {
+    //     tokenID: props.salesOrder.nftData.tokenID,
+    //     uri: props.salesOrder.nftData.uri,
+    //     creator: props.salesOrder.nftData.creator,
+    //     category: props.salesOrder.nftData.category,
+    //     collection: props.salesOrder.nftData.collection,
+    //     royality: props.salesOrder.royality,
+    //     price: ethers.utils.parseEther("0"), //TODO PRICE
+    //   },
+    // });
+    // const newSalesOrder = { ...props.salesOrder, signature };
+    // props.setSalesOrder(newSalesOrder);
+    //console.log(newSalesOrder);
+
     props.setOpenModal(false); //TODO THIS IS OPEN WOLLET TO GET CONFORMATION IS THIS CORRECT
     try {
       const res1 = await axios.post("api/createNFT", {
-        ...newSalesOrder,
+        ...props.salesOrder,
       });
-      props.setMsg(res1.status === 201 ? "successfull!!" : "Try again!!");
+      props.setMsg(res1.status === 201 ? "Successful!" : "Try Again!");
       props.setOpen(true);
     } catch (error) {
       props.setOpen(true);
@@ -84,7 +86,7 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
       <div>
         <Dialog
           fullWidth
-          maxWidth="lg"
+          maxWidth="sm"
           open={props.openModal}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -105,23 +107,33 @@ const ConfirmModal: FC<ConfirmModalProps> = (props) => {
           </Stack>
           <br />
           <br />
-          <Typography sx={{ marginBottom: "20px" }} align="center" variant="h3">
-            item Name : {props.salesOrder.name}
+          <Typography
+            sx={{ marginBottom: "20px", fontWeight: 500 }}
+            align="center"
+            variant="h3"
+          >
+            Item Name : {props.salesOrder.name}
           </Typography>
-          {/* <Typography sx={{ marginBottom: "20px" }} align="center" variant="h3">
-            {`item Price : ${props.salesOrder.nftData.price} ETH`}
-          </Typography> */}
-          <Typography sx={{ marginBottom: "20px" }} align="center" variant="h3">
+          <Typography
+            sx={{ marginBottom: "20px", fontWeight: 500 }}
+            align="center"
+            variant="h3"
+          >
             Creator Fee : 0%
           </Typography>
-          <Typography sx={{ marginBottom: "70px" }} align="center" variant="h3">
+          <Typography
+            sx={{ marginBottom: "50px", fontWeight: 500 }}
+            align="center"
+            variant="h3"
+          >
             {`Total Price : ${props.salesOrder.nftData.price} ETH`}
           </Typography>
           <Box textAlign={"center"}>
             <Button
               onClick={addDB}
-              sx={{ width: "20%", marginBottom: "70px" }}
+              sx={{ width: "40%", marginBottom: "50px" }}
               size="medium"
+              disabled={props.msg === "processing....."}
               color="secondary"
               variant="contained"
             >

@@ -1,38 +1,51 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { NFT_card, Profile } from "../../src/interfaces";
+import {
+  NFT_Card,
+  Profile,
+  Collection_Card,
+  Collection_Item,
+  OfferToAccept,
+} from "../../src/interfaces";
 import { useAccount } from "wagmi";
+import jwt_decode from "jwt-decode";
+import { Session } from "./../../src/interfaces";
+const jwt = require("jsonwebtoken");
+import authService from "../../services/auth.service";
+
 export const useIsMounted = () => {
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => setMounted(true), []);
-
   return mounted;
 };
 
 export const useGetMyNFT = () => {
   const { data: account } = useAccount();
-  const [data, setData] = useState<NFT_card[]>([]);
+  const [collectedNFTCard, setCollectedNFTCard] = useState<NFT_Card[]>([]);
+  const [createdNFTCard, setCreatedNFTCard] = useState<NFT_Card[]>([]);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
     setTimeout(() => {
-      axios
-        .post("/api/getMyNFT", {
-          data: { address: account?.address },
-        })
-        .then((res) => {
-          setData(res.data.data);
-          setIsPending(false);
-          setError(null);
-        })
-        .catch((error) => {
-          setIsPending(false);
-          setError(error.message);
-        });
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getMyNFT", {
+            data: { token: authService.getUserToken() },
+          })
+          .then((res) => {
+            setCollectedNFTCard(res.data.data[0]);
+            setCreatedNFTCard(res.data.data[1]);
+            setIsPending(false);
+            setError(null);
+          })
+          .catch((error) => {
+            setIsPending(false);
+            setError(error.message);
+          });
+      }
     }, 3000);
   }, [account?.address]);
-  return { data, isPending, error };
+  return { collectedNFTCard, createdNFTCard, isPending, error };
 };
 
 export const useGetMyProfile = () => {
@@ -40,22 +53,134 @@ export const useGetMyProfile = () => {
   const [profile, setProfile] = useState<Profile>();
   const [isPendingProfile, setIsPendingProfile] = useState(true);
   const [errorProfile, setErrorProfile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+  useEffect(() => {
+    if (account?.address !== undefined) {
+      setIsPendingProfile(true);
+      setTimeout(() => {
+        axios
+          .post("/api/getMyProfile", {
+            data: {
+              address: account?.address,
+              // token: authService.getUserToken(),
+            },
+          })
+          .then((res) => {
+            setProfile(res.data.data);
+            setIsPendingProfile(false);
+            setErrorProfile(null);
+            //local storage to stay logged in between page refreshes
+            localStorage.setItem("token", res.data.token);
+            let decoded: Session = jwt_decode(res.data.token);
+            switch (decoded.type) {
+              case "ADMIN":
+                setIsAdmin(true);
+                break;
+              case "SUPER_ADMIN":
+                setIsAdmin(true);
+                setIsSuperAdmin(true);
+                break;
+              default:
+                break;
+            }
+          })
+          .catch((error) => {
+            setIsPendingProfile(false);
+            setErrorProfile(error.message);
+          });
+      }, 3000);
+    } else {
+      setIsPendingProfile(false);
+    }
+  }, [account?.address]);
+  return { profile, isPendingProfile, errorProfile, isAdmin, isSuperAdmin };
+};
+
+export const useGetMyCollectionCard = () => {
+  const { data: account } = useAccount();
+  const [collectionCards, setCollectionCards] = useState<Collection_Card[]>([]);
+  const [isPendingCollectionCards, setIsPendingCollectionCards] =
+    useState(true);
+  const [errorCollectionCards, setErrorCollectionCards] = useState(null);
   useEffect(() => {
     setTimeout(() => {
-      axios
-        .post("/api/getMyProfile", {
-          data: { address: account?.address },
-        })
-        .then((res) => {
-          setProfile(res.data.data);
-          setIsPendingProfile(false);
-          setErrorProfile(null);
-        })
-        .catch((error) => {
-          setIsPendingProfile(false);
-          setErrorProfile(error.message);
-        });
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getMyCollectionCard", {
+            data: { token: authService.getUserToken() },
+          })
+          .then((res) => {
+            setCollectionCards(res.data.data);
+            setIsPendingCollectionCards(false);
+            setErrorCollectionCards(null);
+          })
+          .catch((error) => {
+            setIsPendingCollectionCards(false);
+            setErrorCollectionCards(error.message);
+          });
+      }
     }, 3000);
   }, [account?.address]);
-  return { profile, isPendingProfile, errorProfile };
+  return { collectionCards, isPendingCollectionCards, errorCollectionCards };
+};
+
+export const useGetMyCollectionItem = () => {
+  const { data: account } = useAccount();
+  const [collectionItem, setCollectionItem] = useState<Collection_Item[]>([]);
+  const [isPendingCollectionItem, setIsPendingCollectionItem] = useState(true);
+  const [errorCollectionItem, setErrorCollectionItem] = useState(null);
+  useEffect(() => {
+    setTimeout(() => {
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getMyCollectionItem", {
+            data: {
+              // address: account?.address,
+              token: authService.getUserToken(),
+            },
+          })
+          .then((res) => {
+            setCollectionItem(res.data.data);
+            setIsPendingCollectionItem(false);
+            setErrorCollectionItem(null);
+          })
+          .catch((error) => {
+            setIsPendingCollectionItem(false);
+            setErrorCollectionItem(error.message);
+          });
+      }
+    }, 3000);
+  }, [account?.address]);
+  return { collectionItem, isPendingCollectionItem, errorCollectionItem };
+};
+
+export const useGetMyOffers = () => {
+  const { data: account } = useAccount();
+  const [offers, setOffers] = useState<OfferToAccept[]>([]);
+  const [isPendingOffers, setIsPendingOffers] = useState(true);
+  const [errorOffers, setErrorOffers] = useState(null);
+  useEffect(() => {
+    setTimeout(() => {
+      if (account?.address !== undefined) {
+        axios
+          .post("/api/getUserOffers", {
+            data: {
+              token: authService.getUserToken(),
+            },
+          })
+          .then((res) => {
+            setOffers(res.data.data);
+            setIsPendingOffers(false);
+            setErrorOffers(null);
+          })
+          .catch((error) => {
+            setIsPendingOffers(false);
+            setErrorOffers(error.message);
+          });
+      }
+    }, 3000);
+  }, [account?.address]);
+  return { offers, isPendingOffers, errorOffers };
 };
