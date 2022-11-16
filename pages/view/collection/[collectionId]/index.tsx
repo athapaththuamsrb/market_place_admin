@@ -269,7 +269,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
     const { params } = context;
-    const { data } = await axios.post("/getCollection", {
+    const { data } = await axios.post("/api/getCollection", {
       data: { id: params?.collectionId },
     });
 

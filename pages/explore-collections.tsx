@@ -28,7 +28,7 @@ const Home: NextPage<ExploreProps> = ({
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const { data } = await axios.get("/getListCollection");
+    const { data } = await axios.get("/api/getListCollection");
     return { props: { collectionList: data.data }, revalidate: 60 };
   } catch (error) {
     return { notFound: true };
