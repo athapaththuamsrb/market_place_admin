@@ -92,7 +92,7 @@ const Charts: NextPage = (props) => {
   useEffect(() => {
     setTimeout(async () => {
       await axios
-        .get("../api/getCounts")
+        .get("/api/getCounts")
         .then((res) => {
           setUserData({
             labels: res.data.data[0].map((data: CountData) => data.status),

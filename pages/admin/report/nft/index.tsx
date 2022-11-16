@@ -135,7 +135,7 @@ const ViewReportedNFTs: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("../../../api/getReports")
+        .get("/api/getReports")
         .then((res) => {
           setNFTs(
             res.data.data.filter(
@@ -163,7 +163,7 @@ const ViewReportedNFTs: NextPage = (props) => {
       const nft: Report = nfts.find((nft) => nft.id === id)!;
       setTimeout(() => {
         axios
-          .post("../../api/setBlock", {
+          .post("/api/setBlock", {
             data: {
               id: nft.reportedId,
             },
@@ -193,7 +193,7 @@ const ViewReportedNFTs: NextPage = (props) => {
       const nft: Report = nfts.find((nft) => nft.id === id)!;
       setTimeout(() => {
         axios
-          .post("../../api/setBlock", {
+          .post("/api/setBlock", {
             data: {
               id: nft.reportedId,
             },

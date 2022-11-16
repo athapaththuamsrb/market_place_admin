@@ -141,7 +141,7 @@ const ViewAdmins: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("../api/getUsers")
+        .get("/api/getUsers")
         .then((res) => {
           setUsers(res.data.data);
           setAdmins(
@@ -173,7 +173,7 @@ const ViewAdmins: NextPage = (props) => {
       setTimeout(() => {
         axios
           // .put(`http://localhost:8000/users/${user.id}`, user)
-          .post("../../api/deleteAdmin", {
+          .post("/api/deleteAdmin", {
             data: {
               id: user.id,
             },

@@ -136,7 +136,7 @@ const ReportedUsers: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("../../../api/getReports")
+        .get("/api/getReports")
         .then((res) => {
           setRows(
             res.data.data.filter(
@@ -164,7 +164,7 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("../../api/setBlock", {
+          .post("/api/setBlock", {
             data: {
               id: user.reportedId,
             },
@@ -194,7 +194,7 @@ const ReportedUsers: NextPage = (props) => {
       const user: Report = rows.find((user) => user.id === id)!;
       setTimeout(() => {
         axios
-          .post("../../api/setBlock", {
+          .post("/api/setBlock", {
             data: {
               id: user.reportedId,
             },

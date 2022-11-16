@@ -137,7 +137,7 @@ const ViewReportedCollections: NextPage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       axios
-        .get("../../../api/getReports")
+        .get("/api/getReports")
         .then((res) => {
           console.log(res);
           setCollections(
@@ -169,7 +169,7 @@ const ViewReportedCollections: NextPage = (props) => {
       setTimeout(() => {
         collection;
         axios
-          .post("../../api/setBlock", {
+          .post("/api/setBlock", {
             data: {
               id: collection.reportedId,
             },
@@ -201,7 +201,7 @@ const ViewReportedCollections: NextPage = (props) => {
       )!;
       setTimeout(() => {
         axios
-          .post("../../api/setBlock", {
+          .post("/api/setBlock", {
             data: {
               id: collection.reportedId,
             },
