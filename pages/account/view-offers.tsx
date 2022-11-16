@@ -25,7 +25,6 @@ import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import MarketplaceAbi from "../../contractsData/Marketplace.json";
 import { ethers } from "ethers";
 import { useIsMounted } from "../../components/hooks";
-import api from "../../lib/api";
 import authService from "../../services/auth.service";
 import { useGetMyOffers } from "../../components/hooks/useHook";
 import Title from "../../components/ui/Title";

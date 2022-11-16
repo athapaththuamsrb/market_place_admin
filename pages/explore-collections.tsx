@@ -2,11 +2,11 @@ import * as React from "react";
 import Title from "../components/ui/Title";
 import CategoryNav from "../components/ui/CategoryNav";
 import { Collection_Card } from "../src/interfaces";
-import api from "./../lib/api";
 import { Box } from "@mui/system";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useIsMounted } from "../components/hooks";
 import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
+import axios from "axios";
 interface ExploreProps {
   collectionList: Collection_Card[];
 }

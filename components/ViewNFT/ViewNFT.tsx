@@ -16,7 +16,6 @@ import { useSigner, useContract, useAccount, useConnect } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import MarketplaceAbi from "../../contractsData/Marketplace.json";
 import { ethers } from "ethers";
-import api from "../../lib/api";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useRouter } from "next/router";
 import ModalPopUp from "../Popup/Modal";
@@ -52,6 +51,7 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import CopyToClipboard from "react-copy-to-clipboard";
 import authService from "../../services/auth.service";
+import axios from "axios";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;

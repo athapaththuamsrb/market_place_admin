@@ -5,8 +5,8 @@ import type {
   GetStaticPaths,
   InferGetStaticPropsType,
 } from "next";
-import api from "../../../../../lib/api";
 import { NFT_load } from "../../../../../src/interfaces";
+import axios from "axios";
 import { _TypedDataEncoder } from "ethers/lib/utils";
 import { useIsMounted } from "../../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";

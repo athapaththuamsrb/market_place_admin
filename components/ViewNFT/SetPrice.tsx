@@ -22,7 +22,6 @@ import FurtherDetails from "./FurtherDetails";
 import { useSigner, useAccount, useConnect } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import { ethers } from "ethers";
-import api from "../../lib/api";
 import { useRouter } from "next/router";
 import { useFormik, Field } from "formik";
 import * as yup from "yup";

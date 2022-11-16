@@ -4,12 +4,11 @@ import type {
   NextPage,
   InferGetStaticPropsType,
 } from "next";
-import api from "../../../../../lib/api";
+import axios from "axios";
 import { NFT_load } from "../../../../../src/interfaces";
 import SetPrice from "../../../../../components/ViewNFT/SetPrice";
 import { useAccount } from "wagmi";
-import { Typography } from "@mui/material/";
-import Link from "@mui/material/Link";
+import { Typography, Link } from "@mui/material";
 import { useIsMounted } from "../../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box } from "@mui/system";

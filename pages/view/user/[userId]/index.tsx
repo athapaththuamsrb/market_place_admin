@@ -28,7 +28,7 @@ import { useAccount, useBalance } from "wagmi";
 import { useIsMounted } from "../../../../components/hooks";
 import Connect from "../../../../components/Login/Connect";
 import Image from "next/image";
-import api from "../../../../lib/api";
+import axios from "axios";
 import UserTabBar from "../../../../components/ui/User/UserTabBar";
 import { Collection_Card, NFT_Card, Profile } from "../../../../src/interfaces";
 import { props } from "cypress/types/bluebird";
@@ -46,12 +46,12 @@ interface UserProfileProps {
   userId: string;
 }
 const UserProfile: NextPage<UserProfileProps> = ({
-          collectedNFTCards,
-          createdNFTCards,
-          collectionCards,
-          userProfile,
-          userId,
-        }: InferGetStaticPropsType<typeof getStaticProps>) => {
+      collectedNFTCards,
+      createdNFTCards,
+      collectionCards,
+      userProfile,
+      userId,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

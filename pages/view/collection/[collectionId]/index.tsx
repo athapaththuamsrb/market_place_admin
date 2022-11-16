@@ -25,7 +25,7 @@ import NFTCardGrid from "../../../../components/ui/NFT/NFTCardGrid";
 import NFTCard from "../../../../components/ui/NFT/NFTCard";
 import { useIsMounted } from "../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
-import api from "../../../../lib/api";
+import axios from "axios";
 import { Collection_Profile, NFT_Card } from "../../../../src/interfaces";
 import Image from "next/image";
 import Paper from "@mui/material/Paper";
