@@ -11,6 +11,7 @@ import { _TypedDataEncoder } from "ethers/lib/utils";
 import { useIsMounted } from "../../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box } from "@mui/system";
+import api from "../../../../../lib/api";
 interface ViewProps {
   nft: NFT_load;
   saleNum: number;
@@ -44,7 +45,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   try {
-    const { data } = await axios.post("/api/getNFT", {
+    const { data } = await api.post("/getNFT", {
       data: { id: params?.nftId, ownerId: params?.ownerId },
     });
     if (data.data.nft.length === 0) {

@@ -36,6 +36,7 @@ import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import CopyToClipboard from "react-copy-to-clipboard";
 import ShareIcon from "@mui/icons-material/Share";
+import api from "../../../../lib/api";
 
 interface CollectionProps {
   nftList: NFT_Card[];
@@ -269,7 +270,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
     const { params } = context;
-    const { data } = await axios.post("/api/getCollection", {
+    const { data } = await api.post("/getCollection", {
       data: { id: params?.collectionId },
     });
 

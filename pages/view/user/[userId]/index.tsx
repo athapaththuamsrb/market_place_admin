@@ -37,6 +37,7 @@ import ReportPopup from "../../../../components/Popup/ReportPopup";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FlagIcon from "@mui/icons-material/Flag";
 import CopyToClipboard from "react-copy-to-clipboard";
+import api from "../../../../lib/api";
 
 interface UserProfileProps {
   collectedNFTCards: Collection_Card[];
@@ -46,12 +47,12 @@ interface UserProfileProps {
   userId: string;
 }
 const UserProfile: NextPage<UserProfileProps> = ({
-          collectedNFTCards,
-          createdNFTCards,
-          collectionCards,
-          userProfile,
-          userId,
-        }: InferGetStaticPropsType<typeof getStaticProps>) => {
+      collectedNFTCards,
+      createdNFTCards,
+      collectionCards,
+      userProfile,
+      userId,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -230,7 +231,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   try {
-    const { data } = await axios.post("/api/getUser", {
+    const { data } = await api.post("/getUser", {
       data: { userId: params?.userId },
     });
     if (!data.success) {

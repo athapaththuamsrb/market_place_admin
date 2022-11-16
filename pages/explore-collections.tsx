@@ -7,6 +7,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useIsMounted } from "../components/hooks";
 import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
 import axios from "axios";
+import api from "../lib/api";
 interface ExploreProps {
   collectionList: Collection_Card[];
 }
@@ -28,7 +29,7 @@ const Home: NextPage<ExploreProps> = ({
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const { data } = await axios.get("/api/getListCollection");
+    const { data } = await api.get("/getListCollection");
     return { props: { collectionList: data.data }, revalidate: 60 };
   } catch (error) {
     return { notFound: true };
