@@ -44,10 +44,10 @@ interface CollectionProps {
   collectionId: string;
 }
 const Collection: NextPage<CollectionProps> = ({
-      nftList,
-      collectionData,
-      collectionId,
-    }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  nftList,
+  collectionData,
+  collectionId,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -238,7 +238,6 @@ const Collection: NextPage<CollectionProps> = ({
           <Box sx={{ marginBottom: "1%" }}>
             {nftList.length === 0 ? (
               <Box>
-                <Divider sx={{ mt: 3 }} />
                 <Typography
                   color="black"
                   align="center"

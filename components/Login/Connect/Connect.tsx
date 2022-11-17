@@ -32,7 +32,7 @@ export default function Connect() {
         sx={{
           flexGrow: 1,
           textAlign: "center",
-          p: 5,
+          p: 1,
         }}
       >
         Connect with your Metamask wallet. <br />
@@ -48,7 +48,7 @@ export default function Connect() {
             sx={{
               flexGrow: 1,
               textAlign: "center",
-              p: 5,
+              p: 1,
             }}
           >
             {isConnected && activeConnector && (
@@ -71,6 +71,7 @@ export default function Connect() {
                     backgroundColor: "#fafafa",
                     borderRadius: "16px",
                     borderColor: "primary.main",
+                    marginY: "30px",
                   }}
                 >
                   <ListItemIcon>
@@ -91,10 +92,11 @@ export default function Connect() {
             variant="h6"
             gutterBottom
             component="div"
+            color="red"
             sx={{
               flexGrow: 1,
               textAlign: "center",
-              p: 5,
+              p: 3,
             }}
           >
             {error && <div>{error.message}</div>}

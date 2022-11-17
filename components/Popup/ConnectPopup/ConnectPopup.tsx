@@ -49,23 +49,39 @@ const ConnectPopup: FC<ConnectPopupProps> = ({
     }
   }, [activeConnector, isConnected, setOpenConnect]);
   return (
-    <Dialog open={openConnect}>
+    <Dialog open={openConnect} sx={{borderRadius:2}}>
       <DialogTitle
         sx={{
           backgroundColor: "#CA82FF",
           color: "white",
+          boxShadow: 2,
+          borderRadius: 0,
         }}
       >
         <div style={{ display: "flex" }}>
-          <Title firstWord="Connect your wallet" secondWord="" />
+          <Typography
+            variant="h5"
+            component="div"
+            style={{
+              flexGrow: 1,
+              fontWeight: 600,
+              marginTop: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            Connect your wallet
+          </Typography>
+          {/* <Title firstWord="Connect your wallet" secondWord="" /> */}
           <IconButton
             onClick={() => {
               setOpenConnect(false);
             }}
+            sx={{height:"30px", width:"30px", marginBottom:"20px", marginLeft:"20px", background:"#CA82df"}}
           >
             <CloseIcon
               sx={{
                 color: "white",
+                height:"20px"
               }}
             />
           </IconButton>
@@ -86,6 +102,7 @@ const ConnectPopup: FC<ConnectPopupProps> = ({
                 sx={{
                   backgroundColor: "#fafafa",
                   borderRadius: "16px",
+                  marginY:"15px",
                   borderColor: "primary.main",
                 }}
               >
@@ -103,7 +120,8 @@ const ConnectPopup: FC<ConnectPopupProps> = ({
           sx={{
             flexGrow: 1,
             textAlign: "center",
-            p: 5,
+            p: 1,
+            color:"red"
           }}
         >
           {error && <div>{error.message}</div>}

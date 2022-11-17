@@ -4,6 +4,10 @@ import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import { Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -21,35 +25,65 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+// const SearchIconWrapper = styled("div")(({ theme }) => ({
+//   padding: theme.spacing(0, 2),
+//   height: "100%",
+//   position: "absolute",
+//   pointerEvents: "none",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+// }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  borderColor: "red",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+// const StyledInputBase = styled(InputBase)(({ theme }) => ({
+//   borderColor: "red",
+//   "& .MuiInputBase-input": {
+//     padding: theme.spacing(1, 1, 1, 0),
+//     // vertical padding + font size from searchIcon
+//     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+//     transition: theme.transitions.create("width"),
+//     width: "100%",
+//     [theme.breakpoints.up("md")]: {
+//       width: "20ch",
+//     },
+//   },
+// }));
 export default function SearchBar() {
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState("");
+  const [result, setResult] = useState("");
+  const router = useRouter();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  const getCollection = async () => {
+    if (search !== "") {
+      try {
+        const { data } = await axios.post("/api/getSearchItem", {
+          data: {
+            query: search,
+          },
+        });
+        const id: string = data.data;
+        if (id !== "") {
+          router.push(`${router.basePath}/view/collection/${id}`);
+        }
+      } catch (error) {
+        console.log("Search Item Error!");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCollection();
+  }, [search]);
+
   return (
     <Search>
       <TextField
-        variant="outlined"
+        hiddenLabel
+        variant="filled"
+        size="small"
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -57,12 +91,8 @@ export default function SearchBar() {
             </InputAdornment>
           ),
         }}
-        // onKeyDown={(e) => {
-        //   if (e.key === "Enter") {
-        //     setSearch(e.target.value);
-        //   }
-        // }}
-        placeholder="Search items, collections, and accounts"
+        onChange={handleChange}
+        placeholder="Search collections here..."
       />
     </Search>
   );

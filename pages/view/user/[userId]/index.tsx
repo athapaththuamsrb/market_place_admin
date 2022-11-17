@@ -22,6 +22,7 @@ import {
   Grid,
   Button,
   Tooltip,
+  CardMedia,
 } from "@mui/material";
 import theme from "../../../../src/theme";
 import { useAccount, useBalance } from "wagmi";
@@ -95,11 +96,22 @@ const UserProfile: NextPage<UserProfileProps> = ({
     <Box>
       {userProfile.bannerImage && (
         <ImageListItem>
-          <img
+          <Card sx={{ display: "flex", boxShadow: 0 }}>
+            <CardMedia
+              component="img"
+              image={userProfile.bannerImage}
+              alt="Banner image"
+              sx={{
+                height: 400,
+                width: 1850,
+              }}
+            />
+          </Card>
+          {/* <img
             {...srcset(userProfile.bannerImage, 250, 200, 3, 9)}
             alt="banner"
             loading="lazy"
-          />
+          /> */}
 
           <Stack direction="row" spacing={2}>
             <Avatar

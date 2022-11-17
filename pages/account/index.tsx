@@ -11,6 +11,8 @@ import {
   Divider,
   LinearProgress,
   Tooltip,
+  Card,
+  CardMedia,
 } from "@mui/material";
 import { useAccount, useConnect, useBalance } from "wagmi";
 import {
@@ -65,11 +67,22 @@ const MyNFTs: NextPage = (props) => {
     <Box>
       {profile?.bannerImage && (
         <ImageListItem>
-          <img
+          {/* <img
             {...srcset(profile?.bannerImage, 250, 200, 3, 9)}
             alt="banner"
             loading="lazy"
-          />
+          /> */}
+          <Card sx={{ display: "flex", boxShadow: 0 }}>
+            <CardMedia
+              component="img"
+              image={profile?.bannerImage}
+              alt="Banner image"
+              sx={{
+                height: 400,
+                width: 1850,
+              }}
+            />
+          </Card>
 
           <Stack direction="row" spacing={2}>
             <Avatar
