@@ -49,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             fromID: "",
             to: creator?.userName!,
             toID: creator?.id!,
-            date: nft.timestamp.toLocaleDateString(),
+            date: nft.timestamp.toLocaleString(),
           };
           activityList.push(act);
           for await (const activity of activities) {
@@ -65,6 +65,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               const buyer = await prisma.user.findFirst({
                 where: { id: buyerOwner?.userId },
               });
+              const endDate = new Date(Number(activity.buyingTimestamp!));
               act1 = {
                 id: activity.id,
                 event: "Sale",
@@ -73,7 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 fromID: seller?.id!,
                 to: buyer?.userName!,
                 toID: buyer?.id!,
-                date: activity.buyingTimestamp!.toLocaleString(),
+                date: endDate.toLocaleString(),
               };
               activityList.push(act1);
               act2 = {
@@ -84,7 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 fromID: seller?.id!,
                 to: buyer?.userName!,
                 toID: buyer?.id!,
-                date: activity.buyingTimestamp!.toLocaleString()!,
+                date: endDate.toLocaleString(),
               };
               activityList.push(act2);
             } else {
@@ -96,7 +97,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 fromID: seller?.id!,
                 to: "",
                 toID: "",
-                date: activity.listingTimestamp.toLocaleDateString()!,
+                date: activity.listingTimestamp.toLocaleString()!,
               };
               activityList.push(act1);
             }
@@ -116,7 +117,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             fromID: "",
             to: creator?.userName!,
             toID: creator?.id!,
-            date: nft.timestamp.toLocaleDateString(),
+            date: nft.timestamp.toLocaleString(),
           };
           activityList.push(act);
         }

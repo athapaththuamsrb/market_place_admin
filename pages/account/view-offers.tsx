@@ -26,9 +26,13 @@ import MarketplaceAbi from "../../contractsData/Marketplace.json";
 import { ethers } from "ethers";
 import { useIsMounted } from "../../components/hooks";
 import authService from "../../services/auth.service";
-import { useGetMyOffers } from "../../components/hooks/useHook";
+import {
+  useGetETHExchangeRate,
+  useGetMyOffers,
+} from "../../components/hooks/useHook";
 import Title from "../../components/ui/Title";
 import theme from "../../src/theme";
+import Countdown from "react-countdown";
 
 const BidOffers: NextPage = (props) => {
   const { data: account } = useAccount();
@@ -42,6 +46,7 @@ const BidOffers: NextPage = (props) => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(null);
   const { activeConnector } = useConnect();
+  const { ethExRate } = useGetETHExchangeRate();
 
   function getNFT(params: GridRenderCellParams) {
     return [
@@ -53,6 +58,14 @@ const BidOffers: NextPage = (props) => {
 
   function isRejected(params: GridRenderCellParams) {
     return params.row.state === "REJECTED";
+  }
+
+  function getUSDPrice(params: GridRenderCellParams) {
+    return `${Number(params.row.price) * ethExRate}`;
+  }
+
+  function getExpiration(params: GridRenderCellParams) {
+    return [`${params.row.expiration}`];
   }
 
   const columns = [
@@ -71,9 +84,18 @@ const BidOffers: NextPage = (props) => {
     },
     {
       field: "price",
-      headerName: "Price",
+      headerName: "Price (ETH)",
       type: "string",
       width: 150,
+    },
+    {
+      field: "actions3",
+      headerName: "Price (USD)",
+      //type: "string",
+      width: 150,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>{getUSDPrice(params).substring(0, 10)}</div>
+      ),
     },
     {
       field: "state",
@@ -82,10 +104,15 @@ const BidOffers: NextPage = (props) => {
       width: 150,
     },
     {
-      field: "expiration",
+      field: "actions2",
       headerName: "Expiration",
-      type: "string",
+      //type: "string",
       width: 200,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>
+          <Countdown date={Number(getExpiration(params)[0])} />
+        </div>
+      ),
     },
     {
       field: "actions",

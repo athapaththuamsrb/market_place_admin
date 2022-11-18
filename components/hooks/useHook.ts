@@ -184,3 +184,19 @@ export const useGetMyOffers = () => {
   }, [account?.address]);
   return { offers, isPendingOffers, errorOffers };
 };
+
+export const useGetETHExchangeRate = () => {
+  const { data: account } = useAccount();
+  const [ethExRate, setEthExRate] = useState(0);
+  if (account?.address !== undefined) {
+    useEffect(() => {
+      axios
+        .get(`https://api.coinbase.com/v2/exchange-rates?currency=ETH`)
+        .then((res) => {
+          setEthExRate(parseFloat(res.data.data.rates.USD));
+        })
+        .catch((error) => {});
+    }, [ethExRate]);
+  }
+  return { ethExRate };
+};

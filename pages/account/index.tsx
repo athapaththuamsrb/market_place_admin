@@ -73,21 +73,27 @@ const MyNFTs: NextPage = (props) => {
             alt="banner"
             loading="lazy"
           /> */}
-          <Card sx={{ display: "flex", boxShadow: 0 }}>
-            <CardMedia
-              component="img"
-              image={profile?.bannerImage}
-              alt="Banner image"
-              sx={{
-                [theme.breakpoints.up("md")]: {
-                  height: 350,
-                },
-                [theme.breakpoints.up("xs")]: {
-                  height: 200,
-                },
-              }}
-            />
-          </Card>
+           <Box sx={{ width: "100%", marginX: 0 }}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius:0 }}>
+                  <CardMedia
+                    component="img"
+                    image={profile?.bannerImage}
+                    alt="avatar"
+                    sx={{
+                      [theme.breakpoints.up("md")]: {
+                        height: 350,
+                      },
+                      [theme.breakpoints.up("xs")]: {
+                        height: 200,
+                      },
+                    }}
+                  />
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
 
           <Stack direction="row" spacing={2}>
             <Avatar

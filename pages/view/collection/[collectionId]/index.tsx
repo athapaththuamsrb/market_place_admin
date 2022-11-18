@@ -106,7 +106,28 @@ const Collection: NextPage<CollectionProps> = ({
             alt="banner"
             loading="lazy"
           /> */}
-          <Card sx={{ display: "flex", boxShadow: 0}}>
+          <Box sx={{ width: "100%", marginX: 0 }}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius:0 }}>
+                  <CardMedia
+                    component="img"
+                    image={collectionData.bannerImage}
+                    alt="avatar"
+                    sx={{
+                      [theme.breakpoints.up("md")]: {
+                        height: 350,
+                      },
+                      [theme.breakpoints.up("xs")]: {
+                        height: 200,
+                      },
+                    }}
+                  />
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+          {/* <Card sx={{ display: "flex", boxShadow: 0}}>
             <CardMedia
               component="img"
               image={collectionData.bannerImage}
@@ -122,7 +143,7 @@ const Collection: NextPage<CollectionProps> = ({
                 //width: 1530,
               }}
             />
-          </Card>
+          </Card> */}
 
           <Stack direction="row" spacing={2}>
             <Avatar

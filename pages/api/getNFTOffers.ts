@@ -37,9 +37,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               off = {
                 id: offer.id,
                 price: offer.price,
-                usd_price: offer.price,
                 floor_diff: "",
-                expiration: offer.timestamp.toLocaleDateString(),
+                expiration: offer.endDate.toString(),
                 from: user?.userName!,
                 fromID: offer.userId,
                 isExpired: offer.isExpired,

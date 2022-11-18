@@ -4,4 +4,6 @@ export {
   useGetMyProfile,
   useGetMyCollectionCard,
   useGetMyCollectionItem,
+  useGetMyOffers,
+  useGetETHExchangeRate,
 } from "./useHook";

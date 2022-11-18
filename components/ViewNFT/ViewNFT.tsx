@@ -9,6 +9,7 @@ import {
   Chip,
   Tooltip,
 } from "@mui/material";
+import Countdown, { zeroPad } from "react-countdown";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
@@ -43,7 +44,6 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import FlagIcon from "@mui/icons-material/Flag";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import Link from "@mui/material/Link";
 import theme from "../../src/theme";
@@ -52,6 +52,7 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import CopyToClipboard from "react-copy-to-clipboard";
 import authService from "../../services/auth.service";
 import axios from "axios";
+import { number } from "yup";
 
 interface ViewNFTProps {
   salesOrder: NFT_load;
@@ -91,6 +92,22 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openDecline, setOpenDecline] = useState(false);
 
+  // const renderer = ({
+  //   days,
+  //   hours,
+  //   minutes,
+  //   seconds,
+  // }: {
+  //   days: number;
+  //   hours: number;
+  //   minutes: number;
+  //   seconds: number;
+  // }) => (
+  //   <span>
+  //     {zeroPad(days)}:{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
+  //   </span>
+  // );
+
   const [copyURL, setCopyURL] = useState(
     "http://localhost:3000/view/nft/" +
       props.ownerID +
@@ -113,10 +130,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // const copy = () => {
-  //   console.log(window.location.href);
-  // };
 
   const setStateNFT = async (
     key: string,
@@ -210,17 +223,19 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
           id: props.salesOrder.id,
         },
       });
-      const arr2: Offer[] = data.data[0].reverse();
-      //if a payment in pending for an offer, set true
-      setIsPendingPayment(data.data[1]);
-      //if an offer is accepted by the owner
-      if (isPendingPayment === true) {
-        setPendingPaymentBuyer(data.data[2][0].walletAddress);
-        setPendingPaymentPrice(data.data[2][0].price);
-        setPendingPaymentOffer(data.data[2][0].id);
+      if (data.data.length !== 0) {
+        const arr2: Offer[] = data.data[0].reverse();
+        //if a payment in pending for an offer, set true
+        setIsPendingPayment(data.data[1]);
+        //if an offer is accepted by the owner
+        if (isPendingPayment === true) {
+          setPendingPaymentBuyer(data.data[2][0].walletAddress);
+          setPendingPaymentPrice(data.data[2][0].price);
+          setPendingPaymentOffer(data.data[2][0].id);
+        }
+        setOffers(arr2);
+        setIsPending(false);
       }
-      setOffers(arr2);
-      setIsPending(false);
     } catch (error) {
       console.log("Offer Loading error!");
       setIsPending(false);
@@ -406,6 +421,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                     textAlign={"right"}
                     display="flex"
                     justifyContent="space-evenly"
+                    marginBottom={2}
                   >
                     <Chip
                       label={`${props.salesOrder?.price} ETH`}
@@ -415,6 +431,33 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                       sx={{
                         //backgroundColor:"#e7e4e7",
                         //color:"black",
+                        fontSize: 20,
+                        height: "70px",
+                        minWidth: "60%",
+                        marginTop: "10px",
+                        boxShadow: "2",
+                      }}
+                    />
+                  </Box>
+
+                  <Typography variant="h4">Sale ends in :</Typography>
+                  <Box
+                    textAlign={"right"}
+                    display="flex"
+                    justifyContent="space-evenly"
+                  >
+                    <Chip
+                      label={
+                        <Countdown
+                          date={Number(props.salesOrder?.endDate)}
+                          //renderer={renderer}
+                        />
+                      }
+                      //color="primary"
+                      size="medium"
+                      variant="outlined"
+                      sx={{
+                        fontWeight: "400",
                         fontSize: 20,
                         height: "70px",
                         minWidth: "60%",
@@ -691,12 +734,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   </CardContent>
                 )}
               <CardActions disableSpacing>
-                <IconButton
-                  aria-label="add to favorites"
-                  sx={{ color: "black" }}
-                >
-                  <FavoriteIcon />
-                </IconButton>{" "}
                 <CopyToClipboard
                   text={copyURL}
                   onCopy={() => setIsURLCopied(true)}

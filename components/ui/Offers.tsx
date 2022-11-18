@@ -20,6 +20,8 @@ import axios from "axios";
 import { useSignTypedData } from "wagmi";
 import MarketplaceAddress from "../../contractsData/Marketplace-address.json";
 import { ethers, Signature } from "ethers";
+import Countdown from "react-countdown";
+import { useGetETHExchangeRate } from "../hooks/useHook";
 type OffersProps = {
   setOfferPrice: (price: string) => void;
   salesOrder: NFT_load;
@@ -51,6 +53,14 @@ const Offers: FC<OffersProps> = ({
     return [`${params.row.fromID}`, `${params.row.from}`];
   }
 
+  function getExpiration(params: GridRenderCellParams) {
+    return [`${params.row.expiration}`];
+  }
+
+  function getUSDPrice(params: GridRenderCellParams) {
+    return `${Number(params.row.price) * ethExRate}`;
+  }
+
   function isRejected(params: GridRenderCellParams) {
     return params.row.state === "REJECTED";
   }
@@ -58,9 +68,18 @@ const Offers: FC<OffersProps> = ({
   const ownerColumns = [
     {
       field: "price",
-      headerName: "Price",
+      headerName: "Price (ETH)",
       type: "string",
       width: 150,
+    },
+    {
+      field: "actions3",
+      headerName: "Price (USD)",
+      //type: "string",
+      width: 150,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>{getUSDPrice(params).substring(0, 10)}</div>
+      ),
     },
     {
       field: "state",
@@ -71,8 +90,13 @@ const Offers: FC<OffersProps> = ({
     {
       field: "expiration",
       headerName: "Expiration",
-      type: "string",
+      //type: "string",
       width: 150,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>
+          <Countdown date={Number(getExpiration(params)[0])} />
+        </div>
+      ),
     },
     {
       field: "actions1",
@@ -153,9 +177,18 @@ const Offers: FC<OffersProps> = ({
   const columns: GridColDef[] = [
     {
       field: "price",
-      headerName: "Price",
+      headerName: "Price (ETH)",
       type: "string",
       width: 200,
+    },
+    {
+      field: "actions3",
+      headerName: "Price (USD)",
+      //type: "string",
+      width: 200,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>{getUSDPrice(params).substring(0, 10)}</div>
+      ),
     },
     {
       field: "state",
@@ -164,22 +197,21 @@ const Offers: FC<OffersProps> = ({
       width: 150,
     },
     {
-      field: "usd_price",
-      headerName: "USD Price",
-      type: "string",
-      width: 200,
-    },
-    {
-      field: "expiration",
+      field: "actions2",
       headerName: "Expiration",
-      type: "string",
+      //type: "string",
       width: 200,
+      renderCell: (params: GridRenderCellParams<String>) => (
+        <div>
+          <Countdown date={Number(getExpiration(params)[0])} />
+        </div>
+      ),
     },
     {
       field: "actions1",
       headerName: "From",
       //type: "string",
-      width: 150,
+      width: 200,
       renderCell: (params: GridRenderCellParams<String>) => (
         <div>
           {getFromID(params)[0] !== "" ? (
@@ -219,6 +251,7 @@ const Offers: FC<OffersProps> = ({
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
   const { data: account } = useAccount();
+  const { ethExRate } = useGetETHExchangeRate();
 
   const handleClickOpenAccept = (id: string) => {
     setOpenAccept(true);

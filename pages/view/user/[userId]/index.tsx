@@ -96,21 +96,27 @@ const UserProfile: NextPage<UserProfileProps> = ({
     <Box>
       {userProfile.bannerImage && (
         <ImageListItem>
-          <Card sx={{ display: "flex", boxShadow: 0 }}>
-            <CardMedia
-              component="img"
-              image={userProfile.bannerImage}
-              alt="Banner image"
-              sx={{
-                [theme.breakpoints.up("md")]: {
-                  height: 350,
-                },
-                [theme.breakpoints.up("xs")]: {
-                  height: 200,
-                },
-              }}
-            />
-          </Card>
+          <Box sx={{ width: "100%", marginX: 0 }}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius:0 }}>
+                  <CardMedia
+                    component="img"
+                    image={userProfile.bannerImage}
+                    alt="avatar"
+                    sx={{
+                      [theme.breakpoints.up("md")]: {
+                        height: 350,
+                      },
+                      [theme.breakpoints.up("xs")]: {
+                        height: 200,
+                      },
+                    }}
+                  />
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
           {/* <img
             {...srcset(userProfile.bannerImage, 250, 200, 3, 9)}
             alt="banner"

@@ -75,7 +75,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                       nftName: ipfsData.data.name,
                       nftUrl: nft.isMinted ? nft.uri.split("/")[4] : id,
                       owner: nftOwner?.walletAddress,
-                      expiration: offer.timestamp.toLocaleDateString(),
+                      expiration: offer.endDate.toString(),
                       isExpired: offer.isExpired,
                       state:
                         offer.state === "PENDDING" ? "PENDING" : offer.state,

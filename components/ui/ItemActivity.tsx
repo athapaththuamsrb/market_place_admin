@@ -71,7 +71,7 @@ const ItemActivity: FC<ActivityProps> = ({ activity }) => {
       field: "date",
       headerName: "Date",
       type: "string",
-      width: 100,
+      width: 200,
     },
   ];
   return (

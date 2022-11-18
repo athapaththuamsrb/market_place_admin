@@ -180,7 +180,6 @@ export type Activity = {
 export type Offer = {
   id: string;
   price: string;
-  usd_price: string;
   floor_diff: string;
   expiration: string;
   from: string;
