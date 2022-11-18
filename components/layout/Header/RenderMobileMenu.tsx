@@ -17,7 +17,7 @@ type RenderMobileMenuProps = {
   disconnect: any;
   handleClose: () => void;
 };
-const renderMobileMenu: FC<RenderMobileMenuProps> = ({
+const RenderMobileMenu: FC<RenderMobileMenuProps> = ({
   isMobileMenuOpen,
   mobileMenuId,
   isMounted,
@@ -86,12 +86,20 @@ const renderMobileMenu: FC<RenderMobileMenuProps> = ({
               </Link>
             </MenuItem>
             <MenuItem onClick={handleMobileMenuClose}>
-              <Link href={"/account/collection"} underline="none" variant="button">
+              <Link
+                href={"/account/collection"}
+                underline="none"
+                variant="button"
+              >
                 My Collection
               </Link>
             </MenuItem>
             <MenuItem onClick={handleMobileMenuClose}>
-              <Link href={"/../account/view-offers"} underline="none" variant="button">
+              <Link
+                href={"/../account/view-offers"}
+                underline="none"
+                variant="button"
+              >
                 My Offers
               </Link>
             </MenuItem>
@@ -115,4 +123,4 @@ const renderMobileMenu: FC<RenderMobileMenuProps> = ({
     </Box>
   );
 };
-export default renderMobileMenu;
+export default RenderMobileMenu;
