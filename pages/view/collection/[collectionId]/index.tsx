@@ -32,7 +32,7 @@ import Paper from "@mui/material/Paper";
 import ReportPopup from "../../../../components/Popup/ReportPopup";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FlagIcon from "@mui/icons-material/Flag";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import CopyToClipboard from "react-copy-to-clipboard";
 import ShareIcon from "@mui/icons-material/Share";
@@ -58,6 +58,17 @@ const Collection: NextPage<CollectionProps> = ({
   const [copyURL, setCopyURL] = useState(
     "http://localhost:3000/view/collection/" + collectionData.id
   );
+  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setHeight((window.innerHeight * 40) / 100);
+      setWidth(window.innerWidth);
+      //console.log(window.innerHeight,window.innerWidth)
+    });
+  }, []);
+
   const nftEls = nftList.map((nft: NFT_Card) => {
     return (
       <Grid key={nft.id} item xs={12}>
@@ -106,20 +117,22 @@ const Collection: NextPage<CollectionProps> = ({
             alt="banner"
             loading="lazy"
           /> */}
-          <Card sx={{ display: "flex", boxShadow: 0}}>
+          <Card sx={{ display: "flex", boxShadow: 0 }}>
             <CardMedia
               component="img"
               image={collectionData.bannerImage}
               alt="Banner image"
               sx={{
-                [theme.breakpoints.up("md")]: {
+                /*[theme.breakpoints.up("md")]: {
                   height: 350,
                   //width: "100%",
                 },
                 [theme.breakpoints.up("xs")]: {
                   height: 200,
                 },
-                //width: 1530,
+                //width: 1530,*/
+                height: height,
+                width: width,
               }}
             />
           </Card>
