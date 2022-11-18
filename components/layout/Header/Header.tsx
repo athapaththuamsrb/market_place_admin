@@ -4,6 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import { useTheme } from "@mui/material/styles";
@@ -183,7 +184,7 @@ const Navbar: FC = () => {
                     badgeContent={offers.length}
                     max={99}
                   >
-                    <MailIcon color="action" />
+                    <NotificationsIcon color="action" />
                   </Badge>
                 </Button>
                 <Button
@@ -193,7 +194,7 @@ const Navbar: FC = () => {
                   aria-expanded={open ? "true" : undefined}
                   onClick={handleClick}
                 >
-                  <AccountCircleOutlinedIcon />
+                  <AccountCircleOutlinedIcon color="action" />
                 </Button>
                 <Menu
                   id="demo-positioned-menu"
@@ -213,13 +214,17 @@ const Navbar: FC = () => {
                 >
                   <MenuItem onClick={handleClose}>
                     <AccountCircleOutlinedIcon sx={{ marginRight: 1 }} />
-                    <Link href={"/account"} underline="none">
+                    <Link href={"/account"} underline="none" variant="button">
                       Profile
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <CollectionsBookmarkIcon sx={{ marginRight: 1 }} />
-                    <Link href={"/account/collection"} underline="none">
+                    <Link
+                      href={"/account/collection"}
+                      underline="none"
+                      variant="button"
+                    >
                       My Collection
                     </Link>
                   </MenuItem>
@@ -230,7 +235,9 @@ const Navbar: FC = () => {
                     }}
                   >
                     <Logout sx={{ marginRight: 1 }} />
-                    Disconnect
+                    <Link underline="none" variant="button">
+                      Disconnect
+                    </Link>
                   </MenuItem>
                 </Menu>
               </div>

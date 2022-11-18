@@ -27,6 +27,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import theme from "../../src/theme";
 const MyNFTs: NextPage = (props) => {
   const isMounted = useIsMounted();
   const { activeConnector, connect, connectors } = useConnect();
@@ -78,8 +79,12 @@ const MyNFTs: NextPage = (props) => {
               image={profile?.bannerImage}
               alt="Banner image"
               sx={{
-                height: 400,
-                width: 1850,
+                [theme.breakpoints.up("md")]: {
+                  height: 350,
+                },
+                [theme.breakpoints.up("xs")]: {
+                  height: 200,
+                },
               }}
             />
           </Card>
@@ -88,7 +93,23 @@ const MyNFTs: NextPage = (props) => {
             <Avatar
               alt="Remy Sharp"
               src={profile?.profileImage}
-              sx={{ width: 150, height: 150, boxShadow: 3, mt: "-7%", ml: 10 }}
+              sx={{
+                width: 150,
+                height: 150,
+                boxShadow: 3,
+                [theme.breakpoints.up("md")]: {
+                  mt: "-7%",
+                  ml: 10,
+                },
+                [theme.breakpoints.up("sm")]: {
+                  mt: "-10%",
+                  ml: 10,
+                },
+                [theme.breakpoints.up("xs")]: {
+                  mt: "-25%",
+                  mx: "auto",
+                },
+              }}
             />
           </Stack>
         </ImageListItem>

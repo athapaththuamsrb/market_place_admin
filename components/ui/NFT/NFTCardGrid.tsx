@@ -8,7 +8,7 @@ interface NFTGridProps {
 const NFTGrid: FC<NFTGridProps> = ({ nftCardEls }) => {
   return (
     <div>
-      <Box sx={{ width: "90%", marginX: "auto", marginBottom: "72px" }}>
+      <Box sx={{ width: "100%", marginX: "auto", marginBottom: "72px" }}>
         <Grid
           container
           spacing={1}

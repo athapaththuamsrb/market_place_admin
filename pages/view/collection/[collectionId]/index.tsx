@@ -37,6 +37,7 @@ import { useAccount } from "wagmi";
 import CopyToClipboard from "react-copy-to-clipboard";
 import ShareIcon from "@mui/icons-material/Share";
 import api from "../../../../lib/api";
+import theme from "../../../../src/theme";
 
 interface CollectionProps {
   nftList: NFT_Card[];
@@ -105,14 +106,20 @@ const Collection: NextPage<CollectionProps> = ({
             alt="banner"
             loading="lazy"
           /> */}
-          <Card sx={{ display: "flex", boxShadow: 0 }}>
+          <Card sx={{ display: "flex", boxShadow: 0}}>
             <CardMedia
               component="img"
               image={collectionData.bannerImage}
               alt="Banner image"
               sx={{
-                height: 400,
-                width: 1850,
+                [theme.breakpoints.up("md")]: {
+                  height: 350,
+                  //width: "100%",
+                },
+                [theme.breakpoints.up("xs")]: {
+                  height: 200,
+                },
+                //width: 1530,
               }}
             />
           </Card>
@@ -121,7 +128,23 @@ const Collection: NextPage<CollectionProps> = ({
             <Avatar
               alt="Remy Sharp"
               src={collectionData?.logoImage}
-              sx={{ width: 150, height: 150, boxShadow: 3, mt: "-5%", ml: 10 }}
+              sx={{
+                width: 150,
+                height: 150,
+                boxShadow: 3,
+                [theme.breakpoints.up("md")]: {
+                  mt: "-5%",
+                  ml: 10,
+                },
+                [theme.breakpoints.up("sm")]: {
+                  mt: "-10%",
+                  ml: 10,
+                },
+                [theme.breakpoints.up("xs")]: {
+                  mt: "-15%",
+                  mx: "auto",
+                },
+              }}
               variant="rounded"
             />
           </Stack>
@@ -242,7 +265,7 @@ const Collection: NextPage<CollectionProps> = ({
                   color="black"
                   align="center"
                   variant="h2"
-                  sx={{ mt: 3 }}
+                  sx={{ mt: 3, mb: 10 }}
                 >
                   No NFTs Exists!
                 </Typography>

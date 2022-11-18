@@ -102,8 +102,12 @@ const UserProfile: NextPage<UserProfileProps> = ({
               image={userProfile.bannerImage}
               alt="Banner image"
               sx={{
-                height: 400,
-                width: 1850,
+                [theme.breakpoints.up("md")]: {
+                  height: 350,
+                },
+                [theme.breakpoints.up("xs")]: {
+                  height: 200,
+                },
               }}
             />
           </Card>
@@ -117,7 +121,23 @@ const UserProfile: NextPage<UserProfileProps> = ({
             <Avatar
               alt="Remy Sharp"
               src={userProfile.profileImage}
-              sx={{ width: 150, height: 150, boxShadow: 3, mt: "-7%", ml: 10 }}
+              sx={{
+                width: 150,
+                height: 150,
+                boxShadow: 3,
+                [theme.breakpoints.up("md")]: {
+                  mt: "-7%",
+                  ml: 10,
+                },
+                [theme.breakpoints.up("sm")]: {
+                  mt: "-10%",
+                  ml: 10,
+                },
+                [theme.breakpoints.up("xs")]: {
+                  mt: "-15%",
+                  mx: "auto",
+                },
+              }}
             />
           </Stack>
         </ImageListItem>
@@ -208,7 +228,7 @@ const UserProfile: NextPage<UserProfileProps> = ({
                     color="black"
                     align="center"
                     variant="h2"
-                    sx={{ mt: 3 }}
+                    sx={{ mt: 3, mb: 5 }}
                   >
                     No NFTs Exists!
                   </Typography>
