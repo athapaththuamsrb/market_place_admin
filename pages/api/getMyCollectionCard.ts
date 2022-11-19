@@ -41,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               });
             }
           }
-
+          await prisma.$disconnect();
           res.status(201).json({
             message: "Successfully get",
             success: true,

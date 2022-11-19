@@ -80,7 +80,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         status: "Blocked NFTs",
         count: blockedNFT,
       });
-
+      await prisma.$disconnect();
       res.status(201).json({
         message: "success",
         success: true,

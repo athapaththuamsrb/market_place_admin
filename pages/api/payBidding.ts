@@ -22,19 +22,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: { walletAddress: address, userId: user.id },
               });
             }
+            console.log("owner", owner);
             const nft = await prisma.nFT.findUnique({ where: { id: id } });
             if (!nft) throw new Error("nft is not exist");
+            console.log("nft", nft);
             const activity = await prisma.activity.findFirst({
               where: { nftId: id, isPenddingPayment: true },
             });
             if (!activity) throw new Error("activity is not exist");
+            console.log("act", activity);
             const bidding = await prisma.bidding.findFirst({
               where: {
                 activityId: activity.id,
                 isExpired: false,
                 userId: user.id,
+                state: "ACCEPTED",
               },
             });
+            console.log("bid", bidding);
             if (!bidding) throw new Error("bidding is not exist");
             if (price != bidding.price) throw new Error("Uncompatible price");
             //update bidding table
@@ -42,11 +47,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               where: { id: bidding.id },
               data: { isPaid: true, isExpired: true },
             });
+            console.log("jhbgjse");
             await prisma.bidding.updateMany({
               where: { activityId: activity.id, NOT: { id: bidding.id } },
               data: { isExpired: true },
             });
             //update activity table
+            console.log("sergse");
             await prisma.activity.update({
               where: { id: activity.id },
               data: {
@@ -57,6 +64,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 buyingTimestamp: time,
               },
             });
+            console.log("jetggjse");
             //set collection volume
             const pre_volume = await prisma.collection.findUnique({
               where: {
@@ -73,7 +81,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 ),
               },
             });
-
+            console.log("rgweghse");
             //update nft table
             await prisma.nFT.update({
               where: {
@@ -84,6 +92,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 ownerId: owner.id,
               },
             });
+            console.log("tehegee");
             await prisma.$disconnect();
             res
               .status(201)

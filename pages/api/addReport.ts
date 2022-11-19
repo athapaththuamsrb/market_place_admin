@@ -135,6 +135,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       } else {
         throw new Error("Report creation error!");
       }
+      await prisma.$disconnect();
       res.status(201).json({
         message: "Successful!",
         success: true,

@@ -163,6 +163,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               collectedNFTCard.push(list);
             }
           }
+          await prisma.$disconnect();
           res.status(201).json({
             message: "Successfully received",
             success: true,

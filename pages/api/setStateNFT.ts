@@ -33,6 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   isMinted: false,
                 },
               });
+              console.log(oldNFT)
               if (oldNFT) {
                 if (oldNFT.ownerId !== owner.id)
                   throw new Error("nft ower is wrong");

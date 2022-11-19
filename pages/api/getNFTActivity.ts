@@ -27,6 +27,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (nft) {
         const activities = await prisma.activity.findMany({
           where: { nftId: nft.id },
+          orderBy: [
+            {
+              listingTimestamp: "asc",
+            },
+          ],
         });
         //console.log(activities);
         const activityList: Activity[] = [];
@@ -58,6 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const seller = await prisma.user.findFirst({
               where: { id: activity.userId! },
             });
+            //console.log(activity);
             if (activity.buyingprice !== null) {
               const buyerOwner = await prisma.owner.findFirst({
                 where: { id: activity.buyerId! },

@@ -67,7 +67,7 @@ const NFTCard: FC<NFTProps> = (props) => {
                 size="small"
                 color="primary"
                 variant="contained"
-                sx={{ marginX: "32%" }}
+                sx={{ marginX: "auto" }}
                 href={`/view/nft/${props.ownerId}/${props.id}`}
               >
                 BUY
@@ -78,7 +78,7 @@ const NFTCard: FC<NFTProps> = (props) => {
                 size="small"
                 color="primary"
                 variant="contained"
-                sx={{ marginX: "32%" }}
+                sx={{ marginX: "auto" }}
                 href={`/view/nft/${props.ownerId}/${props.id}`}
               >
                 VIEW
@@ -89,7 +89,7 @@ const NFTCard: FC<NFTProps> = (props) => {
                 size="small"
                 color="primary"
                 variant="contained"
-                sx={{ marginLeft: "32%" }}
+                sx={{ marginX: "auto" }}
                 href={`/view/nft/${props.ownerId}/${props.id}`}
               >
                 SELL

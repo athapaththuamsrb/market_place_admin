@@ -9,7 +9,7 @@ import {
   Chip,
   Tooltip,
 } from "@mui/material";
-import Countdown, { zeroPad } from "react-countdown";
+import Countdown from "react-countdown";
 import Title from "../ui/Title";
 import { Box } from "@mui/system";
 import FurtherDetails from "./FurtherDetails";
@@ -92,27 +92,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openDecline, setOpenDecline] = useState(false);
 
-  // const renderer = ({
-  //   days,
-  //   hours,
-  //   minutes,
-  //   seconds,
-  // }: {
-  //   days: number;
-  //   hours: number;
-  //   minutes: number;
-  //   seconds: number;
-  // }) => (
-  //   <span>
-  //     {zeroPad(days)}:{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
-  //   </span>
-  // );
-
   const [copyURL, setCopyURL] = useState(
-    "http://localhost:3000/view/nft/" +
-      props.ownerID +
-      "/" +
-      props.salesOrder.id
+    router.basePath + "/view/nft/" + props.ownerID + "/" + props.salesOrder.id
   );
   const {
     activeConnector,
@@ -147,7 +128,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       }
       switch (key) {
         case "listed":
-          await axios.post("/api/setStateNFT", {
+          const res = await axios.post("/api/setStateNFT", {
             data: {
               action: key,
               value,
@@ -156,6 +137,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
             },
           });
           props.salesOrder.listed = value;
+          setMsg(res.status === 201 ? "Successful!" : "Try again later!");
           break;
 
         case "sold":
@@ -245,16 +227,19 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const declineOffer = async () => {
     try {
       setIsPending(true);
-      await axios.post("/api/declineOffer", {
+      const res = await axios.post("/api/declineOffer", {
         data: {
           id: PendingPaymentOffer,
         },
       });
+      setMsg(res.status === 201 ? "Successful!" : "Try again later!");
       setPendingPaymentOffer("");
       setIsPending(false);
+      setOpen(true);
     } catch {
       console.log("Offer Declining error!");
       setIsPending(false);
+      setOpen(true);
     }
   };
 
@@ -303,6 +288,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     openPopup,
     openAccept,
     openDecline,
+    msg,
   ]);
   return isMounted ? (
     <Box>
@@ -416,7 +402,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               {/* Price */}
               {props.salesOrder?.price !== "0" && (
                 <CardContent>
-                  <Typography variant="h4">Current Price :</Typography>
+                  <Typography variant="h4">
+                    {props.salesOrder?.listingtype === "FIXED_PRICE"
+                      ? "Current Price :"
+                      : "Starting Price :"}
+                  </Typography>
                   <Box
                     textAlign={"right"}
                     display="flex"
@@ -425,9 +415,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   >
                     <Chip
                       label={`${props.salesOrder?.price} ETH`}
-                      //color="primary"
+                      color="default"
                       size="medium"
-                      variant="outlined"
+                      //variant="outlined"
                       sx={{
                         //backgroundColor:"#e7e4e7",
                         //color:"black",
@@ -460,9 +450,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         fontWeight: "400",
                         fontSize: 20,
                         height: "70px",
-                        minWidth: "60%",
+                        minWidth: "50%",
                         marginTop: "10px",
-                        boxShadow: "2",
+                        boxShadow: "0",
                       }}
                     />
                   </Box>
@@ -552,7 +542,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         columnSpacing={{ xs: 1, sm: 1, md: 1 }}
                         sx={{ maxWidth: "80%" }}
                       >
-                        <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+                        <Grid alignSelf={"center"} item xs={12} sm={12} md={12}>
                           {props.salesOrder?.listingtype === "FIXED_PRICE" && (
                             <Button
                               onClick={() => {
@@ -585,7 +575,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             </Button>
                           )}
                         </Grid>
-                        <Grid alignSelf={"center"} item xs={12} sm={12} md={6}>
+                        <Grid alignSelf={"center"} item xs={12} sm={12} md={12}>
                           {(props.salesOrder?.listingtype === "FIXED_PRICE" ||
                             props.salesOrder?.listingtype ===
                               "TIMED_AUCTION") && (

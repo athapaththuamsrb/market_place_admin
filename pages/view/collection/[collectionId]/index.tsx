@@ -210,7 +210,7 @@ const Collection: NextPage<CollectionProps> = ({
                           <ShareIcon
                             sx={{ marginRight: "5px", marginBottom: "-7px" }}
                           ></ShareIcon>
-                          Share URL
+                          Copy URL
                         </div>
                       </CopyToClipboard>
                     </MenuItem>

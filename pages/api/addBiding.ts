@@ -63,6 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         default:
           throw new Error("listingtype is not exist");
       }
+      await prisma.$disconnect();
       res.status(201).json({
         message: "Successfully get",
         success: true,

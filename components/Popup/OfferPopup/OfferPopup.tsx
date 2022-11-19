@@ -125,7 +125,7 @@ const OfferPopup: FC<OfferPopupProps> = ({
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             inputProps={{
-              min: new Date(Date.now() + 24 * 60 * 60 * 1000)
+              min: new Date(Date.now() + 2 * 60 * 60 * 1000)
                 .toISOString()
                 .slice(0, 16),
               max: new Date(bigInt(endDate)).toISOString().slice(0, 16),
