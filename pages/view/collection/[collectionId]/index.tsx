@@ -56,7 +56,7 @@ const Collection: NextPage<CollectionProps> = ({
   const { data: account } = useAccount();
   const [isURLCopied, setIsURLCopied] = useState(false);
   const [copyURL, setCopyURL] = useState(
-    "http://localhost:3000/view/collection/" + collectionData.id
+    "https://exclusives-five.vercel.app/" + collectionData.id
   );
   const nftEls = nftList.map((nft: NFT_Card) => {
     return (

@@ -93,7 +93,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [openDecline, setOpenDecline] = useState(false);
 
   const [copyURL, setCopyURL] = useState(
-    router.basePath + "/view/nft/" + props.ownerID + "/" + props.salesOrder.id
+     "https://exclusives-five.vercel.app/view/nft/" + props.ownerID + "/" + props.salesOrder.id
   );
   const {
     activeConnector,
@@ -400,7 +400,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
               </CardContent>
 
               {/* Price */}
-              {props.salesOrder?.price !== "0" && (
+              {props.salesOrder?.price !== "0" && !isPendingPayment && (
                 <CardContent>
                   <Typography variant="h4">
                     {props.salesOrder?.listingtype === "FIXED_PRICE"

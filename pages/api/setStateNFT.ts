@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               console.log(oldNFT)
               if (oldNFT) {
                 if (oldNFT.ownerId !== owner.id)
-                  throw new Error("nft ower is wrong");
+                  throw new Error("nft owner is wrong");
                 if (value) {
                   const saleWay = req.body.data.saleWay;
 
