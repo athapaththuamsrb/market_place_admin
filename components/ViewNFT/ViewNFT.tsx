@@ -795,6 +795,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   setOfferPrice={setOfferPrice}
                   setOfferSignature={setOfferSignature}
                   salesOrder={props.salesOrder}
+                  listingType={props.salesOrder?.listingtype}
                   offers={offers}
                   user_id={props.salesOrder.walletAddress}
                   getSetOffers={getSetOffers}

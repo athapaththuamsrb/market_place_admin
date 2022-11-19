@@ -34,6 +34,7 @@ type OffersProps = {
   setOpenDecline: React.Dispatch<React.SetStateAction<boolean>>;
   openAccept: boolean;
   setOpenAccept: React.Dispatch<React.SetStateAction<boolean>>;
+  listingType: string;
 };
 
 const Offers: FC<OffersProps> = ({
@@ -48,6 +49,7 @@ const Offers: FC<OffersProps> = ({
   setOpenAccept,
   openDecline,
   setOpenDecline,
+  listingType,
 }) => {
   function getFromID(params: GridRenderCellParams) {
     return [`${params.row.fromID}`, `${params.row.from}`];
@@ -339,7 +341,11 @@ const Offers: FC<OffersProps> = ({
             borderRadius: "10px",
           }}
           rows={offers}
-          columns={account?.address === user_id ? ownerColumns : columns}
+          columns={
+            account?.address === user_id && listingType === "FIXED_PRICE"
+              ? ownerColumns
+              : columns
+          }
           pageSize={5}
           rowsPerPageOptions={[5]}
         />
