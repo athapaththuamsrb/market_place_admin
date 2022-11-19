@@ -25,6 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             where: {
               activityId: activity.id,
               isExpired: false,
+              NOT:{id:id}
             },
             data: { state: "REJECTED" },
           });
