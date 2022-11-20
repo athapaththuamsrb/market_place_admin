@@ -184,7 +184,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               <Typography variant="body2">
                 This image will appear at the top of your collection page. Avoid
                 including too much text in this banner image, as the dimensions
-                change on different devices. 1536 x 350 recommended.
+                change on different devices. 2000 x 350 recommended.
               </Typography>
               <br />
               {image["bannerImage"] && (

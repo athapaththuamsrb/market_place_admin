@@ -366,7 +366,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
                 </Typography>
               </Button>
               <Typography variant="h6" sx={{ fontSize: 13, marginTop: 0.5 }}>
-                This image will appear at the top of your collection page. 1400
+                This image will appear at the top of your collection page. 2000
                 x 350 recommended.
               </Typography>
             </label>
