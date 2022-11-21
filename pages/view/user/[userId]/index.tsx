@@ -39,6 +39,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FlagIcon from "@mui/icons-material/Flag";
 import CopyToClipboard from "react-copy-to-clipboard";
 import api from "../../../../lib/api";
+import { useRouter } from "next/router";
 
 interface UserProfileProps {
   collectedNFTCards: Collection_Card[];
@@ -54,7 +55,6 @@ const UserProfile: NextPage<UserProfileProps> = ({
       userProfile,
       userId,
     }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isCopied, setIsCopied] = useState(false);
@@ -91,15 +91,24 @@ const UserProfile: NextPage<UserProfileProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const router = useRouter();
+  const isMounted = useIsMounted();
+  if (router.isFallback || !isMounted) {
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
+  }
 
-  return isMounted ? (
+  return (
     <Box>
       {userProfile.bannerImage && (
         <ImageListItem>
           <Box sx={{ width: "100%", marginX: 0 }}>
             <Grid container>
               <Grid item xs={12}>
-                <Card sx={{ display: "flex", boxShadow: 0, borderRadius:0 }}>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius: 0 }}>
                   <CardMedia
                     component="img"
                     image={userProfile.bannerImage}
@@ -253,10 +262,6 @@ const UserProfile: NextPage<UserProfileProps> = ({
         )}
       </Container>
     </Box>
-  ) : (
-    <Box sx={{ width: "100%" }}>
-      <LinearProgress />
-    </Box>
   );
 };
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -284,7 +289,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         userProfile: data.data.userProfile,
         userId: params?.userId,
       },
-      revalidate: 1,
+      revalidate: 10,
     };
   } catch (error) {
     return { notFound: true };

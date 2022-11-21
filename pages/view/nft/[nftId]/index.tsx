@@ -37,18 +37,6 @@ const View: NextPage<ViewProps> = (
   );
 };
 export const getStaticPaths: GetStaticPaths = async () => {
-  // const res = await api.get("/getListnft");
-  // console.log("came1");
-  // const paths: { params: { nftId: string } }[] = res.data.data.nftList.map(
-  //   (nft: NFT_Card) => {
-  //     return {
-  //       params: {
-  //         nftId: nft.id,
-  //       },
-  //     };
-  //   }
-  // );
-  // console.log("came2");
   return {
     paths: [],
     fallback: "blocking",
@@ -69,7 +57,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         nft: data.data.nft[0],
         saleNum: data.data.saleNum,
       },
-      revalidate: 1,
+      revalidate: 10,
     };
   } catch (error) {
     return { notFound: true };

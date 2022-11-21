@@ -11,8 +11,8 @@ interface ExploreProps {
   collectionList: Collection_Card[];
 }
 const Home: NextPage<ExploreProps> = ({
-  collectionList,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      collectionList,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   return isMounted ? (
     <Box>
@@ -29,7 +29,7 @@ const Home: NextPage<ExploreProps> = ({
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const { data } = await api.get("/getListCollection");
-    return { props: { collectionList: data.data }, revalidate: 1 };
+    return { props: { collectionList: data.data }, revalidate: 10 };
   } catch (error) {
     return { notFound: true };
   }

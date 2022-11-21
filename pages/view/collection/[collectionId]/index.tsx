@@ -51,10 +51,10 @@ interface CollectionProps {
   collectionId: string;
 }
 const Collection: NextPage<CollectionProps> = ({
-  nftList,
-  collectionData,
-  collectionId,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      nftList,
+      collectionData,
+      collectionId,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
@@ -65,7 +65,7 @@ const Collection: NextPage<CollectionProps> = ({
   const [copyURL, setCopyURL] = useState(
     "https://exclusives-five.vercel.app/" + collectionData.id
   );
-  if (router.isFallback) {
+  if (router.isFallback || !isMounted) {
     return (
       <Box sx={{ width: "100%" }}>
         <LinearProgress />
@@ -111,7 +111,7 @@ const Collection: NextPage<CollectionProps> = ({
     setAnchorEl(null);
   };
   //console.log(collectionData);
-  return isMounted ? (
+  return (
     <Box>
       {collectionData.bannerImage && (
         <ImageListItem>
@@ -312,23 +312,9 @@ const Collection: NextPage<CollectionProps> = ({
         </Box>
       </Container>
     </Box>
-  ) : (
-    <Box sx={{ width: "100%" }}>
-      <LinearProgress />
-    </Box>
   );
 };
 export const getStaticPaths: GetStaticPaths = async () => {
-  // const { data } = await api.get("/getListCollection");
-  // const paths: { params: { collectionId: string } }[] = data.data.map(
-  //   (collection: Collection_Card) => {
-  //     return {
-  //       params: {
-  //         collectionId: collection.id,
-  //       },
-  //     };
-  //   }
-  // );
   return {
     paths: [],
     fallback: "blocking",
@@ -351,7 +337,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         collectionData: data.data.collectionData,
         collectionId: params?.collectionId,
       },
-      revalidate: 1,
+      revalidate: 10,
     };
   } catch (error) {
     return { notFound: true };
