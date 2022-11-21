@@ -4,6 +4,7 @@ import type {
   InferGetStaticPropsType,
   GetStaticPaths,
 } from "next";
+import { useRouter } from "next/router";
 import {
   Grid,
   Typography,
@@ -49,6 +50,7 @@ const Collection: NextPage<CollectionProps> = ({
   collectionData,
   collectionId,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const router = useRouter();
   const isMounted = useIsMounted();
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -58,6 +60,13 @@ const Collection: NextPage<CollectionProps> = ({
   const [copyURL, setCopyURL] = useState(
     "https://exclusives-five.vercel.app/" + collectionData.id
   );
+  if (router.isFallback) {
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
+  }
   const nftEls = nftList.map((nft: NFT_Card) => {
     return (
       <Grid key={nft.id} item xs={12}>
@@ -109,7 +118,7 @@ const Collection: NextPage<CollectionProps> = ({
           <Box sx={{ width: "100%", marginX: 0 }}>
             <Grid container>
               <Grid item xs={12}>
-                <Card sx={{ display: "flex", boxShadow: 0, borderRadius:0 }}>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius: 0 }}>
                   <CardMedia
                     component="img"
                     image={collectionData.bannerImage}
@@ -307,7 +316,7 @@ const Collection: NextPage<CollectionProps> = ({
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: true,
   };
 };
 export const getStaticProps: GetStaticProps = async (context) => {

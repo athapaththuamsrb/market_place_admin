@@ -5,6 +5,7 @@ import type {
   GetStaticPaths,
   InferGetStaticPropsType,
 } from "next";
+import { useRouter } from "next/router";
 import { NFT_load } from "../../../../../src/interfaces";
 import axios from "axios";
 import { _TypedDataEncoder } from "ethers/lib/utils";
@@ -20,8 +21,17 @@ interface ViewProps {
 const View: NextPage<ViewProps> = (
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) => {
+  const router = useRouter();
   const isMounted = useIsMounted();
-  return isMounted ? (
+  if (router.isFallback || isMounted) {
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
+  }
+
+  return (
     <Box>
       <ViewNFT
         salesOrder={props.nft}
@@ -29,16 +39,12 @@ const View: NextPage<ViewProps> = (
         ownerID={props.ownerID}
       />
     </Box>
-  ) : (
-    <Box sx={{ width: "100%" }}>
-      <LinearProgress />
-    </Box>
   );
 };
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: true,
   };
 };
 
