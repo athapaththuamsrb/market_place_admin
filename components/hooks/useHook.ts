@@ -197,7 +197,7 @@ export const useGetETHExchangeRate = () => {
         })
         .catch((error) => {});
     }
-  }, [ethExRate]);
+  }, [account?.address, ethExRate]);
 
   return { ethExRate };
 };
