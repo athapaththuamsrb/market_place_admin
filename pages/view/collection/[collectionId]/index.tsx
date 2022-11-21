@@ -27,7 +27,11 @@ import NFTCard from "../../../../components/ui/NFT/NFTCard";
 import { useIsMounted } from "../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import axios from "axios";
-import { Collection_Profile, NFT_Card } from "../../../../src/interfaces";
+import {
+  Collection_Card,
+  Collection_Profile,
+  NFT_Card,
+} from "../../../../src/interfaces";
 import Image from "next/image";
 import Paper from "@mui/material/Paper";
 import ReportPopup from "../../../../components/Popup/ReportPopup";
@@ -39,6 +43,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import ShareIcon from "@mui/icons-material/Share";
 import api from "../../../../lib/api";
 import theme from "../../../../src/theme";
+import { param } from "cypress/types/jquery";
 
 interface CollectionProps {
   nftList: NFT_Card[];
@@ -314,9 +319,19 @@ const Collection: NextPage<CollectionProps> = ({
   );
 };
 export const getStaticPaths: GetStaticPaths = async () => {
+  // const { data } = await api.get("/getListCollection");
+  // const paths: { params: { collectionId: string } }[] = data.data.map(
+  //   (collection: Collection_Card) => {
+  //     return {
+  //       params: {
+  //         collectionId: collection.id,
+  //       },
+  //     };
+  //   }
+  // );
   return {
     paths: [],
-    fallback: true,
+    fallback: "blocking",
   };
 };
 export const getStaticProps: GetStaticProps = async (context) => {

@@ -15,4 +15,10 @@ const nextConfig = withPWA({
   },
 });
 
-module.exports = nextConfig;
+module.exports = {
+  nextConfig,
+  experimental: {
+    // Defaults to 50MB
+    isrMemoryCacheSize: 0,
+  },
+};

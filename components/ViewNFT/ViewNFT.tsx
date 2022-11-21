@@ -57,7 +57,6 @@ import { number } from "yup";
 interface ViewNFTProps {
   salesOrder: NFT_load;
   saleNum: number;
-  ownerID: string;
 }
 
 const ViewNFT: FC<ViewNFTProps> = (props) => {
@@ -93,7 +92,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   const [openDecline, setOpenDecline] = useState(false);
 
   const [copyURL, setCopyURL] = useState(
-     "https://exclusives-five.vercel.app/view/nft/" + props.ownerID + "/" + props.salesOrder.id
+    "https://exclusives-five.vercel.app/view/nft/" + props.salesOrder.id
   );
   const {
     activeConnector,
@@ -290,7 +289,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     openDecline,
     msg,
   ]);
-  return isMounted ? (
+  return (
     <Box>
       {isPending && (
         <Box sx={{ width: "100%" }}>
@@ -811,10 +810,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         </Grid>
       </Box>
       <ModalPopUp msg={msg} open={open} setOpen={setOpen} setMsg={setMsg} />
-    </Box>
-  ) : (
-    <Box sx={{ width: "100%" }}>
-      <LinearProgress />
     </Box>
   );
 };

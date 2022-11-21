@@ -38,10 +38,10 @@ const MyNFTs: NextPage = (props) => {
   const router = useRouter();
   const [isCopied, setIsCopied] = useState(false);
   const [copyValue, setCopyValue] = useState(account?.address);
-  const { data, isError, isLoading } = useBalance({
-    addressOrName: account?.address,
-    chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
-  });
+  // const { data, isError, isLoading } = useBalance({
+  //   addressOrName: account?.address,
+  //   chainId: 5, //TODO Rinkeby => 4, Local network=>1337,Goerli=>5
+  // });
   // console.log(data);
   // console.log(account?.address);
   function srcset(
@@ -73,10 +73,10 @@ const MyNFTs: NextPage = (props) => {
             alt="banner"
             loading="lazy"
           /> */}
-           <Box sx={{ width: "100%", marginX: 0 }}>
+          <Box sx={{ width: "100%", marginX: 0 }}>
             <Grid container>
               <Grid item xs={12}>
-                <Card sx={{ display: "flex", boxShadow: 0, borderRadius:0 }}>
+                <Card sx={{ display: "flex", boxShadow: 0, borderRadius: 0 }}>
                   <CardMedia
                     component="img"
                     image={profile?.bannerImage}

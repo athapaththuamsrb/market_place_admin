@@ -99,7 +99,7 @@ const ViewReportedNFTs: NextPage = (props) => {
           sx={{ color: "black" }}
         >
           <Link
-            href={`../../view/nft/${params.row.reportedOwner}/${params.row.reportedId}`}
+            href={`../../view/nft/${params.row.reportedId}`}
             underline="hover"
           >
             <a>View NFT</a>

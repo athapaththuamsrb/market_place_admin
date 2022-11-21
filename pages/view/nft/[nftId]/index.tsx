@@ -1,4 +1,4 @@
-import ViewNFT from "../../../../../components/ViewNFT";
+import ViewNFT from "../../../../components/ViewNFT";
 import type {
   GetStaticProps,
   NextPage,
@@ -6,24 +6,23 @@ import type {
   InferGetStaticPropsType,
 } from "next";
 import { useRouter } from "next/router";
-import { NFT_load } from "../../../../../src/interfaces";
+import { NFT_Card, NFT_load } from "../../../../src/interfaces";
 import axios from "axios";
 import { _TypedDataEncoder } from "ethers/lib/utils";
-import { useIsMounted } from "../../../../../components/hooks";
+import { useIsMounted } from "../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box } from "@mui/system";
-import api from "../../../../../lib/api";
+import api from "../../../../lib/api";
 interface ViewProps {
   nft: NFT_load;
   saleNum: number;
-  ownerID: string;
 }
 const View: NextPage<ViewProps> = (
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) => {
   const router = useRouter();
   const isMounted = useIsMounted();
-  if (router.isFallback || isMounted) {
+  if (router.isFallback || !isMounted) {
     return (
       <Box sx={{ width: "100%" }}>
         <LinearProgress />
@@ -33,18 +32,26 @@ const View: NextPage<ViewProps> = (
 
   return (
     <Box>
-      <ViewNFT
-        salesOrder={props.nft}
-        saleNum={props.saleNum}
-        ownerID={props.ownerID}
-      />
+      <ViewNFT salesOrder={props.nft} saleNum={props.saleNum} />
     </Box>
   );
 };
 export const getStaticPaths: GetStaticPaths = async () => {
+  // const res = await api.get("/getListnft");
+  // console.log("came1");
+  // const paths: { params: { nftId: string } }[] = res.data.data.nftList.map(
+  //   (nft: NFT_Card) => {
+  //     return {
+  //       params: {
+  //         nftId: nft.id,
+  //       },
+  //     };
+  //   }
+  // );
+  // console.log("came2");
   return {
     paths: [],
-    fallback: true,
+    fallback: "blocking",
   };
 };
 
@@ -52,7 +59,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   try {
     const { data } = await api.post("/getNFT", {
-      data: { id: params?.nftId, ownerId: params?.ownerId },
+      data: { id: params?.nftId },
     });
     if (data.data.nft.length === 0) {
       return { notFound: true };
@@ -61,7 +68,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       props: {
         nft: data.data.nft[0],
         saleNum: data.data.saleNum,
-        ownerID: params?.ownerId,
       },
       revalidate: 1,
     };

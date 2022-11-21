@@ -5,14 +5,15 @@ import type {
   InferGetStaticPropsType,
 } from "next";
 import axios from "axios";
-import { NFT_load } from "../../../../../src/interfaces";
-import SetPrice from "../../../../../components/ViewNFT/SetPrice";
+import { NFT_load } from "../../../../src/interfaces";
+import SetPrice from "../../../../components/ViewNFT/SetPrice";
 import { useAccount } from "wagmi";
 import { Typography, Link } from "@mui/material";
-import { useIsMounted } from "../../../../../components/hooks";
+import { useIsMounted } from "../../../../components/hooks";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box } from "@mui/system";
-import api from "../../../../../lib/api";
+import api from "../../../../lib/api";
+import { useRouter } from "next/router";
 interface ViewProps {
   nft: NFT_load;
 }
@@ -21,7 +22,15 @@ const SetSellValue: NextPage<ViewProps> = (
 ) => {
   const isMounted = useIsMounted();
   const { data: account } = useAccount();
-  return isMounted ? (
+  const router = useRouter();
+  if (router.isFallback || !isMounted) {
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
+  }
+  return (
     <Box>
       {props.nft.walletAddress === account?.address ? (
         <SetPrice salesOrder={props.nft} />
@@ -32,23 +41,19 @@ const SetSellValue: NextPage<ViewProps> = (
         </Typography>
       )}
     </Box>
-  ) : (
-    <Box sx={{ width: "100%" }}>
-      <LinearProgress />
-    </Box>
   );
 };
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: true,
   };
 };
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   try {
     const { data } = await api.post("/getNFT", {
-      data: { id: params?.nftId, ownerId: params?.ownerId },
+      data: { id: params?.nftId },
     });
     if (data.data.nft.length === 0) {
       return { notFound: true };

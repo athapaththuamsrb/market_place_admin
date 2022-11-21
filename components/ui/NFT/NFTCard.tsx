@@ -20,7 +20,7 @@ const NFTCard: FC<NFTProps> = (props) => {
   const { data: account } = useAccount();
   return (
     <div>
-      <Link href={`/view/nft/${props.ownerId}/${props.id}`}>
+      <Link href={`/view/nft/${props.id}`}>
         <Card
           sx={{
             border: "2px solid",
@@ -68,7 +68,7 @@ const NFTCard: FC<NFTProps> = (props) => {
                 color="primary"
                 variant="contained"
                 sx={{ marginX: "auto" }}
-                href={`/view/nft/${props.ownerId}/${props.id}`}
+                href={`/view/nft/${props.id}`}
               >
                 BUY
               </Button>
@@ -79,7 +79,7 @@ const NFTCard: FC<NFTProps> = (props) => {
                 color="primary"
                 variant="contained"
                 sx={{ marginX: "auto" }}
-                href={`/view/nft/${props.ownerId}/${props.id}`}
+                href={`/view/nft/${props.id}`}
               >
                 VIEW
               </Button>
@@ -90,7 +90,7 @@ const NFTCard: FC<NFTProps> = (props) => {
                 color="primary"
                 variant="contained"
                 sx={{ marginX: "auto" }}
-                href={`/view/nft/${props.ownerId}/${props.id}`}
+                href={`/view/nft/${props.id}`}
               >
                 SELL
               </Button>
