@@ -42,7 +42,7 @@ const ItemActivity: FC<ActivityProps> = ({ activity }) => {
       renderCell: (params: GridRenderCellParams<String>) => (
         <div>
           {getFromID(params)[0] !== "" ? (
-            <Link href={`../../user/${getFromID(params)[0]}`}>
+            <Link href={`../../view/user/${getFromID(params)[0]}`}>
               {getFromID(params)[1]}
             </Link>
           ) : (
@@ -58,7 +58,7 @@ const ItemActivity: FC<ActivityProps> = ({ activity }) => {
       renderCell: (params: GridRenderCellParams<String>) => (
         <div>
           {getToID(params)[0] !== "" ? (
-            <Link href={`../../user/${getToID(params)[0]}`}>
+            <Link href={`../../view/user/${getToID(params)[0]}`}>
               {getToID(params)[1]}
             </Link>
           ) : (

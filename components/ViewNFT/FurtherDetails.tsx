@@ -74,7 +74,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
                 color="text.secondary"
                 sx={{ fontWeight: 500, fontSize: "15px" }}
               >
-                <Link href={`../../user/${props.creatorUserID}`}>
+                <Link href={`../../view/user/${props.creatorUserID}`}>
                   {props.creatorUserName}
                 </Link>
               </Typography>
@@ -108,7 +108,7 @@ const FurtherDetails: FC<FurtherDetailsProps> = (props) => {
                 color="text.secondary"
                 sx={{ fontWeight: 500, fontSize: "15px" }}
               >
-                <Link href={`../../collection/${props.collectionID}`}>
+                <Link href={`../../view/collection/${props.collectionID}`}>
                   {props.collectionName}
                 </Link>
               </Typography>
