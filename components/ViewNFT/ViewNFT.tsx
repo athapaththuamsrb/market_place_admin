@@ -270,15 +270,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       }
     );
     const output = await tokenID.wait();
-<<<<<<< HEAD
     console.log(isPending);
     await setStateNFT("sold", true, price, type);
     setIsPending(false);
-=======
-
-    await setStateNFT("sold", true, price, type);
-    // setIsPending(false);
->>>>>>> 199e7948ea2dc6745e8c255ac8ce860e56b928e9
   };
 
   useEffect(() => {
