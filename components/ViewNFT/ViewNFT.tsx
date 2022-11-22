@@ -118,7 +118,6 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
     type: string
   ) => {
     try {
-      setIsPending(true);
       let token;
       if (activeConnector) {
         token = authService.getUserToken();
@@ -170,10 +169,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
         default:
       }
 
-      setIsPending(false);
       setOpen(true);
     } catch (error) {
-      setIsPending(false);
       setOpen(true);
     }
   };
