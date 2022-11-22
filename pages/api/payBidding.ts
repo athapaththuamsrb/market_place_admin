@@ -47,13 +47,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               where: { id: bidding.id },
               data: { isPaid: true, isExpired: true },
             });
-            console.log("jhbgjse");
             await prisma.bidding.updateMany({
               where: { activityId: activity.id, NOT: { id: bidding.id } },
               data: { isExpired: true },
             });
             //update activity table
-            console.log("sergse");
             await prisma.activity.update({
               where: { id: activity.id },
               data: {
@@ -64,14 +62,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 buyingTimestamp: time,
               },
             });
-            console.log("jetggjse");
             //set collection volume
             const pre_volume = await prisma.collection.findUnique({
               where: {
                 id: nft.collectionId,
               },
             });
-            await prisma.collection.update({
+            if (!pre_volume) {
+              throw new Error("Pre volume not defined");
+            }
+
+            const upt = await prisma.collection.update({
               where: {
                 id: nft.collectionId,
               },
@@ -81,9 +82,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 ),
               },
             });
-            console.log("rgweghse");
             //update nft table
-            await prisma.nFT.update({
+            const nftUpdate = await prisma.nFT.update({
               where: {
                 id: nft.id,
               },
@@ -92,7 +92,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 ownerId: owner.id,
               },
             });
-            console.log("tehegee");
             await prisma.$disconnect();
             res
               .status(201)
