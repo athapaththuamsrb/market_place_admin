@@ -337,7 +337,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         collectionData: data.data.collectionData,
         collectionId: params?.collectionId,
       },
-      revalidate: 10,
+      revalidate: 60,
     };
   } catch (error) {
     return { notFound: true };

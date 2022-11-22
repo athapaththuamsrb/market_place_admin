@@ -263,6 +263,7 @@ const Offers: FC<OffersProps> = ({
   const handleCloseAccept = async (result: string, id: string) => {
     if (result == "Yes") {
       try {
+        setOpenAccept(false);
         const offer: Offer = offers.find((offer) => offer.id == id)!;
         const biddingSignature = await signTypedDataAsync({
           domain,
@@ -287,7 +288,6 @@ const Offers: FC<OffersProps> = ({
         });
         getSetOffers();
         setError(null);
-        setOpenAccept(false);
       } catch (error) {
         console.log("Offer Accepting error!");
       }
@@ -303,6 +303,7 @@ const Offers: FC<OffersProps> = ({
 
   const handleCloseDecline = async (result: string, id: string) => {
     if (result == "Yes") {
+      setOpenDecline(false);
       const offer: Offer = offers.find((offer) => offer.id == id)!;
 
       await axios
@@ -314,7 +315,6 @@ const Offers: FC<OffersProps> = ({
         .then(() => {
           setIsPending(false);
           setError(null);
-          setOpenDecline(false);
         })
         .catch((error) => {
           setIsPending(false);

@@ -57,7 +57,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         nft: data.data.nft[0],
         saleNum: data.data.saleNum,
       },
-      revalidate: 10,
+      revalidate: 60,
     };
   } catch (error) {
     return { notFound: true };
