@@ -373,7 +373,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                   <div>
                     Owned by{" "}
                     <Link
-                      href={`../../user/${props.salesOrder.ownerUserID}`}
+                      href={`../../view/user/${props.salesOrder.ownerUserID}`}
                       color="secondary"
                     >
                       {account?.address === props.salesOrder?.walletAddress
