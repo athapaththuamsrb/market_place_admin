@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// TODO https://docs.openzeppelin.com/contracts/4.x/wizard
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -23,7 +24,7 @@ contract Collection is ERC721, ERC721URIStorage, AccessControl {
     function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
+        _safeMint(to, tokenId); 
         _setTokenURI(tokenId, uri);
     }
 

@@ -241,8 +241,9 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
 
   const mintAndBuy = async (type: string) => {
     //TODO adding data to blockchain
-    setIsPending(true);
+    await setIsPending(true);
     setMsg("processing.....");
+    console.log(isPending);
     const price = type === "FIXED" ? props.salesOrder.price : offerPrice;
     const signature =
       type === "FIXED" ? props.salesOrder.signature : offerSignature;
@@ -268,8 +269,8 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
       }
     );
     const output = await tokenID.wait();
-
-    setStateNFT("sold", true, price, type);
+    console.log(isPending);
+    await setStateNFT("sold", true, price, type);
     setIsPending(false);
   };
 
@@ -289,6 +290,11 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
   return (
     <Box>
       {isPending && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      )}
+      {msg === "processing....." && (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
@@ -468,7 +474,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                         setStateNFT("listed", false, "0", "");
                         props.salesOrder.price = "0";
                       }}
-                      disabled={isPending}
+                      disabled={msg === "processing....."}
                       size="small"
                       color="secondary"
                       variant="contained"
@@ -544,7 +550,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                               onClick={() => {
                                 mintAndBuy("FIXED");
                               }}
-                              disabled={isPending}
+                              disabled={msg === "processing....."}
                               size="small"
                               color="secondary"
                               variant="contained"
@@ -578,7 +584,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             <Button
                               onClick={() => setOpenPopup(true)}
                               size="small"
-                              disabled={isPending}
+                              disabled={msg === "processing....."}
                               color="secondary"
                               variant="contained"
                               sx={{
@@ -647,7 +653,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                           >
                             {/* TODO HAVE TO CHAGE */}
                             <Button
-                              disabled={isPending}
+                              disabled={msg === "processing....."}
                               onClick={() => {
                                 mintAndBuy("OFFER");
                               }}
@@ -685,7 +691,7 @@ const ViewNFT: FC<ViewNFTProps> = (props) => {
                             md={6}
                           >
                             <Button
-                              disabled={isPending}
+                              disabled={msg === "processing....."}
                               size="small"
                               onClick={() => {
                                 declineOffer();
