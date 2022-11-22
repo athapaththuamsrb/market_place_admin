@@ -49,12 +49,12 @@ interface UserProfileProps {
   userId: string;
 }
 const UserProfile: NextPage<UserProfileProps> = ({
-      collectedNFTCards,
-      createdNFTCards,
-      collectionCards,
-      userProfile,
-      userId,
-    }: InferGetStaticPropsType<typeof getStaticProps>) => {
+          collectedNFTCards,
+          createdNFTCards,
+          collectionCards,
+          userProfile,
+          userId,
+        }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [openReportPopup, setOpenReportPopup] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isCopied, setIsCopied] = useState(false);
@@ -289,7 +289,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         userProfile: data.data.userProfile,
         userId: params?.userId,
       },
-      revalidate: 10,
+      revalidate: 60,
     };
   } catch (error) {
     return { notFound: true };

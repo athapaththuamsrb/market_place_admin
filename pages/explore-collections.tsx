@@ -29,7 +29,7 @@ const Home: NextPage<ExploreProps> = ({
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const { data } = await api.get("/getListCollection");
-    return { props: { collectionList: data.data }, revalidate: 10 };
+    return { props: { collectionList: data.data }, revalidate: 60 };
   } catch (error) {
     return { notFound: true };
   }

@@ -33,6 +33,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Logout from "@mui/icons-material/Logout";
 import ConnectPopup from "./../../Popup/ConnectPopup";
+import axios from "axios";
 const Navbar: FC = () => {
   const { connect, connectors, activeConnector } = useConnect();
   const { data: ethereumAccount } = useAccount();
@@ -62,6 +63,12 @@ const Navbar: FC = () => {
   const anchorRef = useRef();
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+  console.log(router.pathname);
+  const revalidate = async () => {
+    console.log(router.pathname);
+    await axios.post("/api/revalidate", { data: { url: router.pathname } });
+    router.reload();
   };
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
@@ -108,6 +115,21 @@ const Navbar: FC = () => {
           <SearchBar />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Button
+              size="small"
+              color="primary"
+              variant="outlined"
+              sx={{ marginX: 1 }}
+              onClick={() => revalidate()}
+            >
+              <Typography
+                color="black"
+                variant="h6"
+                sx={{ fontWeight: 500, fontSize: "medium" }}
+              >
+                Revalidate
+              </Typography>
+            </Button>
             {isAdmin && (
               <Button
                 size="small"
