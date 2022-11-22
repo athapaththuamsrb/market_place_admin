@@ -108,7 +108,7 @@ const Offers: FC<OffersProps> = ({
       renderCell: (params: GridRenderCellParams<String>) => (
         <div>
           {getFromID(params)[0] !== "" ? (
-            <Link href={`../../user/${getFromID(params)[0]}`}>
+            <Link href={`../../view/user/${getFromID(params)[0]}`}>
               {getFromID(params)[1]}
             </Link>
           ) : (
@@ -217,7 +217,7 @@ const Offers: FC<OffersProps> = ({
       renderCell: (params: GridRenderCellParams<String>) => (
         <div>
           {getFromID(params)[0] !== "" ? (
-            <Link href={`../../user/${getFromID(params)[0]}`}>
+            <Link href={`../../view/user/${getFromID(params)[0]}`}>
               {getFromID(params)[1]}
             </Link>
           ) : (
