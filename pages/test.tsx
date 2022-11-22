@@ -11,12 +11,12 @@ interface ExploreProps {
   _time: string;
 }
 const Home: NextPage<ExploreProps> = ({
-  _time,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+      _time,
+    }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const isMounted = useIsMounted();
   const [time, setTime] = React.useState(_time);
   const revalidate = async () => {
-    fetch("/api/revalidate");
+    await fetch("/api/revalidate");
   };
   // React.useEffect(() => {
   //   setTime(_time);
